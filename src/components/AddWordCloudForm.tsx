@@ -106,8 +106,7 @@ const AddStuffForm: React.FC = () => {
                     </Form.Group>
                     <Form.Group>
                       <Form.Label>Description</Form.Label>
-                      <input
-                        type='text'
+                      <textarea
                         {...register('name')}
                         className={`form-control ${errors.name ? 'is-invalid' : ''}`}
                       />
