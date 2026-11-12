@@ -1,6 +1,5 @@
 import WordCloudVisualizer from '@/components/WordCloudVisualizer';
 import { Card, Col, Container, Row, Table } from 'react-bootstrap';
-import { boolean } from 'yup';
 // import { Word } from "@isoterik/react-word-cloud";
 import { JSX } from 'react/jsx-runtime';
 
@@ -19,33 +18,46 @@ interface Word {
 }
 
 function generateWordCloudData(sourceText: string): wcd {
-    const words: string[] = sourceText
-    .toLowerCase()
-    .replace(/[^\w\s]/g, '') // change based on language type
-    .split(/\s+/)
-    .filter(boolean);
-    const wordCountingBuffer: Record<string, number> = words.reduce<Record<string, number>>((acc, word) => {
-      acc[word] = (acc[word] ?? 0) + 1;
-      return acc;
-    }, {});
-    const worddata: Word[] = [];
-    for (const key of Object.keys(wordCountingBuffer)) {
-      worddata.push(
-        {
-          'text': key,
-          'value': wordCountingBuffer[key],
-          'annotation': ''
-        }
-      )
+  // version 1 simple whitespace delimiting split, removing punctuations and non alphanumeric chars
+  // const words: string[] = sourceText
+  // .toLowerCase()
+  // .replace(/[^\w\s]/g, '') // change based on language type
+  // .split(/\s+/)
+  // .filter(boolean);
+  const words: string[] = [];
+  // vers 2, using Intl.segmentor with language support
+  const SegmRef: Intl.Segmenter = new Intl.Segmenter('en', {granularity: 'word'});
+  console.log(Intl.Segmenter.supportedLocalesOf)
+  const segments: Intl.Segments = SegmRef.segment(sourceText.toLowerCase());
+  for (const segment of segments) {
+    if (segment.isWordLike) {
+      words.push(segment.segment);
     }
-    worddata.sort((a: Word, b: Word)=> b.value - a.value)
-    const totalcounter: number = words.length;
-    const newWCD: wcd = {
-        wordcloud: worddata,
-        totalwords: totalcounter,
-        visiblewords: 10,
-    }
-    return newWCD
+  }
+
+  const wordCountingBuffer: Record<string, number> = words.reduce<Record<string, number>>((acc, word) => {
+    acc[word] = (acc[word] ?? 0) + 1;
+    return acc;
+  }, {});
+  const worddata: Word[] = [];
+  for (const key of Object.keys(wordCountingBuffer)) {
+    worddata.push(
+      {
+        'text': key,
+        'value': wordCountingBuffer[key],
+        'annotation': ''
+      }
+    )
+  }
+  worddata.sort((a: Word, b: Word)=> b.value - a.value)
+  const totalcounter: number = words.length;
+  // console.log(totalcounter);
+  const newWCD: wcd = {
+      wordcloud: worddata,
+      totalwords: totalcounter,
+      visiblewords: 10,
+  }
+  return newWCD
 }
 
 
@@ -74,7 +86,7 @@ const DebuggingWordCloudDisplay = () => {
     )
     visibleTotal += sampleData.wordcloud[i].value;
   }
-  // console.log(visibleTotal);
+  console.log(visibleTotal);
   const scaleFactor: number = 1000 / (formattedData[0].value/ visibleTotal)
   for (let i: number = 0; i < sampleData.visiblewords; i++) {
     formattedData[i].value = formattedData[i].value * scaleFactor / visibleTotal;
