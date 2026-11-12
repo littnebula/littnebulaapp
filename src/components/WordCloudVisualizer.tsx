@@ -1,8 +1,5 @@
-// import { Stuff } from '@prisma/client';
-// import Link from 'next/link';
-
+'use client';
 import { Container } from "react-bootstrap";
-import React from "react";
 import { Word, WordCloud } from "@isoterik/react-word-cloud";
 
 
@@ -11,11 +8,11 @@ const WordCloudVisualizer = ({FormattedWordCloudData}: {FormattedWordCloudData: 
   console.log(`passed data: ${JSON.stringify(FormattedWordCloudData, null, 2)}`)
   return (
     <Container className="justify-content-center">
-      <div style={{ width: "600px", height: "600px" }}>
+      <div style={{ width: "400px", height: "400px" }}>
         <WordCloud
           words={FormattedWordCloudData}
-          width={200}
-          height={200}
+          width={100}
+          height={100}
           rotate={() => 0}
           fill={'white'}
           random={() => 0}
