@@ -2,28 +2,43 @@
 import WordCloudVisualizer from '@/components/WordCloudVisualizer';
 import { Col, Container, Row, Table } from 'react-bootstrap';
 import { boolean } from 'yup';
+import { Word } from "@isoterik/react-word-cloud";
+import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from 'react';
+import { JSX } from 'react/jsx-runtime';
 
 const sampleText: string = 'CHAPTER IX 16. And yet this is not all that the unlimited capacity of my memory stores up. In memory, there are also all that one has learned of the liberal sciences, and has not forgotten--removed still further, so to say, into an inner place which is not a place. Of these things it is not the images that are retained, but the things themselves. For what literature and logic are, and what I know about how many different kinds of questions there are--all these are stored in my memory as they are, so that I have not taken in the image and left the thing outside. It is not as though a sound had sounded and passed away like a voice heard by the ear which leaves a trace by which it can be called into memory again, as if it were still sounding in mind while it did so no longer outside. Nor is it the same as an odor which, even after it has passed and vanished into the wind, affects the sense of smell--which then conveys into the memory the image of the smell which is what we recall and re-create; or like food which, once in the belly, surely now has no taste and yet does have a kind of taste in the memory; or like anything that is felt by the body through the sense of touch, which still remains as an image in the memory after the external object is removed. For these things themselves are not put into the memory. Only the images of them are gathered with a marvelous quickness and stored, as it were, in the most wonderful filing system, and are thence produced in a marvelous way by the act of remembering.';
 
 interface wcd {
-    wordcloud: Record<string, number>,
+    wordcloud: Word[],
     totalwords: number,
+    visiblewords: number,
 }
 
 function generateWordCloudData(sourceText: string): wcd {
     const words: string[] = sourceText
     .toLowerCase()
-    .replace(/[^\w\s]/g, '')
+    .replace(/[^\w\s]/g, '') // change based on language type
     .split(/\s+/)
     .filter(boolean);
-    const wordclouddata: Record<string, number> = words.reduce<Record<string, number>>((acc, word) => {
+    const wordCountingBuffer: Record<string, number> = words.reduce<Record<string, number>>((acc, word) => {
       acc[word] = (acc[word] ?? 0) + 1;
       return acc;
     }, {});
-    const counter: number = words.length;
+    const worddata: Word[] = [];
+    for (const key of Object.keys(wordCountingBuffer)) {
+      worddata.push(
+        {
+          'text': key,
+          'value': wordCountingBuffer[key]
+        }
+      )
+    }
+    worddata.sort((a: Word, b: Word)=> b.value - a.value)
+    const totalcounter: number = words.length;
     const newWCD: wcd = {
-        wordcloud: wordclouddata,
-        totalwords: counter,
+        wordcloud: worddata,
+        totalwords: totalcounter,
+        visiblewords: 10,
     }
     return newWCD
 }
@@ -33,15 +48,15 @@ function generateWordCloudData(sourceText: string): wcd {
 const DebuggingWordCloudDisplay = () => {
   const sampleData: wcd = generateWordCloudData(sampleText)
   //   console.log(sampleData);
-  const tablelist = [];
-  for (const key of Object.keys(sampleData.wordcloud)) {
+  const tablelist: JSX.Element[] | null | undefined = [];
+  sampleData.wordcloud.forEach((entry: Word) => {
     tablelist.push(
-      <tr key={key}>
-        <td>{key}</td>
-        <td>{sampleData.wordcloud[key]}</td>
+      <tr key={entry.text}>
+        <td>{entry.text}</td>
+        <td>{entry.value}</td>
       </tr>
     )
-  }
+  })
   return (
     <main>
       <Container id="landing-page" fluid className="py-3">
@@ -51,8 +66,9 @@ const DebuggingWordCloudDisplay = () => {
             <p>{sampleText}</p>
           </Col>
         </Row>
-        <Row>
-          <WordCloudVisualizer wordclouddata={sampleData.wordcloud} total={sampleData.totalwords} />
+        <Row className='justify-content-center'>
+          <WordCloudVisualizer 
+          FormattedWordCloudData={sampleData.wordcloud} />
         </Row>
         <Row>
           <Container>

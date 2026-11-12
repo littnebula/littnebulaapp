@@ -2,18 +2,22 @@
 // import Link from 'next/link';
 
 import { Container } from "react-bootstrap";
+import React from "react";
+import { Word, WordCloud } from "@isoterik/react-word-cloud";
 
-interface wcd {
-    wordcloud: object,
-    totalwords: number,
-}
 
 /* Renders a single row in the List Stuff table. See list/page.tsx. */
-const WordCloudVisualizer = ({ wordclouddata, total }: { wordclouddata: object, total: number }) => {
-  console.log(`passed data: ${JSON.stringify(wordclouddata, null, 2)}`)
+const WordCloudVisualizer = ({FormattedWordCloudData}: {FormattedWordCloudData: Word[]}) => {
+  console.log(`passed data: ${JSON.stringify(FormattedWordCloudData, null, 2)}`)
   return (
-    <Container>
-        
+    <Container className="justify-content-center">
+      <div style={{ width: "600px", height: "600px" }}>
+        <WordCloud
+          words={FormattedWordCloudData}
+          width={200}
+          height={200}
+        />
+      </div>
     </Container>
   );
 };
