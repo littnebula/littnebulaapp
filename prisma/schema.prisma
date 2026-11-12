@@ -17,11 +17,30 @@ enum Role {
   ADMIN
 }
 
+enum VisibilityType {
+  PUBLIC
+  RESTRICTED
+  PRIVATE
+}
+
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  role     Role   @default(USER)
+  id            Int    @id @default(autoincrement())
+  email         String @unique
+  password      String
+  role          Role   @default(USER)
+  ownedWC       Int[]
+  editAccessWC  Int[] 
+  bookmarkedWC  Int[] 
+	recentlyWC    Int[]
+}
+
+model Word {
+  id          Int       @id @default(autoincrement())
+	text        String
+	value       Int
+	annotation  String
+  wordcloud   WordCloud @relation(fields: [wordcloudId], references: [id])
+  wordcloudId Int
 }
 
 enum Condition {
@@ -38,3 +57,30 @@ model Stuff {
   condition Condition @default(good)
   owner     String
 }
+
+model WordCloud {
+  id            Int      @id @default(autoincrement())
+	owner         String
+  language      String
+  wordData      Word[] 
+  createdAt     DateTime @default(now()) 
+  bibliography  String
+  title         String
+  description   String 
+  tags          String[]
+  visibility    VisibilityType  @default(PUBLIC)
+  editors       String[]
+  Views         Int
+  bookmarks     Int
+  comments      Comment[]
+}
+
+model Comment {
+  id          Int       @id @default(autoincrement())
+	owner       String
+	comment     String
+	timestamp   DateTime  @default(now())
+  wordcloud   WordCloud @relation(fields: [wordcloudId], references: [id])
+  wordcloudId Int
+}
+
