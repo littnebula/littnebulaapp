@@ -57,6 +57,24 @@ const DebuggingWordCloudDisplay = () => {
       </tr>
     )
   })
+  const formattedData: Word[] = [];
+  let visibleTotal: number = 0;
+  for (let i: number = 0; i < sampleData.visiblewords; i++) {
+    formattedData.push(
+      {
+        'text': sampleData.wordcloud[i].text,
+        'value': sampleData.wordcloud[i].value
+      }
+    )
+    visibleTotal += sampleData.wordcloud[i].value;
+  }
+  // console.log(visibleTotal);
+  const scaleFactor: number = 1000 / (formattedData[0].value/ visibleTotal)
+  for (let i: number = 0; i < sampleData.visiblewords; i++) {
+    formattedData[i].value = formattedData[i].value * scaleFactor / visibleTotal;
+    visibleTotal += sampleData.wordcloud[i].value;
+  }
+  console.log(formattedData);
   return (
     <main>
       <Container id="landing-page" fluid className="py-3">
@@ -68,7 +86,7 @@ const DebuggingWordCloudDisplay = () => {
         </Row>
         <Row className='justify-content-center'>
           <WordCloudVisualizer 
-          FormattedWordCloudData={sampleData.wordcloud} />
+          FormattedWordCloudData={formattedData} />
         </Row>
         <Row>
           <Container>

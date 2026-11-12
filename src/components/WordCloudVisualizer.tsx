@@ -16,6 +16,9 @@ const WordCloudVisualizer = ({FormattedWordCloudData}: {FormattedWordCloudData: 
           words={FormattedWordCloudData}
           width={200}
           height={200}
+          rotate={() => 0}
+          fill={'white'}
+          random={() => 0}
         />
       </div>
     </Container>
