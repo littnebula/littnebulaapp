@@ -1,34 +1,46 @@
 'use client';
-
 import { useSession } from 'next-auth/react'; // v5 compatible
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import swal from 'sweetalert';
 import { redirect } from 'next/navigation';
-import { addStuff } from '@/lib/dbActions';
+import { addNewWordCloud } from '@/lib/dbActions';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { AddStuffSchema } from '@/lib/validationSchemas';
+import { GenerateWordCloudSchema } from '@/lib/validationSchemas';
+import { getSupportedLocales, languageSet } from '@/lib/WordCloudActions';
+import { JSX } from 'react/jsx-runtime';
 
-const onSubmit = async (data: { name: string; quantity: number; owner: string; condition: string }) => {
-  // console.log(`onSubmit data: ${JSON.stringify(data, null, 2)}`);
-  await addStuff(data);
+const onSubmit = async (data: { 
+  sourceText: string; 
+  bibliography: string;
+  language: string;
+  title: string;
+  description: string;
+  tags: string;
+  visibility: string;
+  owner: string;
+  creatorId: number;
+  }) => {
+  console.log(`onSubmit data: ${JSON.stringify(data, null, 2)}`);
+  await addNewWordCloud(data);
   swal('Success', 'Your item has been added', 'success', {
     timer: 2000,
   });
 };
 
-const AddStuffForm: React.FC = () => {
+const AddWordCloudForm: React.FC = () => {
   const { data: session, status } = useSession();
-  // console.log('AddStuffForm', status, session);
+  // console.log('AddWordCloudForm', status, session);
   const currentUser = session?.user?.email || '';
+  const currentUserId = session?.user?.id || 0;
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(AddStuffSchema),
+    resolver: yupResolver(GenerateWordCloudSchema),
   });
   if (status === 'loading') {
     return <LoadingSpinner />;
@@ -37,12 +49,19 @@ const AddStuffForm: React.FC = () => {
     redirect('/auth/signin');
   }
 
+  const langOptions: JSX.Element[] | null | undefined = [];
+  getSupportedLocales().forEach((tag) => {
+    langOptions.push(
+      <option key={tag} value={tag}>{languageSet[tag]}</option>
+    )
+  })
+
   return (
     <Container className="py-3">
       <Row className="justify-content-center">
         <Col md>
           <Col className="text-center">
-            <h2>Add Stuff</h2>
+            <h2>Embark on Voyage, Start new Territory</h2>
           </Col>
           <Card>
             <Card.Body>
@@ -51,47 +70,37 @@ const AddStuffForm: React.FC = () => {
                   <Form.Group>
                     <Form.Label>Source Text</Form.Label>
                     <textarea
-                      {...register('name')}
-                      className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                      {...register('sourceText')}
+                      className={`form-control ${errors.sourceText ? 'is-invalid' : ''}`}
                     />
-                    <div className="invalid-feedback">{errors.name?.message}</div>
+                    <div className="invalid-feedback">{errors.sourceText?.message}</div>
                   </Form.Group>
                 </Row>
                 <Row>
                   <Col>
                     <Form.Group>
                       <Form.Label>Language</Form.Label>
-                      {/* <select {...register('condition')} className={`form-control ${errors.condition ? 'is-invalid' : ''}`}>
-                        <option value="excellent">Excellent</option>
-                        <option value="good">Good</option>
-                        <option value="fair">Fair</option>
-                        <option value="poor">Poor</option>
-                      </select> */}
-                      <select>
-                        <option value="english">English</option>
-                        <option value="hawaiian">Hawaiian</option>
-                        <option value="japanese">Japanese</option>
-                        <option value="chinese">Chinese</option>
-                        <option value="spanish">Spanish</option>
+                      <select {...register('language')} className={`form-control ${errors.language ? 'is-invalid' : ''}`}>
+                        {langOptions}
                       </select>
-                      <div className="invalid-feedback">{errors.condition?.message}</div>
+                      <div className="invalid-feedback">{errors.language?.message}</div>
                     </Form.Group>
                     <Form.Group>
                       <Form.Label>Source Bibliography</Form.Label>
                       <textarea
-                        {...register('name')}
-                        className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                        {...register('bibliography')}
+                        className={`form-control ${errors.bibliography ? 'is-invalid' : ''}`}
                       />
-                      <div className="invalid-feedback">{errors.name?.message}</div>
+                      <div className="invalid-feedback">{errors.bibliography?.message}</div>
                     </Form.Group>
                     <Form.Group>
-                    <Form.Label>Tags</Form.Label>
+                      <Form.Label>Tags</Form.Label>
                       <input
                         type='text'
-                        {...register('name')}
-                        className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                        {...register('tags')}
+                        className={`form-control ${errors.tags ? 'is-invalid' : ''}`}
                       />
-                      <div className="invalid-feedback">{errors.name?.message}</div>
+                      <div className="invalid-feedback">{errors.tags?.message}</div>
                     </Form.Group>
                   </Col>
                   <Col>
@@ -99,62 +108,32 @@ const AddStuffForm: React.FC = () => {
                       <Form.Label>Title</Form.Label>
                       <input
                         type='text'
-                        {...register('name')}
-                        className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                        {...register('title')}
+                        className={`form-control ${errors.title ? 'is-invalid' : ''}`}
                       />
-                      <div className="invalid-feedback">{errors.name?.message}</div>
+                      <div className="invalid-feedback">{errors.title?.message}</div>
                     </Form.Group>
                     <Form.Group>
                       <Form.Label>Description</Form.Label>
                       <textarea
-                        {...register('name')}
-                        className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                        {...register('description')}
+                        className={`form-control ${errors.description ? 'is-invalid' : ''}`}
                       />
-                      <div className="invalid-feedback">{errors.name?.message}</div>
+                      <div className="invalid-feedback">{errors.description?.message}</div>
                     </Form.Group>
-                  </Col>
-                  <Col>
                     <Form.Group>
                       <Form.Label>Visibility</Form.Label>
-                      {/* <select {...register('condition')} className={`form-control ${errors.condition ? 'is-invalid' : ''}`}>
-                        <option value="excellent">Excellent</option>
-                        <option value="good">Good</option>
-                        <option value="fair">Fair</option>
-                        <option value="poor">Poor</option>
-                      </select> */}
-                      <select>
-                        <option value="public">Public</option>
-                        <option value="private">Private</option>
-                        <option value="restricted">Restricted</option>
+                      <select {...register('visibility')} className={`form-control ${errors.visibility ? 'is-invalid' : ''}`}>
+                        <option value="PUBLIC">Public</option>
+                        <option value="RESTRICTED">Restricted</option>
+                        <option value="PRIVATE">Private</option>
                       </select>
-                      <div className="invalid-feedback">{errors.condition?.message}</div>
-                    </Form.Group>
-                    <Form.Group>
-                      <Form.Label>Editors</Form.Label>
-                      <input
-                        type='text'
-                        {...register('name')}
-                        className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                      />
-                      <div className="invalid-feedback">{errors.name?.message}</div>
+                      <div className="invalid-feedback">{errors.visibility?.message}</div>
                     </Form.Group>
                   </Col>
                 </Row>
-                
-                  
-                
-                
-                {/* <Form.Group>
-                  <Form.Label>Quantity</Form.Label>
-                  <input
-                    type="number"
-                    // {...register('quantity')}
-                    // className={`form-control ${errors.quantity ? 'is-invalid' : ''}`}
-                  />
-                  <div className="invalid-feedback">{errors.quantity?.message}</div>
-                </Form.Group> */}
-               
                 <input type="hidden" {...register('owner')} value={currentUser} />
+                <input type="hidden" {...register('creatorId')} value={currentUserId} />
                 <Form.Group className="form-group">
                   <Row className="pt-3">
                     <Col>
@@ -178,4 +157,4 @@ const AddStuffForm: React.FC = () => {
   );
 };
 
-export default AddStuffForm;
+export default AddWordCloudForm;

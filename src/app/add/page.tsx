@@ -1,4 +1,5 @@
 import { loggedInProtectedPage } from '@/lib/page-protection';
+import AddStuffForm from '@/components/AddStuffForm';
 import AddWordCloudForm from '@/components/AddWordCloudForm';
 import { auth } from '@/lib/auth';
 

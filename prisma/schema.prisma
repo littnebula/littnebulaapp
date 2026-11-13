@@ -38,7 +38,7 @@ model Word {
   id          Int       @id @default(autoincrement())
 	text        String
 	value       Int
-	annotation  String
+	annotation  String    @default("")
   wordcloud   WordCloud @relation(fields: [wordcloudId], references: [id])
   wordcloudId Int
 }
@@ -65,15 +65,17 @@ model WordCloud {
   creator       User     @relation("OwnedWC", fields: [creatorId], references: [id])
 
   language      String
-  wordData      Word[] 
+  wordData      Word[]
+  sourceTotal   Int     @default(1)
+  displayCount  Int     @default(10)
   createdAt     DateTime @default(now()) 
   bibliography  String
   title         String
   description   String 
   tags          String[]
   visibility    VisibilityType  @default(PUBLIC)
-  views         Int
-  bookmarks     Int
+  views         Int      @default(0)
+  bookmarks     Int      @default(0)
 
   editors       String[]
   editingUsers  User[]          @relation("EditAccessWC")

@@ -5,13 +5,14 @@ import { Stuff } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
+import { generateWordCloudData  } from './WordCloudActions';
 
 /**
  * Adds a new stuff to the database.
  * @param stuff, an object with the following properties: name, quantity, owner, condition.
  */
 export async function addStuff(stuff: { name: string; quantity: number; owner: string; condition: string }) {
-  // console.log(`addStuff data: ${JSON.stringify(stuff, null, 2)}`);
+  console.log(`addStuff data: ${JSON.stringify(stuff, null, 2)}`);
   let condition: Condition = 'good';
   if (stuff.condition === 'poor') {
     condition = 'poor';
@@ -20,14 +21,14 @@ export async function addStuff(stuff: { name: string; quantity: number; owner: s
   } else {
     condition = 'fair';
   }
-  await prisma.stuff.create({
-    data: {
-      name: stuff.name,
-      quantity: stuff.quantity,
-      owner: stuff.owner,
-      condition,
-    },
-  });
+  // await prisma.stuff.create({
+  //   data: {
+  //     name: stuff.name,
+  //     quantity: stuff.quantity,
+  //     owner: stuff.owner,
+  //     condition,
+  //   },
+  // });
   // After adding, redirect to the list page
   redirect('/list');
 }
@@ -90,6 +91,33 @@ export async function changePassword(credentials: { email: string; password: str
     where: { email: credentials.email },
     data: {
       password,
+    },
+  });
+}
+
+export async function addNewWordCloud(wc: { 
+  sourceText: string; 
+  bibliography: string;
+  language: string;
+  title: string;
+  description: string;
+  tags: string;
+  visibility: string;
+  owner: string;
+  creatorId: number;
+  }) {
+  console.log(`new cloud data: ${JSON.stringify(wc, null, 2)}`);
+  const wordCloudGenResult: object = generateWordCloudData(wc.sourceText, wc.language)
+  console.log(wordCloudGenResult);
+}
+
+async function addWord(word: { text: string; value: number; wordcloudId: number }) {
+  await prisma.word.create({
+    data: {
+      text: word.text,
+      value: word.value,
+      annotation: "",
+      wordcloudId: word.wordcloudId,
     },
   });
 }
