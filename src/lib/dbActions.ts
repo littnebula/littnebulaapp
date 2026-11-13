@@ -138,9 +138,9 @@ export async function addNewWordCloud(wc: {
     creatorId: wc.creatorId,
   }
   console.log(wcdata);
-  // await prisma.wordCloud.create({
-  //   data: wcdata
-  // });
+  await prisma.wordCloud.create({
+    data: wcdata
+  });
 }
 
 // async function addWord(word: { text: string; value: number; wordcloudId: number }) {

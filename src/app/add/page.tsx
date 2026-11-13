@@ -10,7 +10,7 @@ const AddStuff = async () => {
       user: { email: string; id: string; name: string };
     } | null,
   );
-  console.log(session)
+  // console.log(session)
   return (
     <main>
       <AddWordCloudForm />

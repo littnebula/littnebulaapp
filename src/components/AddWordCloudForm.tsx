@@ -33,10 +33,7 @@ const AddWordCloudForm: React.FC = () => {
   const { data: session, status } = useSession();
   // console.log('AddWordCloudForm', status, session);
   const currentUser = session?.user?.email || '';
-  
-  // console.log(dbUser);
-  const currentUserId = session?.user?.id || 0;
-  console.log(currentUserId);
+  const currentUserId = session?.user?.id || '';
   const {
     register,
     handleSubmit,
@@ -136,7 +133,7 @@ const AddWordCloudForm: React.FC = () => {
                   </Col>
                 </Row>
                 <input type="hidden" {...register('owner')} value={currentUser} />
-                <input type="hidden" {...register('creatorId')} value={currentUserId} />
+                <input type="hidden" {...register('creatorId')} value={parseInt(currentUserId)} />
                 <Form.Group className="form-group">
                   <Row className="pt-3">
                     <Col>
