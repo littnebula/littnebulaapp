@@ -135,15 +135,12 @@ export async function addNewWordCloud(wc: {
     tags: wc.tags.split(" ",).filter((str) => str.trim().length > 0),
     visibility: vis,
     owner: wc.owner,
-    creator: {
-      connect: { id: wc.creatorId }
-    }
-    // creatorId: wc.creatorId,
+    creatorId: wc.creatorId,
   }
   console.log(wcdata);
-  await prisma.wordCloud.create({
-    data: wcdata
-  });
+  // await prisma.wordCloud.create({
+  //   data: wcdata
+  // });
 }
 
 // async function addWord(word: { text: string; value: number; wordcloudId: number }) {
