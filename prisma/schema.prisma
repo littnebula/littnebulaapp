@@ -77,7 +77,7 @@ model WordCloud {
   views         Int      @default(0)
   bookmarks     Int      @default(0)
 
-  editors       String[]
+  editors       String[]  @default([])
   editingUsers  User[]          @relation("EditAccessWC")
 
   comments      Comment[]

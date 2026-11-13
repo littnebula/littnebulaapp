@@ -1,11 +1,11 @@
 'use server';
 
 import { Condition } from '@prisma/client';
-import { Stuff } from '@prisma/client';
+import { Stuff, VisibilityType, Prisma } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
-import { generateWordCloudData  } from './WordCloudActions';
+import { generateWordCloudData, WCGenData  } from './WordCloudActions';
 
 /**
  * Adds a new stuff to the database.
@@ -21,14 +21,14 @@ export async function addStuff(stuff: { name: string; quantity: number; owner: s
   } else {
     condition = 'fair';
   }
-  // await prisma.stuff.create({
-  //   data: {
-  //     name: stuff.name,
-  //     quantity: stuff.quantity,
-  //     owner: stuff.owner,
-  //     condition,
-  //   },
-  // });
+  await prisma.stuff.create({
+    data: {
+      name: stuff.name,
+      quantity: stuff.quantity,
+      owner: stuff.owner,
+      condition,
+    },
+  });
   // After adding, redirect to the list page
   redirect('/list');
 }
@@ -106,18 +106,53 @@ export async function addNewWordCloud(wc: {
   owner: string;
   creatorId: number;
   }) {
-  console.log(`new cloud data: ${JSON.stringify(wc, null, 2)}`);
-  const wordCloudGenResult: object = generateWordCloudData(wc.sourceText, wc.language)
-  console.log(wordCloudGenResult);
-}
+  // console.log(`new cloud data: ${JSON.stringify(wc, null, 2)}`);
+  const wordCloudGenResult: WCGenData = generateWordCloudData(wc.sourceText, wc.language)
+  // console.log(wordCloudGenResult);
+  const wordsToBeAdded: Prisma.WordCreateWithoutWordcloudInput[] = []
+  wordCloudGenResult.wordcloud.forEach((word) => {
+    wordsToBeAdded.push(
+      { text: word.text, value: word.value }
+    )
+  })
+  let vis: VisibilityType = 'PRIVATE';
+  if (wc.visibility === 'RESTRICTED') {
+    vis = 'RESTRICTED';
+  } else if (wc.visibility === 'PUBLIC') {
+    vis = 'PUBLIC';
+  }
 
-async function addWord(word: { text: string; value: number; wordcloudId: number }) {
-  await prisma.word.create({
-    data: {
-      text: word.text,
-      value: word.value,
-      annotation: "",
-      wordcloudId: word.wordcloudId,
+  const wcdata = {
+    title: wc.title,
+    description: wc.description,
+    language: wc.language,
+    sourceTotal: wordCloudGenResult.totalwords,
+    wordData: {
+      create: wordsToBeAdded
     },
+    displayCount: 10,
+    bibliography: wc.bibliography,
+    tags: wc.tags.split(" ",).filter((str) => str.trim().length > 0),
+    visibility: vis,
+    owner: wc.owner,
+    creator: {
+      connect: { id: wc.creatorId }
+    }
+    // creatorId: wc.creatorId,
+  }
+  console.log(wcdata);
+  await prisma.wordCloud.create({
+    data: wcdata
   });
 }
+
+// async function addWord(word: { text: string; value: number; wordcloudId: number }) {
+//   await prisma.word.create({
+//     data: {
+//       text: word.text,
+//       value: word.value,
+//       annotation: "",
+//       wordcloudId: word.wordcloudId,
+//     },
+//   });
+// }

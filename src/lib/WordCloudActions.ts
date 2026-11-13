@@ -26,13 +26,13 @@ export const languageSet: Record<string, string> = {
   'zh-CN': "Simplified Chinese",
   'zh-TW': "Taiwan Chinese",
 }
-interface Word {
+export interface Word {
   text: string,
   value: number,
 //   annotation: string
 }
 
-interface WCGenData {
+export interface WCGenData {
   wordcloud: Word[],
   totalwords: number,
 }
