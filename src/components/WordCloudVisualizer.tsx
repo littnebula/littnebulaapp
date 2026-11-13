@@ -1,6 +1,7 @@
 'use client';
 import { Container } from "react-bootstrap";
-import { Word, WordCloud } from "@isoterik/react-word-cloud";
+import { WordCloud } from "@isoterik/react-word-cloud";
+import { Word } from "@prisma/client";
 
 
 /* Renders a single row in the List Stuff table. See list/page.tsx. */
@@ -9,14 +10,14 @@ const WordCloudVisualizer = ({FormattedWordCloudData}: {FormattedWordCloudData: 
   return (
     <Container className="justify-content-center">
       <div style={{
-        width: "400px",
-        height: "400px",
+        width: "500px",
+        height: "500px",
         margin: "auto"
       }}>
         <WordCloud
           words={FormattedWordCloudData}
-          width={100}
-          height={100}
+          width={200}
+          height={200}
           rotate={() => 0}
           fill={'white'}
           random={() => 0}

@@ -1,4 +1,5 @@
 // Functions that operate on data to generate or modify word cloud data
+import { Word } from "@prisma/client";
 
 export const languageSet: Record<string, string> = {
   'en': "English",
@@ -25,11 +26,6 @@ export const languageSet: Record<string, string> = {
   'zh': "Generic Chinese",
   'zh-CN': "Simplified Chinese",
   'zh-TW': "Taiwan Chinese",
-}
-export interface Word {
-  text: string,
-  value: number,
-//   annotation: string
 }
 
 export interface WCGenData {
@@ -68,6 +64,9 @@ export function generateWordCloudData(sourceText: string, language: string): WCG
       {
         'text': key,
         'value': wordCountingBuffer[key],
+        'annotation': '',
+        'id': 0,
+        'wordcloudId': 0,
       }
     )
   }
@@ -80,4 +79,26 @@ export function generateWordCloudData(sourceText: string, language: string): WCG
   }
   // returns object containing array of counted words and total words in text
   return newWCD
+}
+
+export function getFormattedData(wordcloud: Word[], visiblewords: number): Word[] {
+  const formattedData: Word[] = [];
+  let visibleTotal: number = 0;
+  for (let i: number = 0; i < Math.min(visiblewords, wordcloud.length); i++) {
+    formattedData.push(
+      {
+        'text': wordcloud[i].text,
+        'value': Math.abs(wordcloud[i].value),
+        'annotation': wordcloud[i].annotation,
+        'id': 0,
+        'wordcloudId': 0,
+      }
+    )
+    visibleTotal += Math.abs(wordcloud[i].value);
+  }
+  const scaleFactor: number = 1000 / (formattedData[0].value/ visibleTotal)
+  for (let i: number = 0; i < visiblewords; i++) {
+    formattedData[i].value = formattedData[i].value * scaleFactor / visibleTotal;
+  }
+  return formattedData;
 }
