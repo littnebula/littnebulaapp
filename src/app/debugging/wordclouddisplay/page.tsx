@@ -33,7 +33,6 @@ const langSet: Record<string, string> = {
   'zh-TW': "Taiwan Chinese",
 }
 
-
 interface wcd {
     wordcloud: Word[],
     totalwords: number,
@@ -46,7 +45,7 @@ interface Word {
   annotation: string
 }
 
-function getSupportedLocales(): Array<string> {
+export function getSupportedLocales(): Array<string> {
   const languageTags: Array<string> = [];
   for (const lang of Object.keys(langSet)) {
     languageTags.push(lang)
