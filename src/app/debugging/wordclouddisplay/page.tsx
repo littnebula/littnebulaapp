@@ -57,7 +57,7 @@ function getSupportedLocales(): Array<string> {
 function generateWordCloudData(sourceText: string): wcd {
   const words: string[] = [];
   const SegmRef: Intl.Segmenter = new Intl.Segmenter('en', {granularity: 'word'});
-  console.log(getSupportedLocales())
+  // console.log(getSupportedLocales())
   const segments: Intl.Segments = SegmRef.segment(sourceText.toLowerCase());
   for (const segment of segments) {
     if (segment.isWordLike) {
@@ -106,17 +106,17 @@ const DebuggingWordCloudDisplay = () => {
   })
   const formattedData: Word[] = [];
   let visibleTotal: number = 0;
-  for (let i: number = 0; i < sampleData.visiblewords; i++) {
+  for (let i: number = 0; i < Math.min(sampleData.visiblewords, sampleData.wordcloud.length); i++) {
     formattedData.push(
       {
         'text': sampleData.wordcloud[i].text,
-        'value': sampleData.wordcloud[i].value,
+        'value': Math.abs(sampleData.wordcloud[i].value),
         'annotation': 'some word',
       }
     )
-    visibleTotal += sampleData.wordcloud[i].value;
+    visibleTotal += Math.abs(sampleData.wordcloud[i].value);
   }
-  console.log(visibleTotal);
+  // console.log(visibleTotal);
   const scaleFactor: number = 1000 / (formattedData[0].value/ visibleTotal)
   for (let i: number = 0; i < sampleData.visiblewords; i++) {
     formattedData[i].value = formattedData[i].value * scaleFactor / visibleTotal;
