@@ -5,6 +5,35 @@ import { JSX } from 'react/jsx-runtime';
 
 const sampleText: string = 'CHAPTER IX 16. And yet this is not all that the unlimited capacity of my memory stores up. In memory, there are also all that one has learned of the liberal sciences, and has not forgotten--removed still further, so to say, into an inner place which is not a place. Of these things it is not the images that are retained, but the things themselves. For what literature and logic are, and what I know about how many different kinds of questions there are--all these are stored in my memory as they are, so that I have not taken in the image and left the thing outside. It is not as though a sound had sounded and passed away like a voice heard by the ear which leaves a trace by which it can be called into memory again, as if it were still sounding in mind while it did so no longer outside. Nor is it the same as an odor which, even after it has passed and vanished into the wind, affects the sense of smell--which then conveys into the memory the image of the smell which is what we recall and re-create; or like food which, once in the belly, surely now has no taste and yet does have a kind of taste in the memory; or like anything that is felt by the body through the sense of touch, which still remains as an image in the memory after the external object is removed. For these things themselves are not put into the memory. Only the images of them are gathered with a marvelous quickness and stored, as it were, in the most wonderful filing system, and are thence produced in a marvelous way by the act of remembering.';
 
+// languages available to use if locale is supported
+const langSet: Record<string, string> = {
+  'en': "English",
+  'fr': "French",
+  'de': "Generic German",
+  'de-DE': "Germany German",
+  'de-AT': "Austria German",
+  'ru': "Russian",
+  'ru-Cyrl': "Cyrillic Russian",
+  'uk': "Ukrainian",
+  'hi': "Hindi",
+  'fil': "Filipino",
+  'sm': "Samoan",
+  'id': "Indonesian",
+  'ar': "Arabic",
+  'vi': "Vietnamese",
+  'ko': "Korean",
+  'haw': "Hawaiian",
+  'hwc': "Hawaiian Pidgin",
+  'es': "Generic Spanish",
+  'es-MX': "Mexico Spanish",
+  'es-AR': "Argentina Spanish",
+  'ja': "Japanese",
+  'zh': "Generic Chinese",
+  'zh-CN': "Simplified Chinese",
+  'zh-TW': "Taiwan Chinese",
+}
+
+
 interface wcd {
     wordcloud: Word[],
     totalwords: number,
@@ -17,17 +46,18 @@ interface Word {
   annotation: string
 }
 
+function getSupportedLocales(): Array<string> {
+  const languageTags: Array<string> = [];
+  for (const lang of Object.keys(langSet)) {
+    languageTags.push(lang)
+  }
+  return Intl.Segmenter.supportedLocalesOf(languageTags);
+}
+
 function generateWordCloudData(sourceText: string): wcd {
-  // version 1 simple whitespace delimiting split, removing punctuations and non alphanumeric chars
-  // const words: string[] = sourceText
-  // .toLowerCase()
-  // .replace(/[^\w\s]/g, '') // change based on language type
-  // .split(/\s+/)
-  // .filter(boolean);
   const words: string[] = [];
-  // vers 2, using Intl.segmentor with language support
   const SegmRef: Intl.Segmenter = new Intl.Segmenter('en', {granularity: 'word'});
-  console.log(Intl.Segmenter.supportedLocalesOf)
+  console.log(getSupportedLocales())
   const segments: Intl.Segments = SegmRef.segment(sourceText.toLowerCase());
   for (const segment of segments) {
     if (segment.isWordLike) {
