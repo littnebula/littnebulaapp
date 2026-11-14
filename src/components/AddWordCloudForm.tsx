@@ -81,7 +81,7 @@ const AddWordCloudForm: React.FC = () => {
                   <Col>
                     <Form.Group>
                       <Form.Label>Language</Form.Label>
-                      <select {...register('language')} className={`form-control ${errors.language ? 'is-invalid' : ''} bg-dark text-light`}>
+                      <select {...register('language')} className={`form-control ${errors.language ? 'is-invalid' : ''}`}>
                         {langOptions}
                       </select>
                       <div className="invalid-feedback">{errors.language?.message}</div>

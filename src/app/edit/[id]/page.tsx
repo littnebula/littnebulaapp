@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation';
-import { Stuff } from '@prisma/client';
+import { Stuff, WordCloud } from '@prisma/client';
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
-import EditStuffForm from '@/components/EditStuffForm';
+// import EditStuffForm from '@/components/EditStuffForm';
+import EditWordCloudForm from '@/components/EditWordCloudForm';
 
 export default async function EditStuffPage({ params }: { params: { id: string | string[] } }) {
   const { id } = await params;
@@ -15,18 +16,18 @@ export default async function EditStuffPage({ params }: { params: { id: string |
     } | null,
   );
   const editID: number = +id;
-  const stuff: Stuff | null = await prisma.stuff.findUnique({
+  const wordcloud: WordCloud | null = await prisma.wordCloud.findUnique({
     where: {
       id: editID,
     },
   });
-  if (!stuff) {
+  if (!wordcloud) {
     return notFound();
   }
 
   return (
     <main>
-      <EditStuffForm stuff={stuff} />
+      <EditWordCloudForm wc={wordcloud} />
     </main>
   );
 }

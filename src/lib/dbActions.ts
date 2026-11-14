@@ -143,13 +143,18 @@ export async function addNewWordCloud(wc: {
   });
 }
 
-// async function addWord(word: { text: string; value: number; wordcloudId: number }) {
-//   await prisma.word.create({
-//     data: {
-//       text: word.text,
-//       value: word.value,
-//       annotation: "",
-//       wordcloudId: word.wordcloudId,
-//     },
-//   });
-// }
+export async function editWordCloud(wc: { 
+  id: number;
+  bibliography: string;
+  language: string;
+  title: string;
+  description: string;
+  displayCount: number;
+  tags: string;
+  editors?: string | undefined;
+  visibility: string;
+  owner: string;
+  creatorId: number;
+  }) {
+  console.log(`given cloud data: ${JSON.stringify(wc, null, 2)}`);
+}

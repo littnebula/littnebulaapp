@@ -26,3 +26,17 @@ export const GenerateWordCloudSchema = Yup.object({
   owner: Yup.string().required(),
   creatorId: Yup.number().required(),
 });
+
+export const ModifyWordCloudSchema = Yup.object({
+  id: Yup.number().required(),
+  bibliography: Yup.string().required(),
+  language: Yup.string().required(),
+  title: Yup.string().required(),
+  description: Yup.string().required(),
+  tags: Yup.string().required(),
+  editors: Yup.string(),
+  displayCount: Yup.number().required(),
+  visibility: Yup.string().oneOf(['PUBLIC', 'RESTRICTED', 'PRIVATE']).required(),
+  owner: Yup.string().required(),
+  creatorId: Yup.number().required(),
+});
