@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import { Col, Container, Row, Table } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
 // import StuffItem from '@/components/StuffItem';
@@ -22,6 +23,9 @@ const DBGViewPage = async () => {
       owner,
     },
   });
+  if (!wordcloud) {
+    return notFound();
+  }
   const wordcloudId = wordcloud?.id;
   const words: Word[] = await prisma.word.findMany({
     where: {
@@ -32,26 +36,29 @@ const DBGViewPage = async () => {
   return (
     <main>
       <Container id="list" fluid className="py-3">
+        <Row>
+          <h1>{wordcloud?.title}</h1>
+        </Row>
         <Row>          
           <WordCloudVisualizer FormattedWordCloudData={getFormattedData(words, displayCount)}/>
         </Row>
         <Row>
           <Col>
-            <h1>Words Set</h1>
+            <h2>Words Set for {wordcloud?.title} </h2>
             <Table striped bordered hover>
               <thead>
                 <tr>
                   <th>Unique Word</th>
-                  <th>Count</th>
-                  <th>Annotation</th>
+                  <th className="text-start">Count</th>
+                  <th className="text-start">Annotation</th>
                 </tr>
               </thead>
               <tbody>
                 {words.map((w) => (
                   <tr key={w.text}>
                     <td>{w.text}</td>
-                    <td>{w.value}</td>
-                    <td>{w.annotation}</td>
+                    <td className="text-start">{w.value}</td>
+                    <td className="text-start">{w.annotation}</td>
                   </tr>
                 ))}
               </tbody>

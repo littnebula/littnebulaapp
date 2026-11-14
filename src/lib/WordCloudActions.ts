@@ -46,7 +46,7 @@ export function generateWordCloudData(sourceText: string, language: string): WCG
   // Splitting text by words in language
   const words: string[] = [];
   const SegmRef: Intl.Segmenter = new Intl.Segmenter(language, {granularity: 'word'});
-  const segments: Intl.Segments = SegmRef.segment(sourceText.toLowerCase());
+  const segments: Intl.Segments = SegmRef.segment(sourceText.toUpperCase());
   for (const segment of segments) {
     if (segment.isWordLike) {
       words.push(segment.segment);

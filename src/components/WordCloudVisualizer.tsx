@@ -8,7 +8,7 @@ import { Word } from "@prisma/client";
 const WordCloudVisualizer = ({FormattedWordCloudData}: {FormattedWordCloudData: Word[]}) => {
   // console.log(`passed data: ${JSON.stringify(FormattedWordCloudData, null, 2)}`)
   return (
-    <Container className="justify-content-center">
+    <Container>
       <div style={{
         width: "500px",
         height: "500px",
