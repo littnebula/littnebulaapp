@@ -40,3 +40,23 @@ footer, footer a {
   background-color: var(--card-bkg-color);
   color: var(--body-text-color);
 }
+
+#clearcard1 {
+  background-color: #00000000;
+  color: var(--body-text-color);
+}
+
+.btn-gradient {
+  background: linear-gradient(180deg, #10da3880, #00102916);
+  border: none;
+  color: #ffffff;
+  opacity: 0.75;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.btn-gradient:hover,
+.btn-gradient:active {
+  color: #ffffff;
+  opacity: 1.0;
+  transform: scale(1.05);
+}
