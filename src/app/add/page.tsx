@@ -1,5 +1,5 @@
 import { loggedInProtectedPage } from '@/lib/page-protection';
-import AddStuffForm from '@/components/AddStuffForm';
+import AddWordCloudForm from '@/components/AddWordCloudForm';
 import { auth } from '@/lib/auth';
 
 const AddStuff = async () => {
@@ -10,9 +10,10 @@ const AddStuff = async () => {
       user: { email: string; id: string; name: string };
     } | null,
   );
+  // console.log(session)
   return (
     <main>
-      <AddStuffForm />
+      <AddWordCloudForm />
     </main>
   );
 };

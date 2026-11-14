@@ -14,20 +14,20 @@ const NavBar: React.FC = () => {
   return (
     <Navbar bg="dark" expand="lg">
       <Container className="justify-content-center">
-        <Navbar.Brand href="/"><Image src="litneb_logo.svg" alt="Organization logo" height={40}/></Navbar.Brand>
+        <Navbar.Brand href="/"><Image src="/litneb_logo.svg" alt="Organization logo" height={40}/></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto justify-content-start">
             {currentUser && (
               <>
-                <Nav.Link id="add-stuff-nav" href="/add" active={pathName === '/add'}>
-                  Add Stuff
-                </Nav.Link>
-                <Nav.Link id="list-stuff-nav" href="/list" active={pathName === '/list'}>
-                  List Stuff
+                <Nav.Link id="my-profile-nav" href="/myprofile" active={pathName === '/myprofile'}>
+                  My Profile
                 </Nav.Link>
               </>
             )}
+            <Nav.Link id="search-wordcloud-nav" href="/search" active={pathName === '/search'}>
+              Search
+            </Nav.Link>
             {currentUser && role === 'ADMIN' && (
               <Nav.Link id="admin-stuff-nav" href="/admin" active={pathName === '/admin'}>
                 Admin
