@@ -38,6 +38,7 @@ const DBGViewPage = async () => {
       <Container id="list" fluid className="py-3">
         <Row>
           <h1>{wordcloud?.title}</h1>
+          <h3>Created by {wordcloud?.owner} &lbrack{wordcloud?.createdAt.toLocaleDateString('en-US')}&rbrack</h3>
         </Row>
         <Row>          
           <WordCloudVisualizer FormattedWordCloudData={getFormattedData(words, displayCount)}/>

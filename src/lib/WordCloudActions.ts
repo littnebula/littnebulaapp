@@ -97,7 +97,7 @@ export function getFormattedData(wordcloud: Word[], visiblewords: number): Word[
     visibleTotal += Math.abs(wordcloud[i].value);
   }
   const scaleFactor: number = 1000 / (formattedData[0].value/ visibleTotal)
-  for (let i: number = 0; i < visiblewords; i++) {
+  for (let i: number = 0; i < Math.min(visiblewords, formattedData.length); i++) {
     formattedData[i].value = formattedData[i].value * scaleFactor / visibleTotal;
   }
   return formattedData;

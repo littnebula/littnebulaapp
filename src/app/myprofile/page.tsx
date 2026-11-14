@@ -33,11 +33,13 @@ const ListPage = async () => {
              
               <h1>Owned Territories</h1>
               {ownedwc.map((wc) => (
-                <Card key={wc.title}>
-                  <h2>{wc.title}</h2>
-                  <p>Created by {wc.owner} &lbrack{wc.createdAt.toLocaleDateString('en-US')}&rbrack</p>
-                  <h4>{wc.tags.slice(0, 3).join(" ")}</h4>
-                </Card>
+                <Link key={wc.title} href={`/examine/${wc.id}`}>
+                  <Card>
+                    <h2>{wc.title}</h2>
+                    <h4>{wc.tags.slice(0, 3).join(" ")}</h4>
+                  </Card>
+                </Link>
+                
               ))}
             </Card>
           </Col>
