@@ -132,7 +132,7 @@ export async function addNewWordCloud(wc: {
     },
     displayCount: 10,
     bibliography: wc.bibliography,
-    tags: wc.tags.split(" ",).filter((str) => str.trim().length > 0),
+    tags: wc.tags.split(" ").filter((str) => str.trim().length > 0),
     visibility: vis,
     owner: wc.owner,
     creatorId: wc.creatorId,
@@ -157,4 +157,88 @@ export async function editWordCloud(wc: {
   creatorId: number;
   }) {
   console.log(`given cloud data: ${JSON.stringify(wc, null, 2)}`);
+  let vis: VisibilityType = 'PRIVATE';
+  if (wc.visibility === 'RESTRICTED') {
+    vis = 'RESTRICTED';
+  } else if (wc.visibility === 'PUBLIC') {
+    vis = 'PUBLIC';
+  }
+
+  await prisma.wordCloud.update({
+    where: { id: wc.id },
+    data: {
+      title: wc.title,
+      description: wc.description,
+      bibliography: wc.bibliography,
+      visibility: vis,
+      displayCount: wc.displayCount,
+      language: wc.language,
+
+      tags: wc.tags.split(" ").filter((str) => str.trim().length > 0),
+      editors: wc.editors?.split(" ").filter((str) => str.trim().length > 0),
+
+      owner: wc.owner,
+      creatorId: wc.creatorId
+    },
+  });
+}
+
+export async function incrementWordCloudViews(id: number) {
+  await prisma.wordCloud.update({
+    where: { id },
+    data: {
+      value: {
+        increment: 1
+      }
+    },
+  });
+}
+
+export async function negateWord(id: number) {
+  await prisma.word.update({
+    where: { id },
+    data: {
+      value: {
+        multiply: -1.0
+      }
+    },
+  });
+}
+
+export async function increaseWord(id: number, add: number) {
+  await prisma.word.update({
+    where: { id },
+    data: {
+      value: {
+        increment: add
+      }
+    },
+  });
+}
+
+export async function annotateWord(id: number, annotation: string) {
+  await prisma.word.update({
+    where: { id },
+    data: {
+      annotation: annotation
+    },
+  });
+}
+
+export async function deleteWordCloud(id: number) {
+  // console.log(`deleteStuff id: ${id}`);
+  await prisma.wordCloud.delete({
+    where: { id },
+  });
+  // After deleting, redirect to the list page
+  redirect('/');
+}
+
+export async function deleteWord(id: number) {
+  // console.log(`deleteStuff id: ${id}`);
+  await prisma.word.delete({
+    where: { id },
+  });
+  // After deleting, redirect to the list page
+  redirect('/');
 }
