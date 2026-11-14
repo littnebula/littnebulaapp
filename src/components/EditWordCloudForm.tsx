@@ -51,7 +51,7 @@ const EditWordCloudForm = ({ wc }: { wc: WordCloud }) => {
   return (
     <Container className="py-3">
       <Row className="justify-content-center">
-        <Col xs={5}>
+        <Col>
           <Col className="text-center">
             <h2>Edit Word Cloud</h2>
           </Col>

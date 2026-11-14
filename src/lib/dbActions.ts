@@ -1,5 +1,4 @@
 'use server';
-
 import { Condition } from '@prisma/client';
 import { Stuff, VisibilityType, Prisma } from '@prisma/client';
 import { hash } from 'bcrypt';
@@ -187,21 +186,53 @@ export async function incrementWordCloudViews(id: number) {
   await prisma.wordCloud.update({
     where: { id },
     data: {
-      value: {
-        increment: 1
-      }
+      value: { increment: 1 }
     },
   });
 }
 
-export async function negateWord(id: number) {
-  await prisma.word.update({
-    where: { id },
+export async function onIgnoreText({words, wcid}: {words: string, wcid: number}) {
+  const wordset: string[] = words.toUpperCase().split(' ').filter((str) => str.trim().length > 0);
+  await prisma.word.updateMany({
+    where: {
+      wordcloudId: wcid,
+      text: { in: wordset }, 
+      value: { gt: 0},
+      },
     data: {
-      value: {
-        multiply: -1.0
-      }
+      value: { multiply: -1.0 }
     },
+  });
+}
+
+export async function onIgnoreValue({threshold, wcid}: {threshold: number, wcid: number}) {
+  await prisma.word.updateMany({
+    where: {
+      wordcloudId: wcid,
+      value: { gt: 0, lt: threshold},
+      },
+    data: {
+      value: { multiply: -1.0 }
+    },
+  });
+}
+
+export async function deleteText({words, wcid}: {words: string, wcid: number}) {
+  const wordset: string[] = words.toUpperCase().split(' ').filter((str) => str.trim().length > 0);
+  await prisma.word.deleteMany({
+    where: {
+      wordcloudId: wcid,
+      text: { in: wordset },
+    }
+  });
+}
+
+export async function deleteLowValue({threshold, wcid}: {threshold: number, wcid: number}) {
+  await prisma.word.deleteMany({
+      where: {
+      wordcloudId: wcid,
+      value: {lt: threshold},
+    }
   });
 }
 
@@ -209,9 +240,7 @@ export async function increaseWord(id: number, add: number) {
   await prisma.word.update({
     where: { id },
     data: {
-      value: {
-        increment: add
-      }
+      value: { increment: add }
     },
   });
 }
@@ -219,14 +248,12 @@ export async function increaseWord(id: number, add: number) {
 export async function annotateWord(id: number, annotation: string) {
   await prisma.word.update({
     where: { id },
-    data: {
-      annotation: annotation
-    },
+    data: { annotation: annotation },
   });
 }
 
 export async function deleteWordCloud(id: number) {
-  // console.log(`deleteStuff id: ${id}`);
+  // console.log(`deleteWordCloud id: ${id}`);
   await prisma.wordCloud.delete({
     where: { id },
   });
@@ -235,10 +262,8 @@ export async function deleteWordCloud(id: number) {
 }
 
 export async function deleteWord(id: number) {
-  // console.log(`deleteStuff id: ${id}`);
+  // console.log(`deleteWord id: ${id}`);
   await prisma.word.delete({
     where: { id },
   });
-  // After deleting, redirect to the list page
-  redirect('/');
 }

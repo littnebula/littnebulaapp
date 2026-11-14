@@ -27,11 +27,10 @@ export default async function ExamineWordCloud({ params }: { params: { id: strin
   if (!wordcloud) {
     return notFound();
   }
-  const wordcloudId: number = wordcloud?.id;
   const isEditor: boolean = wordcloud.editors.includes(currentUser);
   const words: Word[] = await prisma.word.findMany({
     where: {
-      wordcloudId,
+      wordcloudId: wordcloud?.id
     }
   });
 

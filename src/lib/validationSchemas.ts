@@ -40,3 +40,13 @@ export const ModifyWordCloudSchema = Yup.object({
   owner: Yup.string().required(),
   creatorId: Yup.number().required(),
 });
+
+export const OperatingOnWordsbyText = Yup.object({
+  wcid: Yup.number().required(),
+  words: Yup.string().required(),
+})
+
+export const OperatingOnWordsbyValue= Yup.object({
+  wcid: Yup.number().required(),
+  threshold: Yup.number().required(),
+})

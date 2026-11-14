@@ -5,6 +5,8 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 // import EditStuffForm from '@/components/EditStuffForm';
 import EditWordCloudForm from '@/components/EditWordCloudForm';
+import { Col, Container, Row } from 'react-bootstrap';
+import OperateWordCloudForm from '@/components/OperateWordCloudForm';
 
 export default async function EditStuffPage({ params }: { params: { id: string | string[] } }) {
   const { id } = await params;
@@ -27,7 +29,16 @@ export default async function EditStuffPage({ params }: { params: { id: string |
 
   return (
     <main>
-      <EditWordCloudForm wc={wordcloud} />
+      <Container className='p-4'>
+        <Row>
+          <Col>
+            <OperateWordCloudForm wc={wordcloud} />
+          </Col>
+          <Col>
+            <EditWordCloudForm wc={wordcloud} />
+          </Col>
+        </Row>
+      </Container>
     </main>
   );
 }
