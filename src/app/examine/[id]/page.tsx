@@ -1,22 +1,23 @@
 import { notFound } from 'next/navigation';
-import { Word, WordCloud } from '@prisma/client';
-import { loggedInProtectedPage } from '@/lib/page-protection';
+import { VisibilityType, Word, WordCloud } from '@prisma/client';
+// import { loggedInProtectedPage } from '@/lib/page-protection';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 // import EditStuffForm from '@/components/EditStuffForm';
 import WordCloudExaminer from '@/components/ViewWordCloudComp';
 import { Container } from 'react-bootstrap';
 import Link from 'next/link';
+import NotAuthorized from '@/app/not-authorized/page';
 
 export default async function ExamineWordCloud({ params }: { params: { id: string | string[] } }) {
   const { id } = await params;
   // Protect the page, only logged in users can access it.
   const session = await auth();
-  loggedInProtectedPage(
-    session as {
-      user: { email: string; id: string; name: string };
-    } | null,
-  );
+  // loggedInProtectedPage(
+  //   session as {
+  //     user: { email: string; id: string; name: string };
+  //   } | null,
+  // );
   const currentUser: string = session?.user?.email || ' ';
   const wcID: number = +id;
   const wordcloud: WordCloud | null = await prisma.wordCloud.findUnique({
@@ -28,19 +29,26 @@ export default async function ExamineWordCloud({ params }: { params: { id: strin
     return notFound();
   }
   const isEditor: boolean = wordcloud.editors.includes(currentUser);
+  if (wordcloud.visibility == VisibilityType.PRIVATE && currentUser !== wordcloud.owner && !isEditor) {
+    return NotAuthorized();
+  }
   const words: Word[] = await prisma.word.findMany({
     where: {
       wordcloudId: wordcloud?.id
     }
   });
-
   return (
     <main>
       {/* <EditStuffForm stuff={stuff} /> */}
       {(currentUser == wordcloud.owner || isEditor) && (
         <Container>
-          <Link key={wordcloud.title} href={`/edit/${wordcloud.id}`}>
-            You can Edit this
+          <Link 
+            key={wordcloud.title} 
+            href={`/edit/${wordcloud.id}`}
+            className='btn btn-solid-grn'
+            
+          >
+            EDIT
           </Link>
         </Container>
       )}

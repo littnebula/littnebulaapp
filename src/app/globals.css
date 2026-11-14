@@ -46,7 +46,20 @@ footer, footer a {
   color: var(--body-text-color);
 }
 
-.btn-gradient {
+.btn-solid-grn {
+  background: #008a6ce4;
+  border: none;
+  color: #ffffff;
+}
+
+.btn-solid-grn:hover,
+.btn-solid-grn:active {
+  background: #02e3b3e4;
+  color: #ffffff;
+  opacity: 1.0;
+}
+
+.btn-gradient-grn {
   background: linear-gradient(180deg, #10da3880, #00102916);
   border: none;
   color: #ffffff;
@@ -54,8 +67,8 @@ footer, footer a {
   transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
-.btn-gradient:hover,
-.btn-gradient:active {
+.btn-gradient-grn:hover,
+.btn-gradient-grn:active {
   color: #ffffff;
   opacity: 1.0;
   transform: scale(1.05);

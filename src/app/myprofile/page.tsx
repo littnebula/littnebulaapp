@@ -25,31 +25,30 @@ const ListPage = async () => {
         <Row>
           <Col>
             <Card id="darkcard1">
+              <h1 className='m-auto'>Controlled Territories</h1>
               <Container className='d-flex justify-content-center'>
-                <Link href='/add' className="btn btn-primary btn-lg">
+                <Link href='/add' className="btn btn-primary btn-lg my-2">
                   Embark on New Voyage
                 </Link>
               </Container>
-             
-              <h1 className='m-auto'>Owned Territories</h1>
+            
+              <h1 className='m-auto'>My Voyages</h1>
+              <hr/>
               {ownedwc.map((wc) => (
                 <Link 
                   key={wc.title} 
                   href={`/examine/${wc.id}`}
-                  className='btn btn-gradient mx-5'
+                  className='btn btn-gradient-grn mx-5 my-1'
                 >
-                  <Card id='clearcard1'>
-                    <h2>{wc.title}</h2>
-                    <h4>{wc.tags.slice(0, 3).join(" ")}</h4>
-                  </Card>
+                  <h4>{wc.title}</h4>
+                  <h6>[{wc.tags.slice(0, 3).join(", ")} {(wc.tags.length > 3 && (", ..."))} ]</h6>
                 </Link>
-                
               ))}
             </Card>
           </Col>
           <Col>
             <Card id='darkcard1'>
-              <h1>Recently Explored</h1>
+              <h1 className='m-auto'>Recently Explored</h1>
             </Card>
           </Col>
         </Row>
