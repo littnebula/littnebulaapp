@@ -1,9 +1,10 @@
 :root{
-  --nat-navbar-bg: #292929;
-  --nat-navbar-bg-rgb: rgb(30, 30, 30);
+  --nat-navbar-bg: #2929293c;
+  --nat-navbar-bg-rgb: (30, 30, 30);
   --nat-navbar-text-color: rgb(230, 229, 229);
   --nat-navbar-highlight-text: white;
   --body-text-color: rgb(240, 243, 255);
+  --card-bkg-color: rgba(0, 0, 0, 0.625);
 }
 
 html,
@@ -33,4 +34,9 @@ body .navbar {
 
 footer, footer a {
   color: var(--nat-navbar-text-color);
+}
+
+#darkcard1 {
+  background-color: var(--card-bkg-color);
+  color: var(--body-text-color);
 }

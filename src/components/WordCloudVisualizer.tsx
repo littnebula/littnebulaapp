@@ -3,7 +3,6 @@ import { Container } from "react-bootstrap";
 import { WordCloud } from "@isoterik/react-word-cloud";
 import { Word } from "@prisma/client";
 
-
 /* Renders a single row in the List Stuff table. See list/page.tsx. */
 const WordCloudVisualizer = ({FormattedWordCloudData}: {FormattedWordCloudData: Word[]}) => {
   // console.log(`passed data: ${JSON.stringify(FormattedWordCloudData, null, 2)}`)

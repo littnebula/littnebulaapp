@@ -1,7 +1,7 @@
 import { Container } from "react-bootstrap";
 
 const WordCloudViewer = () => {
-  <Container>
+  <Container fluid className="py-3">
 
   </Container>
 };

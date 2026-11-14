@@ -63,7 +63,7 @@ const AddWordCloudForm: React.FC = () => {
           <Col className="text-center">
             <h2>Embark on Voyage, Start new Territory</h2>
           </Col>
-          <Card>
+          <Card id="darkcard1">
             <Card.Body>
               <Form onSubmit={handleSubmit(onSubmit)}>
                 <Row>
@@ -71,7 +71,8 @@ const AddWordCloudForm: React.FC = () => {
                     <Form.Label>Source Text</Form.Label>
                     <textarea
                       {...register('sourceText')}
-                      className={`form-control ${errors.sourceText ? 'is-invalid' : ''}`}
+                      className={`form-control ${errors.sourceText ? 'is-invalid' : ''} bg-dark text-light`}
+                      rows={9}
                     />
                     <div className="invalid-feedback">{errors.sourceText?.message}</div>
                   </Form.Group>
@@ -80,7 +81,7 @@ const AddWordCloudForm: React.FC = () => {
                   <Col>
                     <Form.Group>
                       <Form.Label>Language</Form.Label>
-                      <select {...register('language')} className={`form-control ${errors.language ? 'is-invalid' : ''}`}>
+                      <select {...register('language')} className={`form-control ${errors.language ? 'is-invalid' : ''} bg-dark text-light`}>
                         {langOptions}
                       </select>
                       <div className="invalid-feedback">{errors.language?.message}</div>
@@ -89,7 +90,8 @@ const AddWordCloudForm: React.FC = () => {
                       <Form.Label>Source Bibliography</Form.Label>
                       <textarea
                         {...register('bibliography')}
-                        className={`form-control ${errors.bibliography ? 'is-invalid' : ''}`}
+                        className={`form-control ${errors.bibliography ? 'is-invalid' : ''} bg-dark text-light`}
+                        rows={5}
                       />
                       <div className="invalid-feedback">{errors.bibliography?.message}</div>
                     </Form.Group>
@@ -98,7 +100,8 @@ const AddWordCloudForm: React.FC = () => {
                       <input
                         type='text'
                         {...register('tags')}
-                        className={`form-control ${errors.tags ? 'is-invalid' : ''}`}
+                        className={`form-control ${errors.tags ? 'is-invalid' : ''} bg-dark text-light`}
+                        maxLength={300}
                       />
                       <div className="invalid-feedback">{errors.tags?.message}</div>
                     </Form.Group>
@@ -109,7 +112,8 @@ const AddWordCloudForm: React.FC = () => {
                       <input
                         type='text'
                         {...register('title')}
-                        className={`form-control ${errors.title ? 'is-invalid' : ''}`}
+                        className={`form-control ${errors.title ? 'is-invalid' : ''} bg-dark text-light`}
+                        maxLength={300}
                       />
                       <div className="invalid-feedback">{errors.title?.message}</div>
                     </Form.Group>
@@ -117,13 +121,14 @@ const AddWordCloudForm: React.FC = () => {
                       <Form.Label>Description</Form.Label>
                       <textarea
                         {...register('description')}
-                        className={`form-control ${errors.description ? 'is-invalid' : ''}`}
+                        className={`form-control ${errors.description ? 'is-invalid' : ''} bg-dark text-light`}
+                        rows={5}
                       />
                       <div className="invalid-feedback">{errors.description?.message}</div>
                     </Form.Group>
                     <Form.Group>
                       <Form.Label>Visibility</Form.Label>
-                      <select {...register('visibility')} className={`form-control ${errors.visibility ? 'is-invalid' : ''}`}>
+                      <select {...register('visibility')} className={`form-control ${errors.visibility ? 'is-invalid' : ''} bg-dark text-light`}>
                         <option value="PUBLIC">Public</option>
                         <option value="RESTRICTED">Restricted</option>
                         <option value="PRIVATE">Private</option>
