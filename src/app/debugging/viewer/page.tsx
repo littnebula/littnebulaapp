@@ -41,7 +41,10 @@ const DBGViewPage = async () => {
           <h3>Created by {wordcloud?.owner} &lbrack{wordcloud?.createdAt.toLocaleDateString('en-US')}&rbrack</h3>
         </Row>
         <Row>          
-          <WordCloudVisualizer FormattedWordCloudData={getFormattedData(words, displayCount)}/>
+          <WordCloudVisualizer 
+          FormattedWordCloudData={getFormattedData(words, displayCount)}
+          sizing={1.0}
+        />
         </Row>
         <Row>
           <Col>
