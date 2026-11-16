@@ -139,7 +139,8 @@ const DebuggingWordCloudDisplay = () => {
           <Row className='justify-content-center'>
             <Card style={{ backgroundColor: '#08031daf', color: '#ffffff' }}>
               <WordCloudVisualizer 
-              FormattedWordCloudData={formattedData} />
+              FormattedWordCloudData={formattedData} 
+              sizing={1.0}/>
             </Card>
           </Row>
           <Row>
