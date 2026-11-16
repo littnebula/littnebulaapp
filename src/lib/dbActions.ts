@@ -186,7 +186,7 @@ export async function incrementWordCloudViews(id: number) {
   await prisma.wordCloud.update({
     where: { id },
     data: {
-      value: { increment: 1 }
+      views: { increment: 1 }
     },
   });
 }
