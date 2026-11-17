@@ -5,6 +5,7 @@ import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
 import { generateWordCloudData, WCGenData  } from './WordCloudActions';
+import { revalidatePath } from 'next/cache';
 
 /**
  * Adds a new stuff to the database.
@@ -295,4 +296,8 @@ export async function toggleWCBookmark(userId: number, wordcloudId: number) {
       },
     });
   }
+}
+
+export async function revalidatepage(pagepath: string) {
+  revalidatePath(pagepath);
 }

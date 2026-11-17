@@ -1,14 +1,14 @@
 import { notFound } from 'next/navigation';
 import { VisibilityType, Word, WordCloud } from '@prisma/client';
-
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 import WordCloudExaminer from '@/components/ViewWordCloudComp';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import NotAuthorized from '@/app/not-authorized/page';
-import { incrementWordCloudViews, toggleWCBookmark } from '@/lib/dbActions';
+import { incrementWordCloudViews } from '@/lib/dbActions';
 import Link from "next/link";
-import { PencilSquare, Bookmark, BookmarkCheckFill } from 'react-bootstrap-icons';
+import { PencilSquare } from 'react-bootstrap-icons';
+import { BookmarkToggleButton } from '@/components/BookmarkToggleButton';
 
 
 export default async function ExamineWordCloud({ params }: { params: { id: string | string[] } }) {
@@ -72,9 +72,11 @@ export default async function ExamineWordCloud({ params }: { params: { id: strin
               </Link>
             )}
             {(session?.user) && (
-              <Button>
-                {bookmarkFound? (<BookmarkCheckFill/>) : (<Bookmark/>)}
-              </Button>
+              <BookmarkToggleButton 
+              userId={currentUserId}
+              wordcloudId={wcID}
+              initialIsBookmarked={bookmarkFound? true : false}
+              />
             )}
           </Col>
         </Row>
