@@ -66,7 +66,7 @@ const EditWordCloudForm = ({ wc }: { wc: WordCloud }) => {
                     {...register('title')}
                     defaultValue={wc.title}
                     required
-                    className={`form-control ${errors.title ? 'is-invalid' : ''}`}
+                    className={`form-control ${errors.title ? 'is-invalid' : ''} bg-dark text-light`}
                   />
                   <div className="invalid-feedback">{errors.title?.message}</div>
                 </Form.Group>
@@ -74,7 +74,7 @@ const EditWordCloudForm = ({ wc }: { wc: WordCloud }) => {
                   <Form.Label>Visibility</Form.Label>
                   <select
                     {...register('visibility')}
-                    className={`form-control ${errors.visibility ? 'is-invalid' : ''}`}
+                    className={`form-control ${errors.visibility ? 'is-invalid' : ''} bg-dark text-light`}
                     defaultValue={wc.visibility}
                   >
                     <option value="PUBLIC">Public</option>
@@ -89,7 +89,7 @@ const EditWordCloudForm = ({ wc }: { wc: WordCloud }) => {
                     {...register('description')}
                     defaultValue={wc.description}
                     required
-                    className={`form-control ${errors.description ? 'is-invalid' : ''}`}
+                    className={`form-control ${errors.description ? 'is-invalid' : ''} bg-dark text-light`}
                     rows={9}
                   />
                   <div className="invalid-feedback">{errors.description?.message}</div>
@@ -100,7 +100,7 @@ const EditWordCloudForm = ({ wc }: { wc: WordCloud }) => {
                     {...register('bibliography')}
                     defaultValue={wc.bibliography}
                     required
-                    className={`form-control ${errors.bibliography ? 'is-invalid' : ''}`}
+                    className={`form-control ${errors.bibliography ? 'is-invalid' : ''} bg-dark text-light`}
                     rows={6}
                   />
                   <div className="invalid-feedback">{errors.bibliography?.message}</div>
@@ -123,7 +123,7 @@ const EditWordCloudForm = ({ wc }: { wc: WordCloud }) => {
                     {...register('tags')}
                     defaultValue={strTags}
                     required
-                    className={`form-control ${errors.tags ? 'is-invalid' : ''}`}
+                    className={`form-control ${errors.tags ? 'is-invalid' : ''} bg-dark text-light`}
                   />
                   <div className="invalid-feedback">{errors.tags?.message}</div>
                 </Form.Group>
@@ -133,7 +133,7 @@ const EditWordCloudForm = ({ wc }: { wc: WordCloud }) => {
                     type="number"
                     {...register('displayCount')}
                     defaultValue={wc.displayCount}
-                    className={`form-control ${errors.displayCount ? 'is-invalid' : ''}`}
+                    className={`form-control ${errors.displayCount ? 'is-invalid' : ''} bg-dark text-light`}
                   />
                   <div className="invalid-feedback">{errors.displayCount?.message}</div>
                 </Form.Group>
@@ -143,7 +143,8 @@ const EditWordCloudForm = ({ wc }: { wc: WordCloud }) => {
                     type="text"
                     {...register('editors')}
                     defaultValue={strEditors}
-                    className={`form-control ${errors.editors ? 'is-invalid' : ''}`}
+                    className={`form-control ${errors.editors ? 'is-invalid' : ''} bg-dark text-light`}
+                    placeholder='User Emails separated by spaces...'
                   />
                   <div className="invalid-feedback">{errors.editors?.message}</div>
                 </Form.Group>

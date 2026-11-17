@@ -5,31 +5,28 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { WordCloud } from "@prisma/client";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from 'react-hook-form';
-
-type IgnoreFormValues = {
-  words: string;
-  wcid: number;
-};
+import { usePathname } from "next/navigation";
 
 // negates all words found in words for the current 
-const IgnoreOperationbyText = ({ wordcloudId }: { wordcloudId: number }) => {
+const IgnoreOperationbyText = ({ wordcloudId, pagepath }: { wordcloudId: number, pagepath: string }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IgnoreFormValues>({
+  } = useForm({
     resolver: yupResolver(OperatingOnWordsbyText),
   });
   return (
     <Form onSubmit={handleSubmit(onIgnoreText)}>
       <input type="hidden" {...register('wcid')} value={wordcloudId} />
+      <input type="hidden" {...register('pagepath')} value={pagepath} />
       <Form.Group>
         <Form.Label>Words to be Ignored</Form.Label>
         <input
         type="text"
         {...register('words')}
         required
-        className={`form-control ${errors.words ? 'is-invalid' : ''}`}
+        className={`form-control ${errors.words ? 'is-invalid' : ''} bg-dark text-light`}
         placeholder="words separated by spaces..."
         />
         <div className="invalid-feedback">{errors.words?.message}</div>
@@ -47,7 +44,7 @@ const IgnoreOperationbyText = ({ wordcloudId }: { wordcloudId: number }) => {
   
 
 // negates all words with a value equal to or less than value
-const IgnoreOperationbyValue = ({ wordcloudId }: { wordcloudId: number }) => {
+const IgnoreOperationbyValue = ({ wordcloudId, pagepath }: { wordcloudId: number, pagepath: string }) => {
   const {
     register,
     handleSubmit,
@@ -58,13 +55,14 @@ const IgnoreOperationbyValue = ({ wordcloudId }: { wordcloudId: number }) => {
   return (
     <Form onSubmit={handleSubmit(onIgnoreValue)}>
       <input type="hidden" {...register('wcid')} value={wordcloudId} />
+      <input type="hidden" {...register('pagepath')} value={pagepath} />
       <Form.Group>
         <Form.Label>Ignore Words below Value</Form.Label>
         <input
         type="number"
         {...register('threshold')}
         required
-        className={`form-control ${errors.threshold ? 'is-invalid' : ''}`}
+        className={`form-control ${errors.threshold ? 'is-invalid' : ''} bg-dark text-light`}
         min={1}
         />
         <div className="invalid-feedback">{errors.threshold?.message}</div>
@@ -80,24 +78,25 @@ const IgnoreOperationbyValue = ({ wordcloudId }: { wordcloudId: number }) => {
 }
 
 // negates all words found in words for the current 
-const EnableOperationbyText = ({ wordcloudId }: { wordcloudId: number }) => {
+const EnableOperationbyText = ({ wordcloudId, pagepath }: { wordcloudId: number, pagepath: string }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IgnoreFormValues>({
+  } = useForm({
     resolver: yupResolver(OperatingOnWordsbyText),
   });
   return (
     <Form onSubmit={handleSubmit(reEnableText)}>
       <input type="hidden" {...register('wcid')} value={wordcloudId} />
+      <input type="hidden" {...register('pagepath')} value={pagepath} />
       <Form.Group>
         <Form.Label>Words to be Enabled</Form.Label>
         <input
         type="text"
         {...register('words')}
         required
-        className={`form-control ${errors.words ? 'is-invalid' : ''}`}
+        className={`form-control ${errors.words ? 'is-invalid' : ''} bg-dark text-light`}
         placeholder="words separated by spaces..."
         />
         <div className="invalid-feedback">{errors.words?.message}</div>
@@ -114,7 +113,7 @@ const EnableOperationbyText = ({ wordcloudId }: { wordcloudId: number }) => {
 }
 
 // negates all words with a value equal to or less than value
-const EnableOperationbyValue = ({ wordcloudId }: { wordcloudId: number }) => {
+const EnableOperationbyValue = ({ wordcloudId, pagepath }: { wordcloudId: number, pagepath: string }) => {
   const {
     register,
     handleSubmit,
@@ -125,13 +124,14 @@ const EnableOperationbyValue = ({ wordcloudId }: { wordcloudId: number }) => {
   return (
     <Form onSubmit={handleSubmit(reEnableValue)}>
       <input type="hidden" {...register('wcid')} value={wordcloudId} />
+      <input type="hidden" {...register('pagepath')} value={pagepath} />
       <Form.Group>
         <Form.Label>Enable Words below Value</Form.Label>
         <input
         type="number"
         {...register('threshold')}
         required
-        className={`form-control ${errors.threshold ? 'is-invalid' : ''}`}
+        className={`form-control ${errors.threshold ? 'is-invalid' : ''} bg-dark text-light`}
         max={0}
         />
         <div className="invalid-feedback">{errors.threshold?.message}</div>
@@ -147,7 +147,7 @@ const EnableOperationbyValue = ({ wordcloudId }: { wordcloudId: number }) => {
 }
 
 // removes all words found 
-const DeleteOperationbyText = ({ wordcloudId }: { wordcloudId: number }) => {
+const DeleteOperationbyText = ({ wordcloudId, pagepath }: { wordcloudId: number, pagepath: string }) => {
   const {
     register,
     handleSubmit,
@@ -158,13 +158,14 @@ const DeleteOperationbyText = ({ wordcloudId }: { wordcloudId: number }) => {
   return (
     <Form onSubmit={handleSubmit(deleteText)}>
       <input type="hidden" {...register('wcid')} value={wordcloudId} />
+      <input type="hidden" {...register('pagepath')} value={pagepath} />
       <Form.Group>
         <Form.Label>Words to be Deleted</Form.Label>
         <input
         type="text"
         {...register('words')}
         required
-        className={`form-control ${errors.words ? 'is-invalid' : ''}`}
+        className={`form-control ${errors.words ? 'is-invalid' : ''} bg-dark text-light`}
         placeholder="words separated by spaces... Cannot be Undone"
         />
         <div className="invalid-feedback">{errors.words?.message}</div>
@@ -180,7 +181,7 @@ const DeleteOperationbyText = ({ wordcloudId }: { wordcloudId: number }) => {
 }
 
 // removes all words with a value equal or less than
-const DeleteOperationbyValue = ({ wordcloudId }: { wordcloudId: number }) => {
+const DeleteOperationbyValue = ({ wordcloudId, pagepath }: { wordcloudId: number, pagepath: string }) => {
   const {
     register,
     handleSubmit,
@@ -191,13 +192,14 @@ const DeleteOperationbyValue = ({ wordcloudId }: { wordcloudId: number }) => {
   return (
     <Form onSubmit={handleSubmit(deleteLowValue)}>
       <input type="hidden" {...register('wcid')} value={wordcloudId} />
+      <input type="hidden" {...register('pagepath')} value={pagepath} />
       <Form.Group>
         <Form.Label>Delete Words below Value</Form.Label>
         <input
         type="number"
         {...register('threshold')}
         required
-        className={`form-control ${errors.threshold ? 'is-invalid' : ''}`}
+        className={`form-control ${errors.threshold ? 'is-invalid' : ''} bg-dark text-light`}
         />
         <div className="invalid-feedback">{errors.threshold?.message}</div>
       </Form.Group>
@@ -213,6 +215,7 @@ const DeleteOperationbyValue = ({ wordcloudId }: { wordcloudId: number }) => {
 }
 
 const OperateWordCloudForm = ({ wc }: { wc: WordCloud }) => {
+  const pagepath: string = usePathname();
   return (
     <Container className="py-3">
       <Row className="justify-content-center">
@@ -222,12 +225,12 @@ const OperateWordCloudForm = ({ wc }: { wc: WordCloud }) => {
               <h2>Word Operations</h2>
             </Card.Header>
             <Card.Body>
-              <IgnoreOperationbyText wordcloudId={wc.id}/>
-              <IgnoreOperationbyValue wordcloudId={wc.id}/>
-              <EnableOperationbyText wordcloudId={wc.id}/>
-              <EnableOperationbyValue wordcloudId={wc.id}/>
-              <DeleteOperationbyText wordcloudId={wc.id}/>
-              <DeleteOperationbyValue wordcloudId={wc.id}/>
+              <IgnoreOperationbyText wordcloudId={wc.id} pagepath={pagepath}/>
+              <IgnoreOperationbyValue wordcloudId={wc.id} pagepath={pagepath}/>
+              <EnableOperationbyText wordcloudId={wc.id} pagepath={pagepath}/>
+              <EnableOperationbyValue wordcloudId={wc.id} pagepath={pagepath}/>
+              <DeleteOperationbyText wordcloudId={wc.id} pagepath={pagepath}/>
+              <DeleteOperationbyValue wordcloudId={wc.id} pagepath={pagepath}/>
             </Card.Body>
           </Card>
         </Col>

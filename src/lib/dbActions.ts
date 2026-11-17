@@ -192,7 +192,7 @@ export async function incrementWordCloudViews(id: number) {
   });
 }
 
-export async function onIgnoreText({words, wcid}: {words: string, wcid: number}) {
+export async function onIgnoreText({words, wcid, path}: {words: string, wcid: number, path?: string}) {
   const wordset: string[] = words.toUpperCase().split(' ').filter((str) => str.trim().length > 0);
   await prisma.word.updateMany({
     where: {
@@ -204,9 +204,13 @@ export async function onIgnoreText({words, wcid}: {words: string, wcid: number})
       value: { multiply: -1.0 }
     },
   });
+  console.log(path)
+  if (path !== undefined) {
+    revalidatePath(path);
+  }
 }
 
-export async function onIgnoreValue({threshold, wcid}: {threshold: number, wcid: number}) {
+export async function onIgnoreValue({threshold, wcid, path}: {threshold: number, wcid: number, path?: string}) {
   await prisma.word.updateMany({
     where: {
       wordcloudId: wcid,
@@ -216,9 +220,12 @@ export async function onIgnoreValue({threshold, wcid}: {threshold: number, wcid:
       value: { multiply: -1.0 }
     },
   });
+  if (path) {
+    revalidatePath(path);
+  }
 }
 
-export async function reEnableText({words, wcid}: {words: string, wcid: number}) {
+export async function reEnableText({words, wcid, path}: {words: string, wcid: number, path?: string}) {
   const wordset: string[] = words.toUpperCase().split(' ').filter((str) => str.trim().length > 0);
   await prisma.word.updateMany({
     where: {
@@ -230,9 +237,12 @@ export async function reEnableText({words, wcid}: {words: string, wcid: number})
       value: { multiply: -1.0 }
     },
   });
+  if (path) {
+    revalidatePath(path);
+  }
 }
 
-export async function reEnableValue({threshold, wcid}: {threshold: number, wcid: number}) {
+export async function reEnableValue({threshold, wcid, path}: {threshold: number, wcid: number, path?: string}) {
   await prisma.word.updateMany({
     where: {
       wordcloudId: wcid,
@@ -242,9 +252,12 @@ export async function reEnableValue({threshold, wcid}: {threshold: number, wcid:
       value: { multiply: -1.0 }
     },
   });
+  if (path) {
+    revalidatePath(path);
+  }
 }
 
-export async function deleteText({words, wcid}: {words: string, wcid: number}) {
+export async function deleteText({words, wcid, path}: {words: string, wcid: number, path?: string}) {
   const wordset: string[] = words.toUpperCase().split(' ').filter((str) => str.trim().length > 0);
   await prisma.word.deleteMany({
     where: {
@@ -252,15 +265,21 @@ export async function deleteText({words, wcid}: {words: string, wcid: number}) {
       text: { in: wordset },
     }
   });
+  if (path) {
+    revalidatePath(path);
+  }
 }
 
-export async function deleteLowValue({threshold, wcid}: {threshold: number, wcid: number}) {
+export async function deleteLowValue({threshold, wcid, path}: {threshold: number, wcid: number, path?: string}) {
   await prisma.word.deleteMany({
       where: {
       wordcloudId: wcid,
       value: {lt: threshold},
     }
   });
+  if (path) {
+    revalidatePath(path);
+  }
 }
 
 export async function increaseWord(id: number, add: number) {
@@ -285,7 +304,7 @@ export async function deleteWordCloud(id: number) {
     where: { id },
   });
   // After deleting, redirect to the landing page
-  redirect('/');
+  redirect('/myprofile');
 }
 
 export async function deleteWord(id: number) {

@@ -44,11 +44,13 @@ export const ModifyWordCloudSchema = Yup.object({
 export const OperatingOnWordsbyText = Yup.object({
   wcid: Yup.number().required(),
   words: Yup.string().required(),
+  pagepath: Yup.string()
 })
 
 export const OperatingOnWordsbyValue= Yup.object({
   wcid: Yup.number().required(),
   threshold: Yup.number().required(),
+  pagepath: Yup.string()
 })
 
 export const AddCommentSchema = Yup.object({

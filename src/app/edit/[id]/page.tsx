@@ -9,8 +9,10 @@ import { Col, Container, Row } from 'react-bootstrap';
 import OperateWordCloudForm from '@/components/OperateWordCloudForm';
 import DeleteWordCloudButton from '@/components/DeleteWordCloudButton';
 import WordListing from '@/components/ListWordsFromCloud';
+import Link from 'next/link';
 
-export default async function EditStuffPage({ params }: { params: { id: string | string[] } }) {
+
+export default async function EditWordCloudPage({ params }: { params: { id: string | string[] } }) {
   const { id } = await params;
   // Protect the page, only logged in users can access it.
   const session = await auth();
@@ -41,19 +43,25 @@ export default async function EditStuffPage({ params }: { params: { id: string |
     <main>
       <Container className='p-2'>
         <Row>
-          <Col>
-            <OperateWordCloudForm wc={wordcloud} />
-          </Col>
-          <Col>
-            <EditWordCloudForm wc={wordcloud} />
-          </Col>
+          <Container>
+            <Link
+            href={`/examine/${wordcloud.id}`}
+            className='btn btn-gradient-grn'
+            >
+              Return to Territory View
+            </Link>
+          </Container>
         </Row>
         <Row>
           <Col>
+            <OperateWordCloudForm wc={wordcloud} />
             <WordListing words={words}/>
           </Col>
           <Col>
-            <DeleteWordCloudButton wordcloudId={wordcloud.id}/>
+            <EditWordCloudForm wc={wordcloud} />
+            <Container className='p-4 justify-content-end d-flex'>
+              <DeleteWordCloudButton wordcloudId={wordcloud.id}/>
+            </Container>
           </Col>
         </Row>
       </Container>

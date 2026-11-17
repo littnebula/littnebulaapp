@@ -73,3 +73,8 @@ footer, footer a {
   opacity: 1.0;
   transform: scale(1.05);
 }
+
+.form-control::placeholder {
+  color: #c5c5c5;
+  opacity: 0.5;
+}

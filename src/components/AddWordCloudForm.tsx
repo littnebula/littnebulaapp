@@ -102,6 +102,7 @@ const AddWordCloudForm: React.FC = () => {
                         {...register('tags')}
                         className={`form-control ${errors.tags ? 'is-invalid' : ''} bg-dark text-light`}
                         maxLength={300}
+                        placeholder='Topics separated by spaces...'
                       />
                       <div className="invalid-feedback">{errors.tags?.message}</div>
                     </Form.Group>

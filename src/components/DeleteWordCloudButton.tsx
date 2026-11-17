@@ -2,6 +2,7 @@
 
 import { useTransition } from 'react';
 import { deleteWordCloud } from '@/lib/dbActions';
+import { Button } from 'react-bootstrap';
 
 export default function DeleteWordCloudButton({ wordcloudId }: { wordcloudId: number }) {
   const [isPending, startTransition] = useTransition();
@@ -16,13 +17,13 @@ export default function DeleteWordCloudButton({ wordcloudId }: { wordcloudId: nu
   };
 
   return (
-    <button
+    <Button
       type="button"
-      className="btn btn-danger btn-sm"
+      className="btn btn-danger btn-lg float-right" 
       onClick={handleDelete}
       disabled={isPending}
     >
-      {isPending ? 'Deleting...' : 'Delete'}
-    </button>
+      {isPending ? 'Deleting...' : 'Delete This Territory'}
+    </Button>
   );
 }
