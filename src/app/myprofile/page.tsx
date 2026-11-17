@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import { auth } from '@/lib/auth';
 import Link from 'next/link';
+import WordCloudViewLink from '@/components/WordcloudViewingLink';
 
 /** Render a list of stuff for the logged in user. */
 const ListPage = async () => {
@@ -35,14 +36,7 @@ const ListPage = async () => {
               <h1 className='m-auto'>My Voyages</h1>
               <hr/>
               {ownedwc.map((wc) => (
-                <Link 
-                  key={wc.title} 
-                  href={`/examine/${wc.id}`}
-                  className='btn btn-gradient-grn mx-5 my-1'
-                >
-                  <h4>{wc.title}</h4>
-                  <h6>[{wc.tags.slice(0, 3).join(", ")} {(wc.tags.length > 3 && (", ..."))} ]</h6>
-                </Link>
+                <WordCloudViewLink key={wc.title} wc={wc} />
               ))}
             </Card>
           </Col>
