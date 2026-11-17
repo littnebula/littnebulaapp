@@ -1,5 +1,5 @@
 'use client';
-import { Card, Col, Container, Nav, Row, TabContainer, TabContent, Table, TabPane } from "react-bootstrap";
+import { Button, Card, Col, Container, Nav, Row, TabContainer, TabContent, Table, TabPane } from "react-bootstrap";
 import { WordCloud, Word, Comment } from "@prisma/client";
 import WordCloudVisualizer from "./WordCloudVisualizer";
 import { getFormattedData } from "@/lib/WordCloudActions";
@@ -23,17 +23,17 @@ const WordCloudExaminer = ({wordclouddata, words, comments}: {wordclouddata: Wor
         <Card id="darkcard1" className="my-1">
           <Row>
             <Col>
-              <p>{wordclouddata.views} Views</p>
+              <p className="fs-4">{wordclouddata.views} Views</p>
             </Col>
             <Col>
-              <p>{wordclouddata.bookmarks} Bookmarks</p>
+              <p className="fs-4">{wordclouddata.bookmarks} Bookmarks</p>
             </Col>
           </Row>
         </Card>
       </Row>
       <Row>
-        <Card id="darkcard1">
-          <TabContainer defaultActiveKey="first">
+        <Card id="darkcard1" className="p-2">
+          <TabContainer defaultActiveKey="desc">
             <Nav variant="pills">
               <Row>
                 <Col>
@@ -59,7 +59,7 @@ const WordCloudExaminer = ({wordclouddata, words, comments}: {wordclouddata: Wor
                   <p className="text-wrap text-break">{wordclouddata.bibliography}</p>
                 </TabPane>
                 <TabPane eventKey="wordlist">
-                  <Table striped bordered hover>
+                  <Table striped bordered hover className="table-dark">
                     <thead>
                       <tr>
                         <th>Unique Word</th>
@@ -78,7 +78,7 @@ const WordCloudExaminer = ({wordclouddata, words, comments}: {wordclouddata: Wor
                     </tbody>
                   </Table>
                   {hasmoreRows && (
-                    <button
+                    <Button
                       type="button"
                       onClick={() => setIsExpanded((toggle) => !toggle)}
                       aria-expanded={isExpanded}
@@ -86,7 +86,7 @@ const WordCloudExaminer = ({wordclouddata, words, comments}: {wordclouddata: Wor
                       {isExpanded
                       ? 'Show Less'
                       : `Show All (${words.length - collapsedRowsCount} more)`}
-                    </button>
+                    </Button>
                   )}
 
                 </TabPane>

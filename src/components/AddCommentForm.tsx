@@ -4,7 +4,6 @@ import { useSession } from 'next-auth/react'; // v5 compatible
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { redirect } from 'next/navigation';
 import { addComment, revalidatepage } from '@/lib/dbActions';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { AddCommentSchema } from '@/lib/validationSchemas';
@@ -26,9 +25,8 @@ const AddCommentForm = ({ wcid }: {wcid: number}) => {
     return <LoadingSpinner />;
   }
   if (status === 'unauthenticated') {
-    redirect('/auth/signin');
+    return (<></>);
   }
-
   const onSubmit = async (comment: { comment: string; wordcloudId: number, owner: string }) => {
     await addComment(comment);
     await revalidatepage(pathname);
@@ -36,42 +34,41 @@ const AddCommentForm = ({ wcid }: {wcid: number}) => {
     //     timer: 2000,
     //   });
   };
-
   return (
-          <Card id='darkcard1'>
-            <Card.Header>
-              Add a Comment
-            </Card.Header>
-            <Card.Body>
-              <Form onSubmit={handleSubmit(onSubmit)}>
-                <Form.Group>
-                  <input
-                    type='text'
-                    {...register('comment')}
-                    className={`form-control ${errors.comment ? 'is-invalid' : ''}`}
-                    placeholder='Your Thoughts...'
-                  />
-                  <div className="invalid-feedback">{errors.comment?.message}</div>
-                </Form.Group>
-                <input type="hidden" {...register('owner')} value={currentUser} />
-                <input type="hidden" {...register('wordcloudId')} value={wcid} />
-                <Form.Group className="form-group">
-                  <Row className="pt-3">
-                    <Col>
-                      <Button type="submit" variant="primary">
-                        Submit
-                      </Button>
-                    </Col>
-                    <Col>
-                      <Button type="button" onClick={() => reset()} variant="warning" className="float-right">
-                        Reset
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form.Group>
-              </Form>
-            </Card.Body>
-          </Card>
+    <Card id='darkcard1'>
+      <Card.Header>
+        Add a Comment
+      </Card.Header>
+      <Card.Body>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Form.Group>
+            <input
+              type='text'
+              {...register('comment')}
+              className={`form-control ${errors.comment ? 'is-invalid' : ''}`}
+              placeholder='Your Thoughts...'
+            />
+            <div className="invalid-feedback">{errors.comment?.message}</div>
+          </Form.Group>
+          <input type="hidden" {...register('owner')} value={currentUser} />
+          <input type="hidden" {...register('wordcloudId')} value={wcid} />
+          <Form.Group className="form-group">
+            <Row className="pt-3">
+              <Col>
+                <Button type="submit" variant="primary">
+                  Submit
+                </Button>
+              </Col>
+              <Col>
+                <Button type="button" onClick={() => reset()} variant="warning" className="float-right">
+                  Reset
+                </Button>
+              </Col>
+            </Row>
+          </Form.Group>
+        </Form>
+      </Card.Body>
+    </Card>
   );
 };
 

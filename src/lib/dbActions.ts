@@ -298,11 +298,23 @@ export async function toggleWCBookmark(userId: number, wordcloudId: number) {
         },
       },
     });
+    await prisma.wordCloud.update({
+      where: { id: wordcloudId },
+      data: {
+        bookmarks: { decrement: 1 },
+      },
+    });
   } else {
     await prisma.bookmarkedWC.create({
       data: {
         userId,
         wordcloudId,
+      },
+    });
+    await prisma.wordCloud.update({
+      where: { id: wordcloudId },
+      data: {
+        bookmarks: { increment: 1 },
       },
     });
   }

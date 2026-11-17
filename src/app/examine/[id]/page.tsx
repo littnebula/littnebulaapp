@@ -76,7 +76,7 @@ export default async function ExamineWordCloud({ params }: { params: { id: strin
               <Link 
                 key={wordcloud.title} 
                 href={`/edit/${wordcloud.id}`}
-                className='btn btn-solid-grn'
+                className='btn btn-solid-grn py-2'
               >
                 <PencilSquare/> Edit
               </Link>
