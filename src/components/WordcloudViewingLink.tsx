@@ -16,7 +16,7 @@ const WordCloudViewLink = ({wc}: {wc: WordCloud}) => {
   return (
   <Link
     href={`/examine/${wc.id}`}
-    className='btn btn-gradient-grn mx-5 my-1 d-block w-100'
+    className='btn btn-gradient-grn my-1 d-block w-100'
   >
     <h6>{titleline}</h6>
     <p>{infoline}</p>
