@@ -1,11 +1,13 @@
 'use client';
 import { Card, Col, Container, Nav, Row, TabContainer, TabContent, Table, TabPane } from "react-bootstrap";
-import { WordCloud, Word } from "@prisma/client";
+import { WordCloud, Word, Comment } from "@prisma/client";
 import WordCloudVisualizer from "./WordCloudVisualizer";
 import { getFormattedData } from "@/lib/WordCloudActions";
 import { useState } from 'react';
+import AddCommentForm from "./AddCommentForm";
+import CommentItem from "./CommentItem";
 
-const WordCloudExaminer = ({wordclouddata, words}: {wordclouddata: WordCloud, words: Word[]}) => {
+const WordCloudExaminer = ({wordclouddata, words, comments}: {wordclouddata: WordCloud, words: Word[], comments: Comment[]}) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const collapsedRowsCount: number = 5;
   const firstfiveRows = isExpanded ? words : words.slice(0, collapsedRowsCount);
@@ -89,7 +91,13 @@ const WordCloudExaminer = ({wordclouddata, words}: {wordclouddata: WordCloud, wo
 
                 </TabPane>
                 <TabPane eventKey="comments">
-
+                  <AddCommentForm wcid={wordclouddata.id}/>
+                  {comments.map((entry) => (
+                    <Container key={entry.id}>
+                      <hr/>
+                      <CommentItem comment={entry}/>
+                    </Container>
+                  ))}
                 </TabPane>
               </TabContent>
             </Row>

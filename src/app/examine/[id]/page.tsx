@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { VisibilityType, Word, WordCloud } from '@prisma/client';
+import { Comment, VisibilityType, Word, WordCloud } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 import WordCloudExaminer from '@/components/ViewWordCloudComp';
@@ -40,6 +40,11 @@ export default async function ExamineWordCloud({ params }: { params: { id: strin
       wordcloudId: wordcloud?.id
     }
   });
+  const comments: Comment[] = await prisma.comment.findMany({
+    where: {
+      wordcloudId: wordcloud?.id
+    }
+  })
   const bookmarkFound = await prisma.bookmarkedWC.findUnique({
     where: {
       userId_wordcloudId: {
@@ -61,7 +66,12 @@ export default async function ExamineWordCloud({ params }: { params: { id: strin
             <h1 className="text-wrap text-break">{wordcloud.title}</h1>
             <h4>Created by {wordcloud.owner}</h4>
           </Col>
-          <Col className="justify-content-end">
+        </Row>
+        <Row>
+          <Col>
+            <h6>({wordcloud.createdAt.toLocaleDateString('en-US')})</h6>
+          </Col>
+          <Col className="d-flex justify-content-end align-items-center">
             {(currentUser == wordcloud.owner || isEditor) && (
               <Link 
                 key={wordcloud.title} 
@@ -81,12 +91,14 @@ export default async function ExamineWordCloud({ params }: { params: { id: strin
           </Col>
         </Row>
         <Row>
-          <h6>({wordcloud.createdAt.toLocaleDateString('en-US')})</h6>
-          <h6 className="text-wrap text-break">[{wordcloud.tags.join('] [')}]</h6>
+          <Col>
+            <h6 className="text-wrap text-break">[{wordcloud.tags.join('] [')}]</h6>
+          </Col>
         </Row>
         <WordCloudExaminer 
-        wordclouddata={wordcloud} 
-        words={words} 
+        wordclouddata={wordcloud}
+        words={words}
+        comments={comments}
         />
       </Container>
     </main>

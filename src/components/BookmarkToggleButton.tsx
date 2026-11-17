@@ -1,7 +1,5 @@
 "use client";
-
 import { useOptimistic, useTransition } from "react";
-// import { Bookmark } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { revalidatepage, toggleWCBookmark } from "@/lib/dbActions";
 import { Bookmark, BookmarkCheckFill } from "react-bootstrap-icons";
