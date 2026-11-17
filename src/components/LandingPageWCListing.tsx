@@ -1,7 +1,15 @@
 import { prisma } from "@/lib/prisma";
 import { VisibilityType } from "@prisma/client";
-import { Col, Container, Row } from "react-bootstrap";
-import WordCloudViewLink from "./WordcloudViewingLink";
+import { Card, Col, Container, Row } from "react-bootstrap";
+import Link from "next/link";
+
+
+function truncateString(str: string, limit: number) {
+  if (str.length > limit) {
+    return str.slice(0, limit-2) +"...";
+  }
+  return str
+}
 
 const LandingPageListing = async () => {
   const newestWordclouds = await prisma.wordCloud.findMany({
@@ -34,13 +42,37 @@ const LandingPageListing = async () => {
     </Row>
     <Row>
       <Col className="w-50">
-        {newestWordclouds.map((wc) => (
-        <WordCloudViewLink key={wc.title} wc={wc}/>
+        {newestWordclouds.map((wordcloud) => (
+            <Col md={6} lg={4} key={wordcloud.id} className="mb-3">
+            <Link
+                href={`/examine/${wordcloud.id}`}
+                className='text-decoration-none text-reset'
+            >
+            <Card className="h-100">
+                <div className="card-body">
+                <h5 className="card-title">{wordcloud.title}</h5>
+                <p className="card-text">{truncateString(wordcloud.description, 32)}</p>
+                </div>
+            </Card>
+            </Link>
+            </Col>
         ))}
       </Col>
       <Col className="w-50">
-        {popularWorclouds.map((wc) => (
-        <WordCloudViewLink key={wc.title} wc={wc} />
+        {popularWorclouds.map((wordcloud) => (
+            <Col md={6} lg={4} key={wordcloud.id} className="mb-3">
+            <Link
+                href={`/examine/${wordcloud.id}`}
+                className='text-decoration-none text-reset'
+            >
+            <Card className="h-100">
+                <div className="card-body">
+                <h5 className="card-title">{wordcloud.title}</h5>
+                <p className="card-text">{truncateString(wordcloud.description, 32)}</p>
+                </div>
+            </Card>
+            </Link>
+            </Col>
         ))}
       </Col>
     </Row>

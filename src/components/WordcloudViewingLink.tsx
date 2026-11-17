@@ -3,7 +3,7 @@ import { WordCloud } from "@prisma/client";
 import Link from "next/link";
 import { languageSet } from "@/lib/WordCloudActions";
 
-function truncateString(str: string, limit: number) {
+export function truncateString(str: string, limit: number) {
   if (str.length > limit) {
     return str.slice(0, limit-2) +"...";
   }

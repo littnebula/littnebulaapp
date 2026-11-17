@@ -45,7 +45,7 @@ const AddCommentForm = ({ wcid }: {wcid: number}) => {
             <input
               type='text'
               {...register('comment')}
-              className={`form-control ${errors.comment ? 'is-invalid' : ''}`}
+              className={`form-control ${errors.comment ? 'is-invalid' : ''} bg-dark text-light`}
               placeholder='Your Thoughts...'
             />
             <div className="invalid-feedback">{errors.comment?.message}</div>
