@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation';
 import { VisibilityType, Word, WordCloud } from '@prisma/client';
-// import { loggedInProtectedPage } from '@/lib/page-protection';
+
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
-// import EditStuffForm from '@/components/EditStuffForm';
 import WordCloudExaminer from '@/components/ViewWordCloudComp';
 import { Container } from 'react-bootstrap';
-import Link from 'next/link';
 import NotAuthorized from '@/app/not-authorized/page';
+import { incrementWordCloudViews } from '@/lib/dbActions';
+
 
 export default async function ExamineWordCloud({ params }: { params: { id: string | string[] } }) {
   const { id } = await params;
@@ -37,22 +37,18 @@ export default async function ExamineWordCloud({ params }: { params: { id: strin
       wordcloudId: wordcloud?.id
     }
   });
+  if (!(currentUser == wordcloud.owner || isEditor)) {
+    incrementWordCloudViews(wordcloud.id);
+  }
   return (
     <main>
-      {/* <EditStuffForm stuff={stuff} /> */}
-      {(currentUser == wordcloud.owner || isEditor) && (
-        <Container>
-          <Link 
-            key={wordcloud.title} 
-            href={`/edit/${wordcloud.id}`}
-            className='btn btn-solid-grn'
-            
-          >
-            EDIT
-          </Link>
-        </Container>
-      )}
-      <WordCloudExaminer wordclouddata={wordcloud} words={words} />
+      <Container>
+        <WordCloudExaminer 
+        wordclouddata={wordcloud} 
+        words={words} 
+        canEdit={(currentUser == wordcloud.owner || isEditor)}
+        />
+      </Container>
     </main>
   );
 }

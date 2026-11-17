@@ -1,11 +1,13 @@
 'use client';
-import { Card, Col, Container, Row, Table } from "react-bootstrap";
+import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
 import { WordCloud, Word } from "@prisma/client";
 import WordCloudVisualizer from "./WordCloudVisualizer";
 import { getFormattedData } from "@/lib/WordCloudActions";
-import React, { useState } from 'react';
+import { useState } from 'react';
+import Link from "next/link";
+import { PencilSquare, Bookmark, BookmarkCheckFill } from 'react-bootstrap-icons';
 
-const WordCloudExaminer = ({wordclouddata, words}: {wordclouddata: WordCloud, words: Word[]}) => {
+const WordCloudExaminer = ({wordclouddata, words, canEdit}: {wordclouddata: WordCloud, words: Word[], canEdit: boolean}) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const collapsedRowsCount: number = 5;
   const firstfiveRows = isExpanded ? words : words.slice(0, collapsedRowsCount);
@@ -13,10 +15,25 @@ const WordCloudExaminer = ({wordclouddata, words}: {wordclouddata: WordCloud, wo
   return (
     <Container fluid className="py-3">
       <Row>
-        <h1 className="text-wrap text-break">{wordclouddata.title}</h1>
-        <h4>Created by {wordclouddata.owner}</h4>
-        <h6>({wordclouddata.createdAt.toLocaleDateString('en-US')})</h6>
-        <h6 className="text-wrap text-break">[{wordclouddata.tags.join('] [')}]</h6>
+        <Col>
+          <h1 className="text-wrap text-break">{wordclouddata.title}</h1>
+          <h4>Created by {wordclouddata.owner}</h4>
+          <h6>({wordclouddata.createdAt.toLocaleDateString('en-US')})</h6>
+          <h6 className="text-wrap text-break">[{wordclouddata.tags.join('] [')}]</h6>
+        </Col>
+        
+        <Col className="justify-content-end">
+          {canEdit && (
+            <Link 
+              key={wordclouddata.title} 
+              href={`/edit/${wordclouddata.id}`}
+              className='btn btn-solid-grn'
+            >
+              <PencilSquare/> Edit
+            </Link>
+          )}
+          <Button></Button>
+        </Col>
       </Row>
       <Row>          
         <WordCloudVisualizer 
@@ -24,7 +41,19 @@ const WordCloudExaminer = ({wordclouddata, words}: {wordclouddata: WordCloud, wo
         sizing={1.0}/>
       </Row>
       <Row>
-        <Card id="darkcard1" className="my-2">
+        <Card id="darkcard1" className="my-1">
+          <Row>
+            <Col>
+              <p>{wordclouddata.views} Views</p>
+            </Col>
+            <Col>
+              <p>{wordclouddata.bookmarks} Bookmarks</p>
+            </Col>
+          </Row>
+        </Card>
+      </Row>
+      <Row>
+        <Card id="darkcard1">
           <h4>Description: </h4>
           <p className="text-wrap text-break">{wordclouddata.description}</p>
           <hr/>
@@ -68,7 +97,6 @@ const WordCloudExaminer = ({wordclouddata, words}: {wordclouddata: WordCloud, wo
       </Row>
     </Container>
   )
-  
 };
 
 export default WordCloudExaminer;
