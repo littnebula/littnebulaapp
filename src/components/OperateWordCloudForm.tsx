@@ -150,7 +150,10 @@ const OperateWordCloudForm = ({ wc }: { wc: WordCloud }) => {
     <Container className="py-3">
       <Row className="justify-content-center">
         <Col>
-          <Card>
+          <Card id="darkcard1">
+            <Card.Header className="text-center">
+              <h2>Word Operations</h2>
+            </Card.Header>
             <Card.Body>
               <IgnoreOperationbyText wordcloudId={wc.id}/>
               <IgnoreOperationbyValue wordcloudId={wc.id}/>

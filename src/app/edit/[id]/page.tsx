@@ -7,6 +7,7 @@ import { auth } from '@/lib/auth';
 import EditWordCloudForm from '@/components/EditWordCloudForm';
 import { Col, Container, Row } from 'react-bootstrap';
 import OperateWordCloudForm from '@/components/OperateWordCloudForm';
+import DeleteWordCloudButton from '@/components/DeleteWordCloudButton';
 
 export default async function EditStuffPage({ params }: { params: { id: string | string[] } }) {
   const { id } = await params;
@@ -37,6 +38,9 @@ export default async function EditStuffPage({ params }: { params: { id: string |
           <Col>
             <EditWordCloudForm wc={wordcloud} />
           </Col>
+        </Row>
+        <Row>
+          <DeleteWordCloudButton wordcloudId={wordcloud.id}/>
         </Row>
       </Container>
     </main>

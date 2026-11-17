@@ -52,10 +52,10 @@ const EditWordCloudForm = ({ wc }: { wc: WordCloud }) => {
     <Container className="py-3">
       <Row className="justify-content-center">
         <Col>
-          <Col className="text-center">
-            <h2>Edit Word Cloud</h2>
-          </Col>
-          <Card>
+          <Card id='darkcard1'>
+            <Card.Header className="text-center">
+              <h2>Edit Word Cloud</h2>
+            </Card.Header>
             <Card.Body>
               <Form onSubmit={handleSubmit(onSubmit)}>
                 <input type="hidden" {...register('id')} value={wc.id} />
