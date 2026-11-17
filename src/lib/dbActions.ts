@@ -267,3 +267,32 @@ export async function deleteWord(id: number) {
     where: { id },
   });
 }
+
+export async function toggleWCBookmark(userId: number, wordcloudId: number) {
+  const existingBookmark = await prisma.bookmarkedWC.findUnique({
+    where: {
+      userId_wordcloudId: {
+        userId,
+        wordcloudId,
+      },
+    },
+  });
+
+  if (existingBookmark) {
+    await prisma.bookmarkedWC.delete({
+      where: {
+        userId_wordcloudId: {
+          userId,
+          wordcloudId,
+        },
+      },
+    });
+  } else {
+    await prisma.bookmarkedWC.create({
+      data: {
+        userId,
+        wordcloudId,
+      },
+    });
+  }
+}
