@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { WordCloud } from '@prisma/client';
+import { Word, WordCloud } from '@prisma/client';
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
@@ -8,6 +8,7 @@ import EditWordCloudForm from '@/components/EditWordCloudForm';
 import { Col, Container, Row } from 'react-bootstrap';
 import OperateWordCloudForm from '@/components/OperateWordCloudForm';
 import DeleteWordCloudButton from '@/components/DeleteWordCloudButton';
+import WordListing from '@/components/ListWordsFromCloud';
 
 export default async function EditStuffPage({ params }: { params: { id: string | string[] } }) {
   const { id } = await params;
@@ -27,10 +28,18 @@ export default async function EditStuffPage({ params }: { params: { id: string |
   if (!wordcloud) {
     return notFound();
   }
+  const words: Word[] = await prisma.word.findMany({
+    where: {
+      wordcloudId: editID,
+    },
+    orderBy: {
+      value: "desc",
+    }
+  })
 
   return (
     <main>
-      <Container className='p-4'>
+      <Container className='p-2'>
         <Row>
           <Col>
             <OperateWordCloudForm wc={wordcloud} />
@@ -40,7 +49,12 @@ export default async function EditStuffPage({ params }: { params: { id: string |
           </Col>
         </Row>
         <Row>
-          <DeleteWordCloudButton wordcloudId={wordcloud.id}/>
+          <Col>
+            <WordListing words={words}/>
+          </Col>
+          <Col>
+            <DeleteWordCloudButton wordcloudId={wordcloud.id}/>
+          </Col>
         </Row>
       </Container>
     </main>

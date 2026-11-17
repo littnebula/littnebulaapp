@@ -218,6 +218,32 @@ export async function onIgnoreValue({threshold, wcid}: {threshold: number, wcid:
   });
 }
 
+export async function reEnableText({words, wcid}: {words: string, wcid: number}) {
+  const wordset: string[] = words.toUpperCase().split(' ').filter((str) => str.trim().length > 0);
+  await prisma.word.updateMany({
+    where: {
+      wordcloudId: wcid,
+      text: { in: wordset }, 
+      value: { lt: 0},
+      },
+    data: {
+      value: { multiply: -1.0 }
+    },
+  });
+}
+
+export async function reEnableValue({threshold, wcid}: {threshold: number, wcid: number}) {
+  await prisma.word.updateMany({
+    where: {
+      wordcloudId: wcid,
+      value: { lt: threshold },
+      },
+    data: {
+      value: { multiply: -1.0 }
+    },
+  });
+}
+
 export async function deleteText({words, wcid}: {words: string, wcid: number}) {
   const wordset: string[] = words.toUpperCase().split(' ').filter((str) => str.trim().length > 0);
   await prisma.word.deleteMany({
@@ -258,12 +284,11 @@ export async function deleteWordCloud(id: number) {
   await prisma.wordCloud.delete({
     where: { id },
   });
-  // After deleting, redirect to the list page
+  // After deleting, redirect to the landing page
   redirect('/');
 }
 
 export async function deleteWord(id: number) {
-  // console.log(`deleteWord id: ${id}`);
   await prisma.word.delete({
     where: { id },
   });

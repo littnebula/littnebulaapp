@@ -38,6 +38,9 @@ export default async function ExamineWordCloud({ params }: { params: { id: strin
   const words: Word[] = await prisma.word.findMany({
     where: {
       wordcloudId: wordcloud?.id
+    },
+    orderBy: {
+      value: "desc",
     }
   });
   const comments: Comment[] = await prisma.comment.findMany({
