@@ -24,16 +24,19 @@ const ListPage = async () => {
     <main>
       <Container id="list" fluid className="py-3">
         <Row>
+          <h2>My Dashboard</h2>
+        </Row>
+        <Row>
           <Col>
-            <Card id="darkcard1">
-              <h1 className='m-auto'>Controlled Territories</h1>
+            <Card id="darkcard1" className='p-4'>
+              <h3 className='m-auto'>Controlled Territories</h3>
               <Container className='d-flex justify-content-center'>
                 <Link href='/add' className="btn btn-primary btn-lg my-2">
                   Embark on New Voyage
                 </Link>
               </Container>
             
-              <h1 className='m-auto'>My Voyages</h1>
+              <h4 className='m-auto'>My Voyages</h4>
               <hr/>
               {ownedwc.map((wc) => (
                 <WordCloudViewLink key={wc.title} wc={wc} />
@@ -42,7 +45,7 @@ const ListPage = async () => {
           </Col>
           <Col>
             <Card id='darkcard1'>
-              <h1 className='m-auto'>Recently Explored</h1>
+              <h3 className='m-auto'>Recently Explored</h3>
             </Card>
           </Col>
         </Row>
