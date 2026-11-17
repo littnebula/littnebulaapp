@@ -78,3 +78,14 @@ footer, footer a {
   color: #c5c5c5;
   opacity: 0.5;
 }
+
+.gray-pills {
+  /* Inactive link text color */
+  --bs-nav-link-color: #9b9b9b;
+  /* Hover text color */
+  --bs-nav-link-hover-color: #efefef;
+  /* Active pill background color */
+  --bs-nav-pills-link-active-bg: #545454;
+  /* Active pill text color */
+  --bs-nav-pills-link-active-color: #ffffff;
+}

@@ -30,7 +30,7 @@ const WordCloudExaminer = ({wordclouddata, words, comments}: {wordclouddata: Wor
       <Row>
         <Card id="darkcard1" className="p-2">
           <TabContainer defaultActiveKey="desc">
-            <Nav variant="pills">
+            <Nav variant="pills" className="gray-pills">
               <Row>
                 <Col>
                   <Nav.Link eventKey="desc">Description</Nav.Link>
