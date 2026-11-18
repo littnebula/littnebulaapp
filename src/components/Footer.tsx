@@ -11,7 +11,7 @@ const Footer = () => (
         <br />
         Honolulu, HI 96822
         <br />
-        <a href="https://littnebula.github.io/">LittNebula Orgaanization</a>
+        <a href="https://littnebula.github.io/">LittNebula Organization</a>
       </Col>
     </Container>
   </footer>

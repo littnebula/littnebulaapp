@@ -2,6 +2,7 @@
 import { WordCloud } from "@prisma/client"
 import Link from "next/link"
 import { Card, Col, Container, Nav, Row, TabContainer, TabContent, TabPane } from "react-bootstrap"
+import { truncateString } from "./WordcloudViewingLink";
 
 const UserDashboard = ({ownedwc, bookmarkedwc, recentwc}: {ownedwc: WordCloud[], bookmarkedwc: WordCloud[], recentwc: WordCloud[]}) => {
   return (
@@ -45,8 +46,8 @@ const UserDashboard = ({ownedwc, bookmarkedwc, recentwc}: {ownedwc: WordCloud[],
                     >
                     <Card className="h-100">
                         <div className="card-body">
-                        <h5 className="card-title">{wordcloud.title}</h5>
-                        <p className="card-text">{wordcloud.description}</p>
+                        <h5 className="card-title">{truncateString(wordcloud.title, 32)}</h5>
+                        <p className="card-text">{truncateString(wordcloud.description, 32)}</p>
                         </div>
                     </Card>
                     </Link>
@@ -64,8 +65,8 @@ const UserDashboard = ({ownedwc, bookmarkedwc, recentwc}: {ownedwc: WordCloud[],
                     >
                     <Card className="h-100">
                         <div className="card-body">
-                        <h5 className="card-title">{wordcloud.title}</h5>
-                        <p className="card-text">{wordcloud.description}</p>
+                        <h5 className="card-title">{truncateString(wordcloud.title, 32)}</h5>
+                        <p className="card-text">{truncateString(wordcloud.description, 32)}</p>
                         </div>
                     </Card>
                     </Link>
@@ -83,8 +84,8 @@ const UserDashboard = ({ownedwc, bookmarkedwc, recentwc}: {ownedwc: WordCloud[],
                     >
                     <Card className="h-100">
                         <div className="card-body">
-                        <h5 className="card-title">{wordcloud.title}</h5>
-                        <p className="card-text">{wordcloud.description}</p>
+                        <h5 className="card-title">{truncateString(wordcloud.title, 32)}</h5>
+                        <p className="card-text">{truncateString(wordcloud.description, 32)}</p>
                         </div>
                     </Card>
                     </Link>

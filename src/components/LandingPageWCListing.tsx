@@ -43,40 +43,37 @@ const LandingPageListing = async () => {
     <Row>
       <Col className="w-50">
         {newestWordclouds.map((wordcloud) => (
-            <Col md={6} lg={4} key={wordcloud.id} className="mb-3">
-            <Link
-                href={`/examine/${wordcloud.id}`}
-                className='text-decoration-none text-reset'
-            >
-            <Card className="h-100">
-                <div className="card-body">
-                <h5 className="card-title">{wordcloud.title}</h5>
-                <p className="card-text">{truncateString(wordcloud.description, 32)}</p>
-                </div>
-            </Card>
-            </Link>
-            </Col>
+          <Link
+            key={wordcloud.id}
+            href={`/examine/${wordcloud.id}`}
+            className='text-decoration-none text-reset'
+          >
+          <Card className="h-100">
+            <div className="card-body">
+            <h5 className="card-title">{truncateString(wordcloud.title, 32)}</h5>
+            <p className="card-text">{truncateString(wordcloud.description, 32)}</p>
+            </div>
+          </Card>
+          </Link>
         ))}
       </Col>
       <Col className="w-50">
         {popularWorclouds.map((wordcloud) => (
-            <Col md={6} lg={4} key={wordcloud.id} className="mb-3">
-            <Link
-                href={`/examine/${wordcloud.id}`}
-                className='text-decoration-none text-reset'
-            >
-            <Card className="h-100">
-                <div className="card-body">
-                <h5 className="card-title">{wordcloud.title}</h5>
-                <p className="card-text">{truncateString(wordcloud.description, 32)}</p>
-                </div>
-            </Card>
-            </Link>
-            </Col>
+          <Link
+            key={wordcloud.id}
+            href={`/examine/${wordcloud.id}`}
+            className='text-decoration-none text-reset d-block'
+          >
+          <Card className="w-100 h-100">
+            <div className="card-body">
+            <h5 className="card-title">{truncateString(wordcloud.title, 32)}</h5>
+            <p className="card-text">{truncateString(wordcloud.description, 32)}</p>
+            </div>
+          </Card>
+          </Link>
         ))}
       </Col>
     </Row>
-    
   </Container>
 )};
 
