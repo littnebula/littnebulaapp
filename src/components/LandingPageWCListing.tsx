@@ -46,7 +46,7 @@ const LandingPageListing = async () => {
           <Link
             key={wordcloud.id}
             href={`/examine/${wordcloud.id}`}
-            className='text-decoration-none text-reset d-block'
+            className='text-decoration-none text-reset d-block px-4 py-1'
           >
           <Card className="w-100 h-100">
             <div className="card-body">
@@ -62,7 +62,7 @@ const LandingPageListing = async () => {
           <Link
             key={wordcloud.id}
             href={`/examine/${wordcloud.id}`}
-            className='text-decoration-none text-reset d-block'
+            className='text-decoration-none text-reset d-block px-4 py-1'
           >
           <Card className="w-100 h-100">
             <div className="card-body">
