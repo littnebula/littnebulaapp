@@ -22,6 +22,7 @@ export default async function EditWordCloudPage({ params }: { params: { id: stri
     } | null,
   );
   const editID: number = +id;
+  const usermail: string = session?.user?.email || ' ';
   const wordcloud: WordCloud | null = await prisma.wordCloud.findUnique({
     where: {
       id: editID,
@@ -59,9 +60,11 @@ export default async function EditWordCloudPage({ params }: { params: { id: stri
           </Col>
           <Col>
             <EditWordCloudForm wc={wordcloud} />
-            <Container className='p-4 justify-content-end d-flex'>
+            {(usermail === wordcloud.owner) && (
+              <Container className='p-4 justify-content-end d-flex'>
               <DeleteWordCloudButton wordcloudId={wordcloud.id}/>
-            </Container>
+              </Container>
+            )}
           </Col>
         </Row>
       </Container>
