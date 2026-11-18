@@ -46,9 +46,9 @@ const LandingPageListing = async () => {
           <Link
             key={wordcloud.id}
             href={`/examine/${wordcloud.id}`}
-            className='text-decoration-none text-reset'
+            className='text-decoration-none text-reset d-block'
           >
-          <Card className="h-100">
+          <Card className="w-100 h-100">
             <div className="card-body">
             <h5 className="card-title">{truncateString(wordcloud.title, 32)}</h5>
             <p className="card-text">{truncateString(wordcloud.description, 32)}</p>
