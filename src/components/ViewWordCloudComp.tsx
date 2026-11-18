@@ -1,74 +1,78 @@
 'use client';
-import { Card, Col, Container, Row, Table } from "react-bootstrap";
-import { WordCloud, Word } from "@prisma/client";
+import { Card, Col, Container, Nav, Row, TabContainer, TabContent, TabPane } from "react-bootstrap";
+import { WordCloud, Word, Comment } from "@prisma/client";
 import WordCloudVisualizer from "./WordCloudVisualizer";
 import { getFormattedData } from "@/lib/WordCloudActions";
-import React, { useState } from 'react';
+import AddCommentForm from "./AddCommentForm";
+import CommentItem from "./CommentItem";
+import WordListing from "./ListWordsFromCloud";
 
-const WordCloudExaminer = ({wordclouddata, words}: {wordclouddata: WordCloud, words: Word[]}) => {
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const collapsedRowsCount: number = 5;
-  const firstfiveRows = isExpanded ? words : words.slice(0, collapsedRowsCount);
-  const hasmoreRows = words.length > collapsedRowsCount;
+const WordCloudExaminer = ({wordclouddata, words, comments}: {wordclouddata: WordCloud, words: Word[], comments: Comment[]}) => {
   return (
     <Container fluid className="py-3">
-      <Row>
-        <h1 className="text-wrap text-break">{wordclouddata.title}</h1>
-        <h4>Created by {wordclouddata.owner}</h4>
-        <h6>({wordclouddata.createdAt.toLocaleDateString('en-US')})</h6>
-        <h6 className="text-wrap text-break">[{wordclouddata.tags.join('] [')}]</h6>
-      </Row>
       <Row>          
         <WordCloudVisualizer 
         FormattedWordCloudData={getFormattedData(words, wordclouddata.displayCount)}
         sizing={1.0}/>
       </Row>
       <Row>
-        <Card id="darkcard1" className="my-2">
-          <h4>Description: </h4>
-          <p className="text-wrap text-break">{wordclouddata.description}</p>
-          <hr/>
-          <h4>Bibliography</h4>
-          <p className="text-wrap text-break">{wordclouddata.bibliography}</p>
+        <Card id="darkcard1" className="my-1">
+          <Row>
+            <Col>
+              <p className="fs-4">{wordclouddata.views} Views</p>
+            </Col>
+            <Col>
+              <p className="fs-4">{wordclouddata.bookmarks} Bookmarks</p>
+            </Col>
+          </Row>
         </Card>
       </Row>
       <Row>
-        <Col>
-          <h2 className="text-wrap text-break">All Words for: {wordclouddata.title} </h2>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Unique Word</th>
-                <th className="text-start">Count</th>
-                <th className="text-start">Annotation</th>
-              </tr>
-            </thead>
-            <tbody>
-              {firstfiveRows.map((w) => (
-                <tr key={w.text}>
-                  <td>{w.text}</td>
-                  <td className="text-start">{w.value}</td>
-                  <td className="text-start">{w.annotation}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-          {hasmoreRows && (
-            <button
-              type="button"
-              onClick={() => setIsExpanded((toggle) => !toggle)}
-              aria-expanded={isExpanded}
-            >
-              {isExpanded
-              ? 'Show Less'
-              : `Show All (${words.length - collapsedRowsCount} more)`}
-            </button>
-          )}
-        </Col>
+        <Card id="darkcard1" className="p-2">
+          <TabContainer defaultActiveKey="desc">
+            <Nav variant="pills" className="gray-pills">
+              <Row>
+                <Col>
+                  <Nav.Link eventKey="desc">Description</Nav.Link>
+                </Col>
+                <Col>
+                  <Nav.Link eventKey="bib">Bibliography</Nav.Link>
+                </Col>
+                <Col>
+                  <Nav.Link eventKey="wordlist">Word List</Nav.Link>
+                </Col>
+                <Col>
+                  <Nav.Link eventKey="comments">Comments</Nav.Link>
+                </Col>
+              </Row>
+            </Nav>
+            <Row>
+              <TabContent>
+                <TabPane eventKey="desc">
+                  <p className="text-wrap text-break">{wordclouddata.description}</p>
+                </TabPane>
+                <TabPane eventKey="bib">
+                  <p className="text-wrap text-break">{wordclouddata.bibliography}</p>
+                </TabPane>
+                <TabPane eventKey="wordlist">
+                  <WordListing words={words} />
+                </TabPane>
+                <TabPane eventKey="comments">
+                  <AddCommentForm wcid={wordclouddata.id}/>
+                  {comments.map((entry) => (
+                    <Container key={entry.id}>
+                      <hr/>
+                      <CommentItem comment={entry}/>
+                    </Container>
+                  ))}
+                </TabPane>
+              </TabContent>
+            </Row>
+          </TabContainer>
+        </Card>
       </Row>
     </Container>
   )
-  
 };
 
 export default WordCloudExaminer;

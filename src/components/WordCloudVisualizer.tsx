@@ -20,7 +20,8 @@ const WordCloudVisualizer = ({FormattedWordCloudData, sizing}: {FormattedWordClo
             height={200 *sizing}
             rotate={() => 0}
             fill={'white'}
-            random={() => 0}
+            random={() => 0.5}
+            timeInterval={Infinity}
           />
         </div>
       </Card>

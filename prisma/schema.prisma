@@ -39,7 +39,7 @@ model Word {
 	text        String
 	value       Int
 	annotation  String    @default("")
-  wordcloud   WordCloud @relation(fields: [wordcloudId], references: [id])
+  wordcloud   WordCloud @relation(fields: [wordcloudId], references: [id], onDelete: Cascade)
   wordcloudId Int
 }
 
@@ -115,7 +115,7 @@ model Comment {
 	owner       String
 	comment     String
 	timestamp   DateTime  @default(now())
-  wordcloud   WordCloud @relation(fields: [wordcloudId], references: [id])
+  wordcloud   WordCloud @relation(fields: [wordcloudId], references: [id], onDelete: Cascade)
   wordcloudId Int
 }
 

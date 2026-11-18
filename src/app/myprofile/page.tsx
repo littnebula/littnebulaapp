@@ -1,8 +1,8 @@
-import { Card, Col, Container, Row, } from 'react-bootstrap';
+import { Container, } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import { auth } from '@/lib/auth';
-import Link from 'next/link';
+import UserDashboard from '@/components/UserDashboard';
 
 /** Render a list of stuff for the logged in user. */
 const ListPage = async () => {
@@ -14,44 +14,27 @@ const ListPage = async () => {
     } | null,
   );
   const owner = (session && session.user && session.user.email) || '';
+  const ownerId: number = +(session?.user?.id || 0); 
   const ownedwc = await prisma.wordCloud.findMany({
     where: {
       owner,
     },
   });
+  const markedwc = await prisma.bookmarkedWC.findMany({
+    where: {
+      userId: ownerId
+    },
+    include: {
+      wordcloud: true
+    }
+  })
   return (
     <main>
       <Container id="list" fluid className="py-3">
-        <Row>
-          <Col>
-            <Card id="darkcard1">
-              <h1 className='m-auto'>Controlled Territories</h1>
-              <Container className='d-flex justify-content-center'>
-                <Link href='/add' className="btn btn-primary btn-lg my-2">
-                  Embark on New Voyage
-                </Link>
-              </Container>
-            
-              <h1 className='m-auto'>My Voyages</h1>
-              <hr/>
-              {ownedwc.map((wc) => (
-                <Link 
-                  key={wc.title} 
-                  href={`/examine/${wc.id}`}
-                  className='btn btn-gradient-grn mx-5 my-1'
-                >
-                  <h4>{wc.title}</h4>
-                  <h6>[{wc.tags.slice(0, 3).join(", ")} {(wc.tags.length > 3 && (", ..."))} ]</h6>
-                </Link>
-              ))}
-            </Card>
-          </Col>
-          <Col>
-            <Card id='darkcard1'>
-              <h1 className='m-auto'>Recently Explored</h1>
-            </Card>
-          </Col>
-        </Row>
+        <UserDashboard 
+        ownedwc={ownedwc}
+        bookmarkedwc={markedwc.map((bkm) => bkm.wordcloud)}
+        recentwc={ownedwc}/>
       </Container>
     </main>
   );

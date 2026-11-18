@@ -5,6 +5,7 @@ import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
 import { generateWordCloudData, WCGenData  } from './WordCloudActions';
+import { revalidatePath } from 'next/cache';
 
 /**
  * Adds a new stuff to the database.
@@ -191,7 +192,7 @@ export async function incrementWordCloudViews(id: number) {
   });
 }
 
-export async function onIgnoreText({words, wcid}: {words: string, wcid: number}) {
+export async function onIgnoreText({words, wcid, path}: {words: string, wcid: number, path?: string}) {
   const wordset: string[] = words.toUpperCase().split(' ').filter((str) => str.trim().length > 0);
   await prisma.word.updateMany({
     where: {
@@ -203,9 +204,13 @@ export async function onIgnoreText({words, wcid}: {words: string, wcid: number})
       value: { multiply: -1.0 }
     },
   });
+  console.log(path)
+  if (path !== undefined) {
+    revalidatePath(path);
+  }
 }
 
-export async function onIgnoreValue({threshold, wcid}: {threshold: number, wcid: number}) {
+export async function onIgnoreValue({threshold, wcid, path}: {threshold: number, wcid: number, path?: string}) {
   await prisma.word.updateMany({
     where: {
       wordcloudId: wcid,
@@ -215,9 +220,44 @@ export async function onIgnoreValue({threshold, wcid}: {threshold: number, wcid:
       value: { multiply: -1.0 }
     },
   });
+  if (path) {
+    revalidatePath(path);
+  }
 }
 
-export async function deleteText({words, wcid}: {words: string, wcid: number}) {
+export async function reEnableText({words, wcid, path}: {words: string, wcid: number, path?: string}) {
+  const wordset: string[] = words.toUpperCase().split(' ').filter((str) => str.trim().length > 0);
+  await prisma.word.updateMany({
+    where: {
+      wordcloudId: wcid,
+      text: { in: wordset }, 
+      value: { lt: 0},
+      },
+    data: {
+      value: { multiply: -1.0 }
+    },
+  });
+  if (path) {
+    revalidatePath(path);
+  }
+}
+
+export async function reEnableValue({threshold, wcid, path}: {threshold: number, wcid: number, path?: string}) {
+  await prisma.word.updateMany({
+    where: {
+      wordcloudId: wcid,
+      value: { lt: threshold },
+      },
+    data: {
+      value: { multiply: -1.0 }
+    },
+  });
+  if (path) {
+    revalidatePath(path);
+  }
+}
+
+export async function deleteText({words, wcid, path}: {words: string, wcid: number, path?: string}) {
   const wordset: string[] = words.toUpperCase().split(' ').filter((str) => str.trim().length > 0);
   await prisma.word.deleteMany({
     where: {
@@ -225,15 +265,21 @@ export async function deleteText({words, wcid}: {words: string, wcid: number}) {
       text: { in: wordset },
     }
   });
+  if (path) {
+    revalidatePath(path);
+  }
 }
 
-export async function deleteLowValue({threshold, wcid}: {threshold: number, wcid: number}) {
+export async function deleteLowValue({threshold, wcid, path}: {threshold: number, wcid: number, path?: string}) {
   await prisma.word.deleteMany({
       where: {
       wordcloudId: wcid,
       value: {lt: threshold},
     }
   });
+  if (path) {
+    revalidatePath(path);
+  }
 }
 
 export async function increaseWord(id: number, add: number) {
@@ -257,13 +303,67 @@ export async function deleteWordCloud(id: number) {
   await prisma.wordCloud.delete({
     where: { id },
   });
-  // After deleting, redirect to the list page
-  redirect('/');
+  // After deleting, redirect to the landing page
+  redirect('/myprofile');
 }
 
 export async function deleteWord(id: number) {
-  // console.log(`deleteWord id: ${id}`);
   await prisma.word.delete({
     where: { id },
   });
+}
+
+export async function addComment({comment, wordcloudId, owner}: { comment: string, wordcloudId: number, owner: string }) {
+  await prisma.comment.create({
+    data: {
+      comment,
+      wordcloudId,
+      owner,
+    },
+  });
+}
+
+export async function toggleWCBookmark(userId: number, wordcloudId: number) {
+  const existingBookmark = await prisma.bookmarkedWC.findUnique({
+    where: {
+      userId_wordcloudId: {
+        userId,
+        wordcloudId,
+      },
+    },
+  });
+
+  if (existingBookmark) {
+    await prisma.bookmarkedWC.delete({
+      where: {
+        userId_wordcloudId: {
+          userId,
+          wordcloudId,
+        },
+      },
+    });
+    await prisma.wordCloud.update({
+      where: { id: wordcloudId },
+      data: {
+        bookmarks: { decrement: 1 },
+      },
+    });
+  } else {
+    await prisma.bookmarkedWC.create({
+      data: {
+        userId,
+        wordcloudId,
+      },
+    });
+    await prisma.wordCloud.update({
+      where: { id: wordcloudId },
+      data: {
+        bookmarks: { increment: 1 },
+      },
+    });
+  }
+}
+
+export async function revalidatepage(pagepath: string) {
+  revalidatePath(pagepath);
 }
