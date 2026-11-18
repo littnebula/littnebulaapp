@@ -12,7 +12,7 @@ const NavBar: React.FC = () => {
   const currentUser = session?.user?.email;
   const role = session?.user?.role;
   return (
-    <Navbar bg="dark" expand="lg">
+    <Navbar bg="dark" expand="lg" className='clear-navbar'>
       <Container className="justify-content-center">
         <Navbar.Brand href="/"><Image src="/litneb_logo.svg" alt="Organization logo" height={40}/></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

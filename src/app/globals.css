@@ -89,3 +89,15 @@ footer, footer a {
   /* Active pill text color */
   --bs-nav-pills-link-active-color: #ffffff;
 }
+
+.clear-navbar {
+  background-color: transparent;
+  border-bottom: 2px solid #e0e0e0; /* width | style | color */
+  padding: 1rem 2rem;
+}
+
+.gradient-footer {
+  background: linear-gradient(180deg, #000000dc, #00000051);
+  border-top: 2px solide #ffffff;
+  padding: 1rem;
+}
