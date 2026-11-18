@@ -50,7 +50,7 @@ const Search = async ({
         })
       : [];
 
-    // Wordcloud search  
+  // Search for word clouds
   const wordclouds =
     submitted && (searchType === 'all' || searchType === 'wordclouds')
       ? await prisma.wordCloud.findMany({
@@ -111,7 +111,7 @@ const Search = async ({
               />
             </Col>
 
-            <Col md={6}>
+            <Col md={3}>
               <select
                 name="type"
                 className="form-select"
@@ -123,7 +123,7 @@ const Search = async ({
               </select>
             </Col>
 
-            <Col md={6}>
+            <Col md={3}>
               <select
                 name="tag"
                 className="form-select"
@@ -138,7 +138,7 @@ const Search = async ({
               </select>
             </Col>
 
-            <Col>
+            <Col md={12}>
               <button type="submit" className="btn btn-primary">
                 Search
               </button>
