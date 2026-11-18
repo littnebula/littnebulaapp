@@ -17,6 +17,7 @@ const Search = async ({
 }: Props) => {
   const term = searchTerm.trim();
 
+  // Getting the tags
   const publicWordClouds = await prisma.wordCloud.findMany({
     where: {
       visibility: 'PUBLIC',
@@ -30,6 +31,7 @@ const Search = async ({
     new Set(publicWordClouds.flatMap((wordcloud) => wordcloud.tags)),
   ).sort();
 
+  // Searching for users with email
   const users =
     submitted && (searchType === 'all' || searchType === 'users')
       ? await prisma.user.findMany({
@@ -48,6 +50,7 @@ const Search = async ({
         })
       : [];
 
+    // Wordcloud search  
   const wordclouds =
     submitted && (searchType === 'all' || searchType === 'wordclouds')
       ? await prisma.wordCloud.findMany({
