@@ -38,7 +38,7 @@ const AdminPage = async () => {
         <Row>
           <Col>
             <h1>All Word Clouds</h1>
-            <Table striped bordered hover>
+            <Table striped bordered hover variant="dark">
               <thead>
                 <tr>
                   <th>Title</th>
@@ -72,7 +72,7 @@ const AdminPage = async () => {
         <Row>
           <Col>
             <h1>All Users</h1>
-            <Table striped bordered hover>
+            <Table striped bordered hover variant="dark">
               <thead>
                 <tr>
                   <th>Email</th>

@@ -105,7 +105,7 @@ const Search = async ({
               <input
                 type="text"
                 name="q"
-                className="form-control"
+                className="form-control bg-dark text-light"
                 placeholder="Search users or word clouds..."
                 defaultValue={term}
               />
@@ -185,20 +185,27 @@ const Search = async ({
                 <Row>
                   {wordclouds.map((wordcloud) => (
                     <Col xs={12} key={wordcloud.id} className="mb-3">
-                      <Card
-                        className="h-100"
-                        style={{ maxWidth: '400px' }}
+                      <Link
+                        href={`/examine/${wordcloud.id}`}
+                        className="text-decoration-none text-reset"
                       >
-                        <div className="card-body">
-                          <h5 className="card-title">{wordcloud.title}</h5>
+                        <Card
+                          className="h-100"
+                          style={{ maxWidth: '400px' }}
+                        >
+                          <div className="card-body">
+                            <h5 className="card-title">
+                              {wordcloud.title}
+                            </h5>
 
-                          <p className="card-text">
-                            {wordcloud.description}
-                          </p>
+                            <p className="card-text">
+                              {wordcloud.description}
+                            </p>
 
-                          <p>Tags: {wordcloud.tags.join(', ')}</p>
-                        </div>
-                      </Card>
+                            <p>Tags: {wordcloud.tags.join(', ')}</p>
+                          </div>
+                        </Card>
+                      </Link>
                     </Col>
                   ))}
                 </Row>
