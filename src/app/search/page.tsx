@@ -5,18 +5,20 @@ type Props = {
     q?: string;
     type?: string;
     tag?: string;
+    sort?: string;
     submitted?: string;
   }>;
 };
 
 const SearchPage = async ({ searchParams }: Props) => {
-  const { q, type, tag, submitted } = await searchParams;
+  const { q, type, tag, sort, submitted } = await searchParams;
 
   return (
     <Search
       searchTerm={q || ''}
       searchType={type || 'all'}
       selectedTag={tag || ''}
+      sortBy={sort || 'recent'}
       submitted={submitted === 'true'}
     />
   );
