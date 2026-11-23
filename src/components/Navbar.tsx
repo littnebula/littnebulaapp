@@ -23,9 +23,6 @@ const NavBar: React.FC = () => {
                 <Nav.Link id="my-profile-nav" href="/myprofile" active={pathName === '/myprofile'}>
                   My Profile
                 </Nav.Link>
-                <Nav.Link id="profile-nav" href="/user" active={pathName === '/user'}>
-                  View Profiles
-                </Nav.Link>
               </>
             )}
             <Nav.Link id="search-wordcloud-nav" href="/search" active={pathName === '/search'}>
