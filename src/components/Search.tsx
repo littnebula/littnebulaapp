@@ -6,13 +6,66 @@ type Props = {
   searchTerm: string;
   searchType: string;
   selectedTag: string;
+  sortBy: string;
   submitted: boolean;
+};
+
+// Differentiating from two words
+const editDistance = (first: string, second: string) => {
+  const table = Array.from(
+    { length: first.length + 1 },
+    () => Array(second.length + 1).fill(0),
+  );
+
+  for (let i = 0; i <= first.length; i++) {
+    table[i][0] = i;
+  }
+
+  for (let j = 0; j <= second.length; j++) {
+    table[0][j] = j;
+  }
+
+  for (let i = 1; i <= first.length; i++) {
+    for (let j = 1; j <= second.length; j++) {
+      const cost = first[i - 1] === second[j - 1] ? 0 : 1;
+
+      table[i][j] = Math.min(
+        table[i - 1][j] + 1,
+        table[i][j - 1] + 1,
+        table[i - 1][j - 1] + cost,
+      );
+    }
+  }
+
+  return table[first.length][second.length];
+};
+
+// Checking for exact or similar words
+const matchesSearch = (value: string, searchTerm: string) => {
+  const queryWords = searchTerm.toLowerCase().match(/[a-z0-9]+/g) || [];
+  const textWords = value.toLowerCase().match(/[a-z0-9]+/g) || [];
+
+  return queryWords.every((queryWord) =>
+    textWords.some((textWord) => {
+      if (textWord.includes(queryWord)) {
+        return true;
+      }
+
+      const maxDistance = Math.max(
+        1,
+        Math.floor(queryWord.length * 0.25),
+      );
+
+      return editDistance(queryWord, textWord) <= maxDistance;
+    }),
+  );
 };
 
 const Search = async ({
   searchTerm,
   searchType,
   selectedTag,
+  sortBy,
   submitted,
 }: Props) => {
   const term = searchTerm.trim();
@@ -32,17 +85,9 @@ const Search = async ({
   ).sort();
 
   // Searching for users with email
-  const users =
+  const allUsers =
     submitted && !selectedTag && (searchType === 'all' || searchType === 'users')
       ? await prisma.user.findMany({
-          where: term
-            ? {
-                email: {
-                  contains: term,
-                  mode: 'insensitive',
-                },
-              }
-            : {},
           select: {
             id: true,
             email: true,
@@ -50,30 +95,16 @@ const Search = async ({
         })
       : [];
 
+  const users = term
+    ? allUsers.filter((user) => matchesSearch(user.email, term))
+    : allUsers;
+
   // Search for word clouds
   const wordclouds =
     submitted && (searchType === 'all' || searchType === 'wordclouds')
       ? await prisma.wordCloud.findMany({
           where: {
             visibility: 'PUBLIC',
-            ...(term
-              ? {
-                  OR: [
-                    {
-                      title: {
-                        contains: term,
-                        mode: 'insensitive',
-                      },
-                    },
-                    {
-                      description: {
-                        contains: term,
-                        mode: 'insensitive',
-                      },
-                    },
-                  ],
-                }
-              : {}),
             ...(selectedTag
               ? {
                   tags: {
@@ -88,6 +119,8 @@ const Search = async ({
             description: true,
             tags: true,
             views: true,
+            bookmarks: true,
+            createdAt: true,
             creator: {
               select: {
                 email: true,
@@ -96,6 +129,29 @@ const Search = async ({
           },
         })
       : [];
+
+  // Filter word clouds using fuzzy search.
+  const filteredWordClouds = term
+    ? wordclouds.filter((wordcloud) =>
+        matchesSearch(
+          `${wordcloud.title} ${wordcloud.description} ${wordcloud.tags.join(' ')}`,
+          term,
+        ),
+      )
+    : wordclouds;
+
+  // Sort word clouds.
+  filteredWordClouds.sort((a, b) => {
+    if (sortBy === 'popular') {
+      return b.bookmarks - a.bookmarks;
+    }
+
+    if (sortBy === 'views') {
+      return b.views - a.views;
+    }
+
+    return b.createdAt.getTime() - a.createdAt.getTime();
+  });
 
   return (
     <main>
@@ -171,7 +227,7 @@ const Search = async ({
               </div>
             </Col>
 
-            <Col md={6}>
+            <Col md={3}>
               <select
                 name="tag"
                 className="form-select form-select-lg bg-dark text-light border-secondary"
@@ -186,8 +242,20 @@ const Search = async ({
               </select>
             </Col>
 
+            <Col md={3}>
+              <select
+                name="sort"
+                className="form-select form-select-lg bg-dark text-light border-secondary"
+                defaultValue={sortBy}
+              >
+                <option value="recent">Recently Created</option>
+                <option value="popular">Most Popular</option>
+                <option value="views">Most Viewed</option>
+              </select>
+            </Col>
+
             <Col md={12}>
-                <button           // Good Button look!?
+              <button
                 type="submit"
                 className="btn text-light shadow"
                 style={{
@@ -244,9 +312,9 @@ const Search = async ({
             <>
               <h3 className="mt-4">Public Word Clouds</h3>
 
-              {wordclouds.length > 0 ? (
+              {filteredWordClouds.length > 0 ? (
                 <Row>
-                  {wordclouds.map((wordcloud) => (
+                  {filteredWordClouds.map((wordcloud) => (
                     <Col xs={12} key={wordcloud.id} className="mb-3">
                       <Link
                         href={`/examine/${wordcloud.id}`}
