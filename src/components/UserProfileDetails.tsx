@@ -59,8 +59,8 @@ const UserProfileDetails = async ({ id }: Props) => {
           ))}
         </Row>
 
-        <Link href="/user" className="btn btn-secondary mt-3">
-          Back to View Profiles
+        <Link href="/search" className="btn btn-secondary mt-3">
+          Back to Search
         </Link>
       </Container>
     </main>
