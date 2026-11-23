@@ -33,7 +33,7 @@ const Search = async ({
 
   // Searching for users with email
   const users =
-    submitted && (searchType === 'all' || searchType === 'users')
+    submitted && !selectedTag && (searchType === 'all' || searchType === 'users')
       ? await prisma.user.findMany({
           where: term
             ? {
@@ -87,6 +87,12 @@ const Search = async ({
             title: true,
             description: true,
             tags: true,
+            views: true,
+            creator: {
+              select: {
+                email: true,
+              },
+            },
           },
         })
       : [];
@@ -100,33 +106,75 @@ const Search = async ({
         <form action="/search" method="GET" className="mb-4">
           <input type="hidden" name="submitted" value="true" />
 
-          <Row className="g-2">
+          <Row className="g-3">
             <Col md={12}>
-              <input
-                type="text"
-                name="q"
-                className="form-control bg-dark text-light"
-                placeholder="Search users or word clouds..."
-                defaultValue={term}
-              />
+              <div className="input-group input-group-lg">
+                <span className="input-group-text bg-dark text-light border-secondary">
+                  &#x1F50D;
+                </span>
+                <input
+                  type="text"
+                  name="q"
+                  className="form-control bg-dark text-light border-secondary"
+                  placeholder="Search users, territories, or topics..."
+                  defaultValue={term}
+                />
+              </div>
             </Col>
 
-            <Col md={3}>
-              <select
-                name="type"
-                className="form-select"
-                defaultValue={searchType}
-              >
-                <option value="all">All</option>
-                <option value="users">Users</option>
-                <option value="wordclouds">Word Clouds</option>
-              </select>
+            <Col md={6}>
+              <div className="btn-group w-100" role="group">
+                <input
+                  type="radio"
+                  className="btn-check"
+                  name="type"
+                  id="search-all"
+                  value="all"
+                  defaultChecked={searchType === 'all'}
+                />
+                <label
+                  className="btn btn-outline-light"
+                  htmlFor="search-all"
+                >
+                  All
+                </label>
+
+                <input
+                  type="radio"
+                  className="btn-check"
+                  name="type"
+                  id="search-users"
+                  value="users"
+                  defaultChecked={searchType === 'users'}
+                />
+                <label
+                  className="btn btn-outline-light"
+                  htmlFor="search-users"
+                >
+                  Users
+                </label>
+
+                <input
+                  type="radio"
+                  className="btn-check"
+                  name="type"
+                  id="search-wordclouds"
+                  value="wordclouds"
+                  defaultChecked={searchType === 'wordclouds'}
+                />
+                <label
+                  className="btn btn-outline-light"
+                  htmlFor="search-wordclouds"
+                >
+                  Word Clouds
+                </label>
+              </div>
             </Col>
 
-            <Col md={3}>
+            <Col md={6}>
               <select
                 name="tag"
-                className="form-select"
+                className="form-select form-select-lg bg-dark text-light border-secondary"
                 defaultValue={selectedTag}
               >
                 <option value="">All Tags</option>
@@ -139,42 +187,57 @@ const Search = async ({
             </Col>
 
             <Col md={12}>
-              <button type="submit" className="btn btn-primary">
+                <button           // Good Button look!?
+                type="submit"
+                className="btn text-light shadow"
+                style={{
+                  backgroundColor: 'rgba(52, 58, 64, 0.9)',
+                  border: '1px solid #6c757d',
+                }}
+              >
                 Search
               </button>
             </Col>
           </Row>
         </form>
 
-        {submitted && (searchType === 'all' || searchType === 'users') && (
-          <>
-            <h3>Users</h3>
+        {submitted &&
+          !selectedTag &&
+          (searchType === 'all' || searchType === 'users') && (
+            <>
+              <h3>Users</h3>
 
-            {users.length > 0 ? (
-              <Row>
-                {users.map((user) => (
-                  <Col xs={12} key={user.id} className="mb-3">
-                    <Link
-                      href={`/user/${user.id}`}
-                      className="text-decoration-none text-reset"
-                    >
-                      <Card
-                        className="h-100"
-                        style={{ maxWidth: '400px' }}
+              {users.length > 0 ? (
+                <Row>
+                  {users.map((user) => (
+                    <Col xs={12} key={user.id} className="mb-3">
+                      <Link
+                        href={`/user/${user.id}`}
+                        className="text-decoration-none text-reset"
                       >
-                        <div className="card-body">
-                          <h5 className="card-title">{user.email}</h5>
-                        </div>
-                      </Card>
-                    </Link>
-                  </Col>
-                ))}
-              </Row>
-            ) : (
-              <p>No users found.</p>
-            )}
-          </>
-        )}
+                        <Card
+                          className="h-100 text-light border-secondary"
+                          style={{
+                            maxWidth: '400px',
+                            backgroundColor: 'rgba(20, 20, 20, 0.65)',
+                          }}
+                        >
+                          <div className="card-body">
+                            <h5 className="card-title">{user.email}</h5>
+                            <p className="card-text text-secondary mb-0">
+                              View Profile
+                            </p>
+                          </div>
+                        </Card>
+                      </Link>
+                    </Col>
+                  ))}
+                </Row>
+              ) : (
+                <p>No users found.</p>
+              )}
+            </>
+          )}
 
         {submitted &&
           (searchType === 'all' || searchType === 'wordclouds') && (
@@ -190,19 +253,41 @@ const Search = async ({
                         className="text-decoration-none text-reset"
                       >
                         <Card
-                          className="h-100"
-                          style={{ maxWidth: '400px' }}
+                          className="h-100 text-light border-secondary"
+                          style={{
+                            maxWidth: '400px',
+                            backgroundColor: 'rgba(20, 20, 20, 0.65)',
+                          }}
                         >
                           <div className="card-body">
                             <h5 className="card-title">
                               {wordcloud.title}
                             </h5>
 
-                            <p className="card-text">
+                            <p className="card-text text-secondary">
                               {wordcloud.description}
                             </p>
 
-                            <p>Tags: {wordcloud.tags.join(', ')}</p>
+                            <p className="mb-2">
+                              <small>
+                                Owner: {wordcloud.creator.email}
+                              </small>
+                            </p>
+
+                            <p className="mb-2">
+                              <small>Views: {wordcloud.views}</small>
+                            </p>
+
+                            <div>
+                              {wordcloud.tags.map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="badge bg-secondary me-1 mb-1"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
                           </div>
                         </Card>
                       </Link>
