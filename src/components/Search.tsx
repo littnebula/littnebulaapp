@@ -116,7 +116,7 @@ const Search = async ({
                   type="text"
                   name="q"
                   className="form-control bg-dark text-light border-secondary"
-                  placeholder="Search users, territories, or topics..."
+                  placeholder="Search users, territories..."
                   defaultValue={term}
                 />
               </div>
