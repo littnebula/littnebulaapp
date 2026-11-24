@@ -28,6 +28,7 @@ const LandingPageListing = async () => {
     },
     take: 10,
   });
+
   const popularWorclouds = await prisma.wordCloud.findMany({
     where: {
         visibility: VisibilityType.PUBLIC
@@ -43,42 +44,45 @@ const LandingPageListing = async () => {
         bookmarks: "desc"
     },
     take: 10,
-  })
+  });
+
   return (
-  <Container className="container-fluid d-flex flex-column">
-    <Row>
-      <Col className="w-50">
-        <h3>Recent Territories</h3>
-        {newestWordclouds.map((wordcloud) => (
-          <div key={wordcloud.id} className="py-1">
-            <WordCloudCard
-              id={wordcloud.id}
-              title={truncateString(wordcloud.title, 32)}
-              description={truncateString(wordcloud.description, 32)}
-              owner={wordcloud.creator.email}
-              views={wordcloud.views}
-              tags={wordcloud.tags}
-            />
-          </div>
-        ))}
-      </Col>
-      <Col className="w-50">
-        <h3>Popular Territories</h3>
-        {popularWorclouds.map((wordcloud) => (
-          <div key={wordcloud.id} className="py-1">
-            <WordCloudCard
-              id={wordcloud.id}
-              title={truncateString(wordcloud.title, 32)}
-              description={truncateString(wordcloud.description, 32)}
-              owner={wordcloud.creator.email}
-              views={wordcloud.views}
-              tags={wordcloud.tags}
-            />
-          </div>
-        ))}
-      </Col>
-    </Row>
-  </Container>
-)};
+    <Container className="container-fluid d-flex flex-column">
+      <Row className="justify-content-evenly">
+        <Col xs={12} md={5}>
+          <h3 className="text-center">Recent Territories</h3>
+          {newestWordclouds.map((wordcloud) => (
+            <div key={wordcloud.id} className="py-1 mx-auto" style={{ width: '100%', maxWidth: '400px' }}>
+              <WordCloudCard
+                id={wordcloud.id}
+                title={truncateString(wordcloud.title, 32)}
+                description={truncateString(wordcloud.description, 32)}
+                owner={wordcloud.creator.email}
+                views={wordcloud.views}
+                tags={wordcloud.tags}
+              />
+            </div>
+          ))}
+        </Col>
+
+        <Col xs={12} md={5}>
+          <h3 className="text-center">Popular Territories</h3>
+          {popularWorclouds.map((wordcloud) => (
+            <div key={wordcloud.id} className="py-1 mx-auto" style={{ width: '100%', maxWidth: '400px' }}>
+              <WordCloudCard
+                id={wordcloud.id}
+                title={truncateString(wordcloud.title, 32)}
+                description={truncateString(wordcloud.description, 32)}
+                owner={wordcloud.creator.email}
+                views={wordcloud.views}
+                tags={wordcloud.tags}
+              />
+            </div>
+          ))}
+        </Col>
+      </Row>
+    </Container>
+  );
+};
 
 export default LandingPageListing;
