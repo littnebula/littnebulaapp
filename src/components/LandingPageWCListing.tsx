@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { VisibilityType } from "@prisma/client";
-import { Card, Col, Container, Row } from "react-bootstrap";
-import Link from "next/link";
+import { Col, Container, Row } from "react-bootstrap";
+import WordCloudCard from "@/components/WordCloudCard";
 
 
 function truncateString(str: string, limit: number) {
@@ -16,6 +16,13 @@ const LandingPageListing = async () => {
     where: {
         visibility: VisibilityType.PUBLIC
     },
+    include: {
+        creator: {
+            select: {
+                email: true
+            }
+        }
+    },
     orderBy: {
         createdAt: 'desc'
     },
@@ -25,6 +32,13 @@ const LandingPageListing = async () => {
     where: {
         visibility: VisibilityType.PUBLIC
     },
+    include: {
+        creator: {
+            select: {
+                email: true
+            }
+        }
+    },
     orderBy: {
         bookmarks: "desc"
     },
@@ -32,45 +46,35 @@ const LandingPageListing = async () => {
   })
   return (
   <Container className="container-fluid d-flex flex-column">
-    <Row className="g-0">
-      <Col className="text-center">
-        <h3>Recent Territories</h3>    
-      </Col>
-      <Col className="text-center">
-        <h3>Popular Territories</h3>    
-      </Col>
-    </Row>
     <Row>
       <Col className="w-50">
+        <h3>Recent Territories</h3>
         {newestWordclouds.map((wordcloud) => (
-          <Link
-            key={wordcloud.id}
-            href={`/examine/${wordcloud.id}`}
-            className='text-decoration-none text-reset d-block px-4 py-1'
-          >
-          <Card className="w-100 h-100">
-            <div className="card-body">
-            <h5 className="card-title">{truncateString(wordcloud.title, 32)}</h5>
-            <p className="card-text">{truncateString(wordcloud.description, 32)}</p>
-            </div>
-          </Card>
-          </Link>
+          <div key={wordcloud.id} className="py-1">
+            <WordCloudCard
+              id={wordcloud.id}
+              title={truncateString(wordcloud.title, 32)}
+              description={truncateString(wordcloud.description, 32)}
+              owner={wordcloud.creator.email}
+              views={wordcloud.views}
+              tags={wordcloud.tags}
+            />
+          </div>
         ))}
       </Col>
       <Col className="w-50">
+        <h3>Popular Territories</h3>
         {popularWorclouds.map((wordcloud) => (
-          <Link
-            key={wordcloud.id}
-            href={`/examine/${wordcloud.id}`}
-            className='text-decoration-none text-reset d-block px-4 py-1'
-          >
-          <Card className="w-100 h-100">
-            <div className="card-body">
-            <h5 className="card-title">{truncateString(wordcloud.title, 32)}</h5>
-            <p className="card-text">{truncateString(wordcloud.description, 32)}</p>
-            </div>
-          </Card>
-          </Link>
+          <div key={wordcloud.id} className="py-1">
+            <WordCloudCard
+              id={wordcloud.id}
+              title={truncateString(wordcloud.title, 32)}
+              description={truncateString(wordcloud.description, 32)}
+              owner={wordcloud.creator.email}
+              views={wordcloud.views}
+              tags={wordcloud.tags}
+            />
+          </div>
         ))}
       </Col>
     </Row>
