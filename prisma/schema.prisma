@@ -84,7 +84,7 @@ model WordCloud {
   displayIconIndex      Int     @default(0)
 
   editors       String[]  @default([])
-  editingUsers  User[]          @relation("EditAccessWC")
+  editingUsers  User[]    @relation("EditAccessWC")
 
   comments      Comment[]
 
@@ -153,16 +153,16 @@ model Comment {
 	owner       String
 	comment     String
 	timestamp   DateTime  @default(now())
-  wordcloud   WordCloud @relation(fields: [wordcloudId], references: [id], onDelete: Cascade)
-  wordcloudId Int
-  collection    Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
-  collectionId  Int 
+  wordcloud   WordCloud? @relation(fields: [wordcloudId], references: [id], onDelete: Cascade)
+  wordcloudId Int?
+  collection    Collection? @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  collectionId  Int? 
 }
 
 model Report {
   id          Int       @id @default(autoincrement())
-  wordcloudId Int
-  userId      Int
+  wordcloudId Int?
+  userId      Int?
   reporterId  Int
   context     String
   reason      String
