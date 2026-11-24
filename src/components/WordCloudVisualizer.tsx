@@ -1,31 +1,71 @@
 'use client';
-import { Card, Container } from "react-bootstrap";
-import { WordCloud } from "@isoterik/react-word-cloud";
-import { Word } from "@prisma/client";
 
-/* Renders a single row in the List Stuff table. See list/page.tsx. */
-const WordCloudVisualizer = ({FormattedWordCloudData, sizing}: {FormattedWordCloudData: Word[], sizing: number}) => {
-  // console.log(`passed data: ${JSON.stringify(FormattedWordCloudData, null, 2)}`)
+import { Card, Container } from 'react-bootstrap';
+import { Wordcloud } from '@visx/wordcloud';
+import { Text } from '@visx/text';
+import { scaleLog } from '@visx/scale';
+import { Word } from '@prisma/client';
+
+const fixedRotate = () => 0;
+// const fixedRandom = () => 0.5;
+function createSeededRandom(seed: number) {
+  return function () {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const WordCloudVisualizer = ({
+  FormattedWordCloudData,
+  sizing,
+  seed,
+}: {
+  FormattedWordCloudData: Word[];
+  sizing: number;
+  seed: number;
+}) => {const values = FormattedWordCloudData.map((w) => w.value);
+  const min = values.length ? Math.max(1, Math.min(...values)) : 1;
+  const max = values.length ? Math.max(min, Math.max(...values)) : 1;
+
+  const fontScale = scaleLog({
+    domain: [min, max],
+    range: [24 * sizing, 96 * sizing],
+  });
+
   return (
     <Container>
       <Card id="darkcard1">
-        <div style={{
-          width: "500px",
-          height: "500px",
-          margin: "auto"
-        }}>
-          <WordCloud
-            words={FormattedWordCloudData}
-            width={200 *sizing}
-            height={200 *sizing}
-            rotate={() => 0}
-            fill={'white'}
-            random={() => 0.5}
-            timeInterval={Infinity}
-          />
+        <div style={{ width: '400px', height: '400px', margin: 'auto' }}>
+          {FormattedWordCloudData.length > 0 && (
+            <Wordcloud
+              words={FormattedWordCloudData}
+              width={400 * sizing}
+              height={400 * sizing}
+              fontSize={(datum) => fontScale(Math.max(1, datum.value))}
+              font="Arial"
+              rotate={fixedRotate}
+              random={createSeededRandom(seed)}
+            >
+              {(cloudWords) =>
+                cloudWords.map((w, i) => (
+                  <Text
+                    key={`${w.text}-${i}`}
+                    fill="white"
+                    textAnchor="middle"
+                    transform={`translate(${w.x}, ${w.y}) rotate(${w.rotate})`}
+                    fontSize={w.size}
+                    fontFamily={w.font}
+                  >
+                    {w.text}
+                  </Text>
+                ))
+              }
+            </Wordcloud>
+          )}
         </div>
       </Card>
-      
     </Container>
   );
 };
