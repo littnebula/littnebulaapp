@@ -19,16 +19,16 @@ const WordCloudCard = ({
   tags,
 }: Props) => {
   return (
-    <Link
-      href={`/examine/${id}`}
-      className="text-decoration-none text-reset"
+    <Card
+      className="h-100 text-light border-secondary"
+      style={{
+        maxWidth: '400px',
+        backgroundColor: 'rgba(20, 20, 20, 0.65)',
+      }}
     >
-      <Card
-        className="h-100 text-light border-secondary"
-        style={{
-          maxWidth: '400px',
-          backgroundColor: 'rgba(20, 20, 20, 0.65)',
-        }}
+      <Link
+        href={`/examine/${id}`}
+        className="text-decoration-none text-reset"
       >
         <div className="card-body">
           <h5 className="card-title">
@@ -60,8 +60,8 @@ const WordCloudCard = ({
             ))}
           </div>
         </div>
-      </Card>
-    </Link>
+      </Link>
+    </Card>
   );
 };
 
