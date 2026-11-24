@@ -280,16 +280,16 @@ const Search = async ({
                 <Row>
                   {users.map((user) => (
                     <Col xs={12} key={user.id} className="mb-3">
-                      <Link
-                        href={`/user/${user.id}`}
-                        className="text-decoration-none text-reset"
+                      <Card
+                        className="h-100 text-light border-secondary"
+                        style={{
+                          maxWidth: '400px',
+                          backgroundColor: 'rgba(20, 20, 20, 0.65)',
+                        }}
                       >
-                        <Card
-                          className="h-100 text-light border-secondary"
-                          style={{
-                            maxWidth: '400px',
-                            backgroundColor: 'rgba(20, 20, 20, 0.65)',
-                          }}
+                        <Link
+                          href={`/user/${user.id}`}
+                          className="text-decoration-none text-reset"
                         >
                           <div className="card-body">
                             <h5 className="card-title">{user.email}</h5>
@@ -297,8 +297,8 @@ const Search = async ({
                               View Profile
                             </p>
                           </div>
-                        </Card>
-                      </Link>
+                        </Link>
+                      </Card>
                     </Col>
                   ))}
                 </Row>
