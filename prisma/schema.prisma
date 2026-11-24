@@ -83,8 +83,6 @@ model WordCloud {
   displayColorIndex     Int     @default(0)
   displayIconIndex      Int     @default(0)
 
-  sourceTextDate        DateTime
-
   editors       String[]  @default([])
   editingUsers  User[]          @relation("EditAccessWC")
 
@@ -157,6 +155,8 @@ model Comment {
 	timestamp   DateTime  @default(now())
   wordcloud   WordCloud @relation(fields: [wordcloudId], references: [id], onDelete: Cascade)
   wordcloudId Int
+  collection    Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  collectionId  Int 
 }
 
 model Report {
