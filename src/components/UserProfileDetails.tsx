@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { Container, Row, Col, Card, Badge } from 'react-bootstrap';
 import Link from 'next/link';
+import WordCloudCard from '@/components/WordCloudCard';
 
 type Props = {
   id: number;
@@ -57,40 +58,14 @@ const UserProfileDetails = async ({ id }: Props) => {
           <Row>
             {user.ownedWC.map((wordcloud) => (
               <Col md={6} lg={4} key={wordcloud.id} className="mb-3">
-                <Link
-                  href={`/examine/${wordcloud.id}`}
-                  className="text-decoration-none text-reset"
-                >
-                  <Card
-                    className="h-100 text-light border-secondary"
-                    style={{
-                      backgroundColor: 'rgba(20, 20, 20, 0.65)',
-                    }}
-                  >
-                    <div className="card-body">
-                      <h5 className="card-title">{wordcloud.title}</h5>
-
-                      <p className="card-text text-secondary">
-                        {wordcloud.description}
-                      </p>
-
-                      <p className="mb-2">
-                        <small>Views: {wordcloud.views}</small>
-                      </p>
-
-                      <div>
-                        {wordcloud.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="badge bg-secondary me-1 mb-1"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </Card>
-                </Link>
+                <WordCloudCard
+                  id={wordcloud.id}
+                  title={wordcloud.title}
+                  description={wordcloud.description}
+                  owner={user.email}
+                  views={wordcloud.views}
+                  tags={wordcloud.tags}
+                />
               </Col>
             ))}
           </Row>
