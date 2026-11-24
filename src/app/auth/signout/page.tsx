@@ -10,12 +10,26 @@ const SignOut = () => (
     <Row>
       <Col xs={4} />
       <Col>
-        <Button variant="danger" onClick={() => signOut({ callbackUrl: '/', redirect: true })}>
+        <Button
+          className="text-light shadow"
+          style={{
+            backgroundColor: 'rgba(139, 0, 0, 0.85)',
+            border: '1px solid #8b0000',
+          }}
+          onClick={() => signOut({ callbackUrl: '/', redirect: true })}
+        >
           Sign Out
         </Button>
       </Col>
       <Col>
-        <Button variant="secondary" href="/">
+        <Button
+          href="/"
+          className="text-light shadow"
+          style={{
+            backgroundColor: 'rgba(52, 58, 64, 0.9)',
+            border: '1px solid #6c757d',
+          }}
+        >
           Cancel
         </Button>
       </Col>

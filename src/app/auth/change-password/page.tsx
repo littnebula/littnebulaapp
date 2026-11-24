@@ -55,9 +55,14 @@ const ChangePassword = () => {
     <main>
       <Container>
         <Row className="justify-content-center">
-          <Col xs={5}>
+          <Col xs={10} md={6} lg={5}>
             <h1 className="text-center">Change Password</h1>
-            <Card>
+            <Card
+              className="text-light border-secondary"
+              style={{
+                backgroundColor: 'rgba(20, 20, 20, 0.65)',
+              }}
+            >
               <Card.Body>
                 <Form onSubmit={handleSubmit(onSubmit)}>
                   <Form.Group className="form-group">
@@ -65,7 +70,7 @@ const ChangePassword = () => {
                     <input
                       type="password"
                       {...register('oldpassword')}
-                      className={`form-control ${errors.oldpassword ? 'is-invalid' : ''}`}
+                      className={`form-control bg-dark text-light border-secondary ${errors.oldpassword ? 'is-invalid' : ''}`}
                     />
                     <div className="invalid-feedback">{errors.oldpassword?.message}</div>
                   </Form.Group>
@@ -75,7 +80,7 @@ const ChangePassword = () => {
                     <input
                       type="password"
                       {...register('password')}
-                      className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                      className={`form-control bg-dark text-light border-secondary ${errors.password ? 'is-invalid' : ''}`}
                     />
                     <div className="invalid-feedback">{errors.password?.message}</div>
                   </Form.Group>
@@ -84,19 +89,34 @@ const ChangePassword = () => {
                     <input
                       type="password"
                       {...register('confirmPassword')}
-                      className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
+                      className={`form-control bg-dark text-light border-secondary ${errors.confirmPassword ? 'is-invalid' : ''}`}
                     />
                     <div className="invalid-feedback">{errors.confirmPassword?.message}</div>
                   </Form.Group>
                   <Form.Group className="form-group py-3">
                     <Row>
                       <Col>
-                        <Button type="submit" className="btn btn-primary">
+                        <Button
+                          type="submit"
+                          className="btn text-light shadow"
+                          style={{
+                            backgroundColor: 'rgba(0, 65, 130, 0.9)',
+                            border: '1px solid #004182',
+                          }}
+                        >
                           Change
                         </Button>
                       </Col>
                       <Col>
-                        <Button type="button" onClick={() => reset()} className="btn btn-warning float-right">
+                        <Button
+                          type="button"
+                          onClick={() => reset()}
+                          className="btn text-light shadow float-right"
+                          style={{
+                            backgroundColor: 'rgba(139, 0, 0, 0.85)',
+                            border: '1px solid #8b0000',
+                          }}
+                        >
                           Reset
                         </Button>
                       </Col>
