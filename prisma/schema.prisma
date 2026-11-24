@@ -25,6 +25,8 @@ enum VisibilityType {
 
 model User {
   id            Int           @id @default(autoincrement())
+  displayIconIndex     Int   @default(0)
+  displayColorIndex   Int   @default(0)
   email         String        @unique
   password      String
   role          Role          @default(USER)
@@ -32,6 +34,7 @@ model User {
   editAccessWC  WordCloud[]   @relation("EditAccessWC")
   bookmarkedWC  BookmarkedWC[] 
 	recentlyWC    ViewedWC[]
+  collections   Collection[]
 }
 
 model Word {
@@ -77,6 +80,11 @@ model WordCloud {
   views         Int      @default(0)
   bookmarks     Int      @default(0)
 
+  displayColorIndex     Int     @default(0)
+  displayIconIndex      Int     @default(0)
+
+  sourceTextDate        DateTime
+
   editors       String[]  @default([])
   editingUsers  User[]          @relation("EditAccessWC")
 
@@ -84,9 +92,10 @@ model WordCloud {
 
   viewedWC      ViewedWC[]
   bookmarkedWC  BookmarkedWC[]
+
+  datasetLinks  DatasetWordClouds[]
 }
 
-// Explicit Join Table for "Recently Viewed"
 model ViewedWC {
   userId        Int
   wordcloudId   Int
@@ -98,7 +107,6 @@ model ViewedWC {
   @@id([userId, wordcloudId])
 }
 
-// Explicit Join Table for "Bookmarks"
 model BookmarkedWC {
   userId    Int
   wordcloudId    Int
@@ -110,6 +118,38 @@ model BookmarkedWC {
   @@id([userId, wordcloudId])
 }
 
+model Collection {
+  id        Int            @id @default(autoincrement())
+	owner     String
+  userId    Int
+  user      User           @relation(fields: [userId], references: [id])
+  createdAt DateTime       @default(now())
+
+  dataset   DatasetWordClouds[]
+  
+  title         String
+  description   String 
+  views         Int      @default(0)
+  visibility    VisibilityType  @default(PUBLIC)
+
+  leftColorIndex Int    @default(0)
+  rightColorIndex Int    @default(1)
+
+  comments      Comment[]
+}
+
+model DatasetWordClouds {
+  collectionId Int
+  wordcloudId  Int
+  position     Int      @default(0)
+  addedAt      DateTime @default(now())
+
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  wordcloud    WordCloud  @relation(fields: [wordcloudId], references: [id], onDelete: Cascade)
+
+  @@id([collectionId, wordcloudId])
+}
+
 model Comment {
   id          Int       @id @default(autoincrement())
 	owner       String
@@ -119,3 +159,12 @@ model Comment {
   wordcloudId Int
 }
 
+model Report {
+  id          Int       @id @default(autoincrement())
+  wordcloudId Int
+  userId      Int
+  reporterId  Int
+  context     String
+  reason      String
+  resolution  String
+}
