@@ -1,14 +1,15 @@
-import { getColorOptions } from "@/lib/WordCloudActions";
+import WordCloudIcon from "@/components/WordCloudIcon";
 import { Container } from "react-bootstrap";
-import { SquareFill } from "react-bootstrap-icons";
 
 
 const debuggingSpace = () => {
   return (
     <Container>
-      {getColorOptions().map((color, idx) => (
-        <SquareFill key={idx} style={{ color: color}}></SquareFill>
-      ))}
+      <WordCloudIcon
+      iconame="user-circle"
+      size={24}
+      color="#ff4040"
+      ></WordCloudIcon>
     </Container>
 )};
 
