@@ -12,13 +12,13 @@ export const languageSet: Record<string, string> = {
   'uk': "Ukrainian",
   'hi': "Hindi",
   'fil': "Filipino",
-  // 'sm': "Samoan",
+  'sm': "Samoan",
   'id': "Indonesian",
   'ar': "Arabic",
   'vi': "Vietnamese",
   'ko': "Korean",
   'haw': "Hawaiian",
-  // 'hwc': "Hawaiian Pidgin",
+  'hwc': "Hawaiian Pidgin",
   'es': "Generic Spanish",
   'es-MX': "Mexico Spanish",
   'es-AR': "Argentina Spanish",
@@ -27,6 +27,33 @@ export const languageSet: Record<string, string> = {
   'zh-CN': "Simplified Chinese",
   'zh-TW': "Taiwan Chinese",
 }
+
+export function getColorOptions(): string[] {
+  const palette: string[] = [];
+  const colorSteps: number = 8;
+  const saturation: number = 80;
+
+  const minLightness = 50;
+  const maxLightness = 100;
+  
+  // Row 1: Grayscale (0% saturation, lightness from 0% to 100%)
+  for (let i = 0; i < colorSteps; i++) {
+    const lightness = Math.round((i / (colorSteps - 1)) * (100 -minLightness) + minLightness);
+    palette.push(`hsl(0, 0%, ${lightness}%)`);
+  }
+
+  // Rows 2–8: Color groups (lightness from 15% to 92% to avoid pure black/white)
+  for (let j = 0; j < colorSteps; j++) {
+    for (let i = 0; i < colorSteps; i++) {
+      const ratio = i / (colorSteps - 1);
+      const lightness = Math.round(minLightness + ratio * (maxLightness - minLightness));
+      palette.push(`hsl(${j * 360.0 / colorSteps}, ${saturation}%, ${lightness}%)`);
+    }
+  }
+
+  return palette; // Returns 64 colors (8 rows x 8 columns)
+}
+
 
 export interface WCGenData {
   wordcloud: Word[],
@@ -102,3 +129,5 @@ export function getFormattedData(wordcloud: Word[], visiblewords: number): Word[
   }
   return formattedData;
 }
+
+
