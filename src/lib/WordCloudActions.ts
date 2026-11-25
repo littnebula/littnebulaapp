@@ -54,6 +54,10 @@ export function getColorOptions(): string[] {
   return palette; // Returns 64 colors (8 rows x 8 columns)
 }
 
+export function getHSLColor(hue: number, sat: number, lit: number): string {
+  return `hsl(${hue}, ${sat}%, ${lit}%)`
+}
+
 
 export interface WCGenData {
   wordcloud: Word[],
