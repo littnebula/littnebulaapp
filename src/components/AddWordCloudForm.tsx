@@ -39,7 +39,7 @@ const AddWordCloudForm: React.FC = () => {
   const [hue, setHue] = useState(50);
   const [sat, setSat] = useState(80);
   const [lit, setLit] = useState(80);
-  const [selectedIcon, setSelectedIcon] = useState('home');
+  const [selectedIcon, setSelectedIcon] = useState('cloud');
 
   const { data: session, status } = useSession();
   // console.log('AddWordCloudForm', status, session);
@@ -161,7 +161,7 @@ const AddWordCloudForm: React.FC = () => {
                   </Col>
                   <Col>
                     <IconSelect
-                      name="categoryIcon"
+                      name="displayIcon"
                       value={selectedIcon}
                       onChange={(icon) => {
                         setSelectedIcon(icon)

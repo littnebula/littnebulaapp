@@ -161,6 +161,10 @@ export async function editWordCloud(wc: {
   tags: string;
   editors?: string | undefined;
   visibility: string;
+  displayColorHue: number;
+  displayColorSat: number;
+  displayColorLit: number;
+  displayIcon: string;
   owner: string;
   creatorId: number;
   }) {
@@ -181,6 +185,11 @@ export async function editWordCloud(wc: {
       visibility: vis,
       displayCount: wc.displayCount,
       language: wc.language,
+
+      displayColorHue: wc.displayColorHue,
+      displayColorSat: wc.displayColorSat,
+      displayColorLit: wc.displayColorLit,
+      displayIcon: wc.displayIcon,
 
       tags: wc.tags.split(" ").filter((str) => str.trim().length > 0),
       editors: wc.editors?.split(" ").filter((str) => str.trim().length > 0),

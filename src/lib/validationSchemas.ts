@@ -41,6 +41,10 @@ export const ModifyWordCloudSchema = Yup.object({
   editors: Yup.string(),
   displayCount: Yup.number().required(),
   visibility: Yup.string().oneOf(['PUBLIC', 'RESTRICTED', 'PRIVATE']).required(),
+  displayColorHue: Yup.number().required(),
+  displayColorSat: Yup.number().required(),
+  displayColorLit: Yup.number().required(),
+  displayIcon: Yup.string().required(),
   owner: Yup.string().required(),
   creatorId: Yup.number().required(),
 });
