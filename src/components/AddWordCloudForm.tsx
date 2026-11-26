@@ -168,7 +168,7 @@ const AddWordCloudForm: React.FC = () => {
                         setValue('displayIcon', icon, { shouldValidate: true, shouldDirty: true });
                       }}
                       
-                      columns={5}
+                      columns={12}
                     />
                   </Col>
                 </Row>

@@ -1,42 +1,8 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  Home,
-  User,
-  Settings,
-  Bell,
-  Mail,
-  Calendar,
-  Camera,
-  Heart,
-  Star,
-  Search,
-  Cloud,
-
-  ChevronDown,
-  LucideIcon,
-} from 'lucide-react';
-
-// 1. Define your icon list
-interface IconOption {
-  name: string;
-  icon: LucideIcon;
-}
-
-const ICON_OPTIONS: IconOption[] = [
-  { name: 'home', icon: Home },
-  { name: 'user', icon: User },
-  { name: 'settings', icon: Settings },
-  { name: 'bell', icon: Bell },
-  { name: 'mail', icon: Mail },
-  { name: 'calendar', icon: Calendar },
-  { name: 'camera', icon: Camera },
-  { name: 'heart', icon: Heart },
-  { name: 'star', icon: Star },
-  { name: 'search', icon: Search },
-  { name: 'cloud', icon: Cloud }
-];
+import { ChevronDown } from 'lucide-react';
+import { ICON_DICTIONARY } from './DynamicIconDisplay';
 
 interface IconSelectProps {
   name: string;
@@ -49,7 +15,7 @@ export default function IconSelect({
   name,
   value = 'home',
   onChange,
-  columns = 5,
+  columns = 12,
 }: IconSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedName, setSelectedName] = useState<string>(value);
@@ -57,8 +23,9 @@ export default function IconSelect({
 
   // Find the currently selected icon component
   const selectedOption =
-    ICON_OPTIONS.find((item) => item.name === selectedName) || ICON_OPTIONS[0];
-  const SelectedIcon = selectedOption.icon;
+    Object.keys(ICON_DICTIONARY).find((ico) => ico === selectedName) || 'helpcircle';
+    // ICON_OPTIONS.find((item) => item.name === selectedName) || ICON_OPTIONS[0];
+  const SelectedIcon = ICON_DICTIONARY[selectedOption];
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -80,9 +47,9 @@ export default function IconSelect({
   };
 
   // Chunk icons into rows for the <table> layout
-  const rows: IconOption[][] = [];
-  for (let i = 0; i < ICON_OPTIONS.length; i += columns) {
-    rows.push(ICON_OPTIONS.slice(i, i + columns));
+  const rows: string[][] = [];
+  for (let i = 0; i < Object.keys(ICON_DICTIONARY).length; i += columns) {
+    rows.push(Object.keys(ICON_DICTIONARY).slice(i, i + columns));
   }
 
   return (
@@ -100,7 +67,7 @@ export default function IconSelect({
       >
         <span className="d-flex align-items-center gap-2 bg-dark text-light">
           <SelectedIcon size={18} />
-          <span className="text-capitalize">{selectedOption.name}</span>
+          <span className="text-capitalize">{selectedOption}</span>
         </span>
         <ChevronDown size={16} />
       </button>
@@ -116,16 +83,16 @@ export default function IconSelect({
               {rows.map((row, rowIndex) => (
                 <tr key={rowIndex}>
                   {row.map((item) => {
-                    const IconComponent = item.icon;
-                    const isSelected = item.name === selectedName;
+                    const IconComponent = ICON_DICTIONARY[item];
+                    const isSelected = item === selectedName;
 
                     return (
-                      <td key={item.name} className="p-1 text-center"
+                      <td key={item} className="p-1 text-center"
                       style={{background: "#000000"}}>
                         <button
                           type="button"
-                          title={item.name}
-                          onClick={() => handleSelect(item.name)}
+                          title={item}
+                          onClick={() => handleSelect(item)}
                           className={`btn btn-sm d-flex align-items-center justify-content-center p-2 ${
                             isSelected ? 'btn-primary' : 'btn-outline-dark text-light'
                           }`}
