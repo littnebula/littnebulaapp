@@ -14,7 +14,9 @@ const WordCloudExaminer = ({wordclouddata, words, comments}: {wordclouddata: Wor
         <WordCloudVisualizer 
         FormattedWordCloudData={getFormattedData(words, wordclouddata.displayCount)}
         sizing={1.0}
-        seed={0}/>
+        seed={0}
+        viewWidth={400}
+        viewHeight={400}/>
       </Row>
       <Row>
         <Card id="darkcard1" className="my-1">

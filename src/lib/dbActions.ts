@@ -381,6 +381,20 @@ export async function toggleWCBookmark(userId: number, wordcloudId: number) {
   }
 }
 
+export async function createCollection(coll: { 
+  id: number;
+  title: string;
+  description: string;
+  editors?: string | undefined;
+  visibility: string;
+  wordcloudIds: number[];
+  owner: string;
+  userId: number;
+  }) {
+  console.log(`given cloud data: ${JSON.stringify(coll, null, 2)}`);
+}
+
+
 export async function revalidatepage(pagepath: string) {
   revalidatePath(pagepath);
 }

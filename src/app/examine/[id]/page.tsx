@@ -15,11 +15,6 @@ export default async function ExamineWordCloud({ params }: { params: { id: strin
   const { id } = await params;
   // Protect the page, only logged in users can access it.
   const session = await auth();
-  // loggedInProtectedPage(
-  //   session as {
-  //     user: { email: string; id: string; name: string };
-  //   } | null,
-  // );
   const currentUser: string = session?.user?.email || ' ';
   const currentUserId: number = +(session?.user?.id || '0');
   const wcID: number = +id;

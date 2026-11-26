@@ -142,6 +142,11 @@ model Collection {
   rightdisplayColorLit      Int @default(50)
   displayIcon         String @default("cloudy")
 
+  trendingSets      String[]
+  dataSortOrder     String[]
+  comparisonSets    String[]
+
+  editors       String[]  @default([])
   comments      Comment[]
 }
 

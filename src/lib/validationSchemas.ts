@@ -66,3 +66,16 @@ export const AddCommentSchema = Yup.object({
   wordcloudId: Yup.number().required(),
   owner: Yup.string().required(),
 })
+
+export const CreateCollectionSchema = Yup.object({
+  id: Yup.number().required(),
+  title: Yup.string().required(),
+  description: Yup.string().required(),
+  wordcloudIds: Yup.array()
+  .of(Yup.number().integer("Must be a whole number").required())
+  .min(1, "Select at least one word cloud") // Ensures the array isn't empty
+  .required("Word cloud IDs are required"),
+  visibility: Yup.string().oneOf(['PUBLIC', 'RESTRICTED', 'PRIVATE']).required(),
+  owner: Yup.string().required(),
+  userId: Yup.number().required(),
+})

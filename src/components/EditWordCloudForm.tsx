@@ -49,6 +49,9 @@ const EditWordCloudForm = ({ wc }: { wc: WordCloud }) => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(ModifyWordCloudSchema),
+    defaultValues: {
+      displayIcon: wc.displayIcon
+    }
   });
   // console.log(wc);
   const strEditors: string = wc.editors.join(' ');

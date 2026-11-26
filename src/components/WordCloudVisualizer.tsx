@@ -21,11 +21,16 @@ const WordCloudVisualizer = ({
   FormattedWordCloudData,
   sizing,
   seed,
+  viewWidth,
+  viewHeight,
 }: {
   FormattedWordCloudData: Word[];
   sizing: number;
   seed: number;
-}) => {const values = FormattedWordCloudData.map((w) => w.value);
+  viewWidth: number;
+  viewHeight: number
+}) => {
+  const values = FormattedWordCloudData.map((w) => w.value);
   const min = values.length ? Math.max(1, Math.min(...values)) : 1;
   const max = values.length ? Math.max(min, Math.max(...values)) : 1;
 
@@ -37,12 +42,12 @@ const WordCloudVisualizer = ({
   return (
     <Container>
       <Card id="darkcard1">
-        <div style={{ width: '400px', height: '400px', margin: 'auto' }}>
+        <div style={{ width: `${viewWidth}px`, height: `${viewHeight}px`, margin: 'auto' }}>
           {FormattedWordCloudData.length > 0 && (
             <Wordcloud
               words={FormattedWordCloudData}
-              width={400 * sizing}
-              height={400 * sizing}
+              width={viewWidth * sizing}
+              height={viewWidth * sizing}
               fontSize={(datum) => fontScale(Math.max(1, datum.value))}
               font="Arial"
               rotate={fixedRotate}
