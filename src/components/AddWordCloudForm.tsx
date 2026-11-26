@@ -21,6 +21,10 @@ const onSubmit = async (data: {
   description: string;
   tags: string;
   visibility: string;
+  displayColorHue: number;
+  displayColorSat: number;
+  displayColorLit: number;
+  displayIcon: string;
   owner: string;
   creatorId: number;
   }) => {
@@ -44,10 +48,14 @@ const AddWordCloudForm: React.FC = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(GenerateWordCloudSchema),
+    defaultValues: {
+      displayIcon: 'cloud'
+    }
   });
   if (status === 'loading') {
     return <LoadingSpinner />;
@@ -62,6 +70,7 @@ const AddWordCloudForm: React.FC = () => {
       <option key={tag} value={tag}>{languageSet[tag]}</option>
     )
   })
+
 
   return (
     <Container className="py-3">
@@ -154,7 +163,11 @@ const AddWordCloudForm: React.FC = () => {
                     <IconSelect
                       name="categoryIcon"
                       value={selectedIcon}
-                      onChange={(icon) => setSelectedIcon(icon)}
+                      onChange={(icon) => {
+                        setSelectedIcon(icon)
+                        setValue('displayIcon', icon, { shouldValidate: true, shouldDirty: true });
+                      }}
+                      
                       columns={5}
                     />
                   </Col>
@@ -185,6 +198,7 @@ const AddWordCloudForm: React.FC = () => {
                         type="range"
                         className="form-range"
                         id="numberRange"
+                        {...register('displayColorHue')}
                         min={0}
                         max={360}
                         step={1}
@@ -202,6 +216,7 @@ const AddWordCloudForm: React.FC = () => {
                         type="range"
                         className="form-range"
                         id="numberRange"
+                        {...register('displayColorSat')}
                         min={0}
                         max={100}
                         step={1}
@@ -219,7 +234,8 @@ const AddWordCloudForm: React.FC = () => {
                         type="range"
                         className="form-range"
                         id="numberRange"
-                        min={60}
+                        {...register('displayColorLit')}
+                        min={50}
                         max={100}
                         step={1}
                         value={lit}
@@ -230,6 +246,7 @@ const AddWordCloudForm: React.FC = () => {
                 </Row>
                 <input type="hidden" {...register('owner')} value={currentUser} />
                 <input type="hidden" {...register('creatorId')} value={parseInt(currentUserId)} />
+                <input type="hidden" {...register('displayIcon')} value={selectedIcon} />
                 <Form.Group className="form-group">
                   <Row className="pt-3">
                     <Col>

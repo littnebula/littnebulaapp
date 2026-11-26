@@ -103,10 +103,14 @@ export async function addNewWordCloud(wc: {
   description: string;
   tags: string;
   visibility: string;
+  displayColorHue: number;
+  displayColorSat: number;
+  displayColorLit: number;
+  displayIcon: string;
   owner: string;
   creatorId: number;
   }) {
-  // console.log(`new cloud data: ${JSON.stringify(wc, null, 2)}`);
+  console.log(`new cloud data: ${JSON.stringify(wc, null, 2)}`);
   const wordCloudGenResult: WCGenData = generateWordCloudData(wc.sourceText, wc.language)
   // console.log(wordCloudGenResult);
   const wordsToBeAdded: Prisma.WordCreateWithoutWordcloudInput[] = []
@@ -134,6 +138,10 @@ export async function addNewWordCloud(wc: {
     bibliography: wc.bibliography,
     tags: wc.tags.split(" ").filter((str) => str.trim().length > 0),
     visibility: vis,
+    displayColorHue: wc.displayColorHue,
+    displayColorSat: wc.displayColorSat,
+    displayColorLit: wc.displayColorLit,
+    displayIcon: wc.displayIcon,
     owner: wc.owner,
     creatorId: wc.creatorId,
   }

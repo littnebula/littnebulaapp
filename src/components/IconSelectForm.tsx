@@ -12,6 +12,7 @@ import {
   Heart,
   Star,
   Search,
+  Cloud,
 
   ChevronDown,
   LucideIcon,
@@ -34,6 +35,7 @@ const ICON_OPTIONS: IconOption[] = [
   { name: 'heart', icon: Heart },
   { name: 'star', icon: Star },
   { name: 'search', icon: Search },
+  { name: 'cloud', icon: Cloud }
 ];
 
 interface IconSelectProps {

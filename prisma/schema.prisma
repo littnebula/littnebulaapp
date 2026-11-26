@@ -26,7 +26,9 @@ enum VisibilityType {
 model User {
   id            Int           @id @default(autoincrement())
   displayIcon          String @default("user")
-  displayColor         String @default("#ffff")
+  displayColorHue      Int @default(0)
+  displayColorSat      Int @default(100)
+  displayColorLit      Int @default(50)
   email         String        @unique
   password      String
   role          Role          @default(USER)
@@ -80,7 +82,9 @@ model WordCloud {
   views         Int      @default(0)
   bookmarks     Int      @default(0)
 
-  displayColor        String @default("#ffff")
+  displayColorHue      Int @default(0)
+  displayColorSat      Int @default(100)
+  displayColorLit      Int @default(50)
   displayIcon         String @default("cloud")
 
   editors       String[]  @default([])
@@ -130,8 +134,12 @@ model Collection {
   views         Int      @default(0)
   visibility    VisibilityType  @default(PUBLIC)
 
-  leftdisplayColor         String @default("#ffff")
-  rightdisplayColor        String @default("#ffff")
+  leftdisplayColorHue      Int @default(0)
+  leftdisplayColorSat      Int @default(100)
+  leftdisplayColorLit      Int @default(50)
+  rightdisplayColorHue      Int @default(180)
+  rightdisplayColorSat      Int @default(100)
+  rightdisplayColorLit      Int @default(50)
   displayIcon         String @default("cloudy")
 
   comments      Comment[]
