@@ -10,6 +10,7 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import { GenerateWordCloudSchema } from '@/lib/validationSchemas';
 import { getSupportedLocales, languageSet } from '@/lib/WordCloudActions';
 import { JSX } from 'react/jsx-runtime';
+import { useState } from 'react';
 
 const onSubmit = async (data: { 
   sourceText: string; 
@@ -30,6 +31,10 @@ const onSubmit = async (data: {
 };
 
 const AddWordCloudForm: React.FC = () => {
+  const [hue, setHue] = useState(50);
+  const [sat, setSat] = useState(80);
+  const [lit, setLit] = useState(80);
+
   const { data: session, status } = useSession();
   // console.log('AddWordCloudForm', status, session);
   const currentUser = session?.user?.email || '';
@@ -61,7 +66,7 @@ const AddWordCloudForm: React.FC = () => {
       <Row className="justify-content-center">
         <Col md>
           <Col className="text-center">
-            <h2>Embark on Voyage, Start new Territory</h2>
+            <h2>Embark on Voyage, Start a new Territory</h2>
           </Col>
           <Card id="darkcard1">
             <Card.Body>
@@ -81,7 +86,7 @@ const AddWordCloudForm: React.FC = () => {
                   <Col>
                     <Form.Group>
                       <Form.Label>Language</Form.Label>
-                      <select {...register('language')} className={`form-control ${errors.language ? 'is-invalid' : ''}`}>
+                      <select {...register('language')} className={`form-control ${errors.language ? 'is-invalid' : ''} bg-dark text-light`}>
                         {langOptions}
                       </select>
                       <div className="invalid-feedback">{errors.language?.message}</div>
@@ -135,6 +140,73 @@ const AddWordCloudForm: React.FC = () => {
                         <option value="PRIVATE">Private</option>
                       </select>
                       <div className="invalid-feedback">{errors.visibility?.message}</div>
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <hr/>
+                <Row>
+                  <Container className='p-1'>
+                  <div 
+                    className="rounded w-auto " 
+                    style={{ 
+                      height: '12px',
+                      marginLeft: '48px',
+                      marginRight: '48px',
+                      background: `hsla(${hue}, ${sat}%, ${lit}%)`
+                    }}
+                  />
+                  </Container>
+                </Row>
+                <Row className='p-2'>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label className='d-block text-center'>
+                        Hue: {hue}
+                      </Form.Label>
+                      <input
+                        type="range"
+                        className="form-range"
+                        id="numberRange"
+                        min={0}
+                        max={360}
+                        step={1}
+                        value={hue}
+                        onChange={(e) => setHue(Number(e.target.value))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label className='d-block text-center'>
+                        Saturation: {sat}
+                      </Form.Label>
+                      <input
+                        type="range"
+                        className="form-range"
+                        id="numberRange"
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={sat}
+                        onChange={(e) => setSat(Number(e.target.value))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label className='d-block text-center'>
+                        Lightness: {lit}
+                      </Form.Label>
+                      <input
+                        type="range"
+                        className="form-range"
+                        id="numberRange"
+                        min={60}
+                        max={100}
+                        step={1}
+                        value={lit}
+                        onChange={(e) => setLit(Number(e.target.value))}
+                      />
                     </Form.Group>
                   </Col>
                 </Row>
