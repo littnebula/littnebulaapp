@@ -11,6 +11,7 @@ import { GenerateWordCloudSchema } from '@/lib/validationSchemas';
 import { getSupportedLocales, languageSet } from '@/lib/WordCloudActions';
 import { JSX } from 'react/jsx-runtime';
 import { useState } from 'react';
+import IconSelect from './IconSelectForm';
 
 const onSubmit = async (data: { 
   sourceText: string; 
@@ -34,6 +35,7 @@ const AddWordCloudForm: React.FC = () => {
   const [hue, setHue] = useState(50);
   const [sat, setSat] = useState(80);
   const [lit, setLit] = useState(80);
+  const [selectedIcon, setSelectedIcon] = useState('home');
 
   const { data: session, status } = useSession();
   // console.log('AddWordCloudForm', status, session);
@@ -145,17 +147,33 @@ const AddWordCloudForm: React.FC = () => {
                 </Row>
                 <hr/>
                 <Row>
-                  <Container className='p-1'>
-                  <div 
-                    className="rounded w-auto " 
-                    style={{ 
-                      height: '12px',
-                      marginLeft: '48px',
-                      marginRight: '48px',
-                      background: `hsla(${hue}, ${sat}%, ${lit}%)`
-                    }}
-                  />
-                  </Container>
+                  <Col className='col-3'>
+                    <h5>Display Icon</h5>
+                  </Col>
+                  <Col>
+                    <IconSelect
+                      name="categoryIcon"
+                      value={selectedIcon}
+                      onChange={(icon) => setSelectedIcon(icon)}
+                      columns={5}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className='col-3'>
+                    <h5>Display Color</h5>
+                  </Col>
+                  <Col>
+                    <Container className='p-1'>
+                      <div 
+                        className="rounded w-auto " 
+                        style={{ 
+                          height: '12px',
+                          background: `hsla(${hue}, ${sat}%, ${lit}%)`
+                        }}
+                      />
+                    </Container>
+                  </Col>
                 </Row>
                 <Row className='p-2'>
                   <Col>
