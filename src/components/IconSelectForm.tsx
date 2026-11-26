@@ -9,6 +9,8 @@ interface IconSelectProps {
   value?: string;
   onChange?: (iconName: string) => void;
   columns?: number;
+  maxHeight?: string;
+  maxWidth?: string;
 }
 
 export default function IconSelect({
@@ -16,18 +18,19 @@ export default function IconSelect({
   value = 'home',
   onChange,
   columns = 12,
+  maxHeight = '220px',
+  maxWidth = '100%',
 }: IconSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedName, setSelectedName] = useState<string>(value);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Find the currently selected icon component
+  // Calculate directly from the `value` prop during render (no duplicate state or useEffect)
+  const iconKeys = Object.keys(ICON_DICTIONARY);
   const selectedOption =
-    Object.keys(ICON_DICTIONARY).find((ico) => ico === selectedName) || 'helpcircle';
-    // ICON_OPTIONS.find((item) => item.name === selectedName) || ICON_OPTIONS[0];
+    iconKeys.find((ico) => ico === value) || 'helpcircle';
   const SelectedIcon = ICON_DICTIONARY[selectedOption];
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside (valid use of Effect for external DOM events)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -39,7 +42,6 @@ export default function IconSelect({
   }, []);
 
   const handleSelect = (iconName: string) => {
-    setSelectedName(iconName);
     setIsOpen(false);
     if (onChange) {
       onChange(iconName);
@@ -48,14 +50,14 @@ export default function IconSelect({
 
   // Chunk icons into rows for the <table> layout
   const rows: string[][] = [];
-  for (let i = 0; i < Object.keys(ICON_DICTIONARY).length; i += columns) {
-    rows.push(Object.keys(ICON_DICTIONARY).slice(i, i + columns));
+  for (let i = 0; i < iconKeys.length; i += columns) {
+    rows.push(iconKeys.slice(i, i + columns));
   }
 
   return (
     <div className="dropdown" ref={dropdownRef}>
-      {/* Hidden input so it works seamlessly with native HTML forms */}
-      <input type="hidden" name={name} value={selectedName} />
+      {/* Hidden input bound directly to `value` */}
+      <input type="hidden" name={name} value={value} />
 
       {/* Dropdown Trigger Button */}
       <button
@@ -66,17 +68,21 @@ export default function IconSelect({
         style={{ minWidth: '140px' }}
       >
         <span className="d-flex align-items-center gap-2 bg-dark text-light">
-          <SelectedIcon size={18} />
+          {SelectedIcon && <SelectedIcon size={18} />}
           <span className="text-capitalize">{selectedOption}</span>
         </span>
         <ChevronDown size={16} />
       </button>
 
-      {/* Dropdown Menu containing the Table */}
+      {/* Scrollable Dropdown Menu containing the Table */}
       {isOpen && (
         <div
-          className="dropdown-menu show p-2 shadow-sm bg-dark text-light"
-          style={{ minWidth: 'max-content' }}
+          className="dropdown-menu show p-2 shadow-sm bg-dark text-light overflow-auto"
+          style={{
+            maxHeight,
+            maxWidth,
+            zIndex: 1050,
+          }}
         >
           <table className="table table-borderless table-sm mb-0 bg-dark text-light">
             <tbody>
@@ -84,11 +90,14 @@ export default function IconSelect({
                 <tr key={rowIndex}>
                   {row.map((item) => {
                     const IconComponent = ICON_DICTIONARY[item];
-                    const isSelected = item === selectedName;
+                    const isSelected = item === value;
 
                     return (
-                      <td key={item} className="p-1 text-center"
-                      style={{background: "#000000"}}>
+                      <td
+                        key={item}
+                        className="p-1 text-center"
+                        style={{ background: '#000000' }}
+                      >
                         <button
                           type="button"
                           title={item}
