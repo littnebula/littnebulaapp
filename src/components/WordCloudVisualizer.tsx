@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { Card, Container } from 'react-bootstrap';
 import { Wordcloud } from '@visx/wordcloud';
 import { Text } from '@visx/text';
@@ -7,7 +8,7 @@ import { scaleLinear, scaleLog } from '@visx/scale';
 import { Word } from '@prisma/client';
 
 const fixedRotate = () => 0;
-// const fixedRandom = () => 0.5;
+
 function createSeededRandom(seed: number) {
   return function () {
     let t = (seed += 0x6d2b79f5);
@@ -32,7 +33,23 @@ const WordCloudVisualizer = ({
   viewHeight: number;
   color: string;
 }) => {
-  const values = FormattedWordCloudData.map((w) => w.value);
+  // Forces @visx/wordcloud to re-run layout whenever words or values change
+  const cloudKey = useMemo(() => {
+    const signature = FormattedWordCloudData.map(
+      (w) => `${w.text}:${w.value}`
+    ).join('|');
+    return `${seed}-${sizing}-${viewWidth}x${viewHeight}-${signature}`;
+  }, [FormattedWordCloudData, seed, sizing, viewWidth, viewHeight]);
+
+  // Prevents d3-cloud from mutating original Word objects in state
+  const wordsCopy = useMemo(
+    () => FormattedWordCloudData.map((w) => ({ ...w })),
+    [FormattedWordCloudData]
+  );
+
+  const randomGenerator = useMemo(() => createSeededRandom(seed), [seed]);
+
+  const values = wordsCopy.map((w) => w.value);
   const min = values.length ? Math.max(1, Math.min(...values)) : 1;
   const max = values.length ? Math.max(min, Math.max(...values)) : 1;
 
@@ -53,17 +70,20 @@ const WordCloudVisualizer = ({
   return (
     <Container>
       <Card id="darkcard1">
-        <Container style={{
-          width: `${viewWidth}px`,
-          height: `${viewHeight}px`,
-          margin: '0 auto',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-          {FormattedWordCloudData.length > 0 && (
+        <Container
+          style={{
+            width: `${viewWidth}px`,
+            height: `${viewHeight}px`,
+            margin: '0 auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {wordsCopy.length > 0 && (
             <Wordcloud
-              words={FormattedWordCloudData}
+              key={cloudKey}
+              words={wordsCopy}
               width={viewWidth}
               height={viewHeight}
               fontSize={(datum) => fontScale(Math.max(1, datum.value))}
@@ -72,10 +92,10 @@ const WordCloudVisualizer = ({
               padding={4}
               spiral="archimedean"
               rotate={fixedRotate}
-              random={createSeededRandom(seed)}
+              random={randomGenerator}
             >
-              {(cloudWords) => (
-              cloudWords.map((w) => (
+              {(cloudWords) =>
+                cloudWords.map((w) => (
                   <Text
                     key={w.text}
                     textAnchor="middle"
@@ -89,7 +109,7 @@ const WordCloudVisualizer = ({
                     {w.text}
                   </Text>
                 ))
-              )}
+              }
             </Wordcloud>
           )}
         </Container>
