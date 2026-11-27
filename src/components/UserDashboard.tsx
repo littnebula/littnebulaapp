@@ -1,10 +1,20 @@
 'use client';
-import { WordCloud } from "@prisma/client"
+import { Collection, WordCloud } from "@prisma/client"
 import Link from "next/link"
 import { Card, Col, Container, Nav, Row, TabContainer, TabContent, TabPane } from "react-bootstrap"
 import { truncateString } from "./WordcloudViewingLink";
 
-const UserDashboard = ({ownedwc, bookmarkedwc, recentwc}: {ownedwc: WordCloud[], bookmarkedwc: WordCloud[], recentwc: WordCloud[]}) => {
+const UserDashboard = ({
+    ownedwc, 
+    bookmarkedwc, 
+    recentwc,
+    ownedcoll,
+    }: {
+    ownedwc: WordCloud[], 
+    bookmarkedwc: WordCloud[], 
+    recentwc: WordCloud[],
+    ownedcoll: Collection[],
+  }) => {
   return (
     <TabContainer defaultActiveKey="owned">
     <Container fluid>
@@ -35,6 +45,9 @@ const UserDashboard = ({ownedwc, bookmarkedwc, recentwc}: {ownedwc: WordCloud[],
                 {/* <Nav.Link eventKey="shared">Shard Territories</Nav.Link> */}
                 <Container>
                     <Nav.Link eventKey="recent">Recent Territories</Nav.Link>
+                </Container>
+                <Container>
+                    <Nav.Link eventKey="ownedcollections">Owned Clusters</Nav.Link>
                 </Container>
                 </Nav>
             </Card>
@@ -92,6 +105,25 @@ const UserDashboard = ({ownedwc, bookmarkedwc, recentwc}: {ownedwc: WordCloud[],
                         <div className="card-body">
                         <h5 className="card-title">{truncateString(wordcloud.title, 32)}</h5>
                         <p className="card-text">{truncateString(wordcloud.description, 32)}</p>
+                        </div>
+                    </Card>
+                    </Link>
+                    </Col>
+                ))}
+                </Row>
+            </TabPane>
+            <TabPane eventKey="ownedcollections">
+                <Row>
+                {ownedcoll.map((collection) => (
+                    <Col md={6} lg={4} key={collection.id} className="mb-3">
+                    <Link
+                        href={`/analyze/${collection.id}`}
+                        className='text-decoration-none text-reset'
+                    >
+                    <Card className="h-100">
+                        <div className="card-body">
+                        <h5 className="card-title">{truncateString(collection.title, 32)}</h5>
+                        <p className="card-text">{truncateString(collection.description, 32)}</p>
                         </div>
                     </Card>
                     </Link>

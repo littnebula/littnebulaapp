@@ -145,7 +145,7 @@ export async function addNewWordCloud(wc: {
     owner: wc.owner,
     creatorId: wc.creatorId,
   }
-  console.log(wcdata);
+  // console.log(wcdata);
   await prisma.wordCloud.create({
     data: wcdata
   });
@@ -168,7 +168,7 @@ export async function editWordCloud(wc: {
   owner: string;
   creatorId: number;
   }) {
-  console.log(`given cloud data: ${JSON.stringify(wc, null, 2)}`);
+  // console.log(`given cloud data: ${JSON.stringify(wc, null, 2)}`);
   let vis: VisibilityType = 'PRIVATE';
   if (wc.visibility === 'RESTRICTED') {
     vis = 'RESTRICTED';
@@ -389,7 +389,30 @@ export async function createCollection(coll: {
   owner: string;
   userId: number;
   }) {
-  console.log(`given cloud data: ${JSON.stringify(coll, null, 2)}`);
+  // console.log(`given cloud data: ${JSON.stringify(coll, null, 2)}`);
+  let vis: VisibilityType = 'PRIVATE';
+  if (coll.visibility === 'RESTRICTED') {
+    vis = 'RESTRICTED';
+  } else if (coll.visibility === 'PUBLIC') {
+    vis = 'PUBLIC';
+  }
+  
+  await prisma.collection.create({
+    data: {
+      title: coll.title,
+      description: coll.description,
+      visibility: vis,
+      dataset: {
+        create: coll.wordcloudIds.map((id) => ({
+          wordcloud: {
+            connect: { id: id }
+          }
+        }))
+      },
+      owner: coll.owner,
+      userId: coll.userId,
+    }
+  });
 }
 
 
