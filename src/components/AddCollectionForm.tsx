@@ -155,7 +155,7 @@ const AddCollectionForm = ({ ownedwc }: { ownedwc: WordCloud[] }) => {
 
                 {Object.keys(errors).length > 0 && (
                   <div className="alert alert-danger mt-3">
-                    <strong>Form Errors:</strong>
+                    <strong>Errors:</strong>
                     <ul className="mb-0">
                       {Object.entries(errors).map(([field, error]) => (
                         <li key={field}>
