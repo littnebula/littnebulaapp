@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import AnalyzerMainComponent from "@/components/AnalyzerMainComp";
 import { Word } from "@prisma/client";
 import LineChartComp from "@/components/LineChartComponent";
+import DragDropBoxes, { Item } from "@/components/draganddropdemo";
+import SplitComparator from "@/components/SplitComparatorComp";
+
 
 export default async function DebuggingSpace() {
   const collectiondata = await prisma.collection.findUnique({
@@ -27,6 +30,12 @@ export default async function DebuggingSpace() {
   const { dataset, comments, ...collection } = collectiondata;
   const wordclouds = dataset.map((item) => item.wordcloud);
   const words: Word[][] = dataset.map((item) => item.wordcloud.wordData)
+
+  const STARTING_ITEMS: Item[] = [];
+  wordclouds.forEach((wc, idx) => {
+    STARTING_ITEMS.push({ id: `${idx}`, label: wc.title, location: 'pool'})
+  })
+
   return (
     <Container>
       <Row>
@@ -39,6 +48,12 @@ export default async function DebuggingSpace() {
       </Row>
       <Row>
         <LineChartComp />
+      </Row>
+      <Row>
+        <SplitComparator 
+        collData={collection}
+        wordclouds={wordclouds}
+        allwords={words}/>
       </Row>
     </Container>
   );

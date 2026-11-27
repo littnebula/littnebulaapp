@@ -1,14 +1,14 @@
 import { notFound } from 'next/navigation';
-import { Collection, Comment, VisibilityType, Word, WordCloud } from '@prisma/client';
+import { VisibilityType, Word, WordCloud } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
-import WordCloudExaminer from '@/components/ViewWordCloudComp';
-import { Col, Container, Row } from 'react-bootstrap';
+// import WordCloudExaminer from '@/components/ViewWordCloudComp';
+import { Container } from 'react-bootstrap';
 import NotAuthorized from '@/app/not-authorized/page';
-import { incrementWordCloudViews } from '@/lib/dbActions';
-import Link from "next/link";
-import { PencilSquare } from 'react-bootstrap-icons';
-import { BookmarkToggleButton } from '@/components/BookmarkToggleButton';
+// import { incrementWordCloudViews } from '@/lib/dbActions';
+// import Link from "next/link";
+// import { PencilSquare } from 'react-bootstrap-icons';
+// import { BookmarkToggleButton } from '@/components/BookmarkToggleButton';
 
 
 export default async function AnalyzeCollection({ params }: { params: { id: string | string[] } }) {
@@ -18,15 +18,29 @@ export default async function AnalyzeCollection({ params }: { params: { id: stri
   const currentUser: string = session?.user?.email || ' ';
   const currentUserId: number = +(session?.user?.id || '0');
   const collectionId: number = +id;
-  const collection: Collection | null = await prisma.collection.findUnique({
-    where: {
-      id: collectionId,
-    },
+  const collectionResult = await prisma.collection.findUnique({
+    where: { id: 1},
+    include: {
+      dataset: {
+        include: {
+          wordcloud: {
+            include: {
+              wordData: true,
+            }
+          }
+        }
+      },
+      comments: true
+    }
   });
-  console.log(collection)
-  if (!collection) {
+  if (!collectionResult) {
     return notFound();
   }
+  // console.log(collectionResult)
+  const { dataset, comments, ...collection } = collectionResult;
+  const wordclouds = dataset.map((item) => item.wordcloud);
+  const words: Word[][] = dataset.map((item) => item.wordcloud.wordData)
+  console.log(collection)
   const isEditor: boolean = collection.editors.includes(currentUser);
   if (collection.visibility == VisibilityType.PRIVATE && currentUser !== collection.owner && !isEditor) {
     return NotAuthorized();
@@ -44,23 +58,8 @@ export default async function AnalyzeCollection({ params }: { params: { id: stri
   }
   });
   console.log(wordClouds)
-  const comments: Comment[] = await prisma.comment.findMany({
-    where: {
-      collectionId: collection?.id
-    }
-  })
   console.log(comments)
-//   const bookmarkFound = await prisma.bookmarkedWC.findUnique({
-//     where: {
-//       userId_wordcloudId: {
-//         userId: currentUserId,
-//         wordcloudId: wcID
-//       }
-//     }
-//   })
-  // console.log(bookmarkFound);
   if (!(currentUser == collection.owner || isEditor)) {
-    // incrementWordCloudViews(wordcloud.id);
   }
 
   return (

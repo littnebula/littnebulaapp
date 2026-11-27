@@ -182,7 +182,7 @@ const AddWordCloudForm: React.FC = () => {
                         className="rounded w-auto " 
                         style={{ 
                           height: '12px',
-                          background: `hsla(${hue}, ${sat}%, ${lit}%)`
+                          background: `hsl(${hue}, ${sat}%, ${lit}%)`
                         }}
                       />
                     </Container>

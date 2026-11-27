@@ -86,7 +86,10 @@ export function generateWordCloudData(sourceText: string, language: string): WCG
   return newWCD
 }
 
-export function getFormattedData(wordcloud: Word[], visiblewords: number): Word[] {
+export function getFormattedData(wordcloud?: Word[], visiblewords?: number): Word[] {
+  if (!wordcloud || !visiblewords) {
+    return []
+  }
   const formattedData: Word[] = [];
   let visibleTotal: number = 0;
   for (let i: number = 0; i < Math.min(visiblewords, wordcloud.length); i++) {
@@ -100,6 +103,9 @@ export function getFormattedData(wordcloud: Word[], visiblewords: number): Word[
       }
     )
     visibleTotal += Math.abs(wordcloud[i].value);
+  }
+  if (formattedData.length == 0) {
+    return []
   }
   const scaleFactor: number = 1000 / (formattedData[0].value/ visibleTotal)
   for (let i: number = 0; i < Math.min(visiblewords, formattedData.length); i++) {
