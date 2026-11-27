@@ -73,6 +73,7 @@ model WordCloud {
   wordData      Word[]
   sourceTotal   Int     @default(1)
   displayCount  Int     @default(10)
+  randomseed    Int     @default(0)
   createdAt     DateTime @default(now()) 
   bibliography  String
   title         String

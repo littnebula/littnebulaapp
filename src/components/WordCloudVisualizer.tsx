@@ -5,7 +5,6 @@ import { Wordcloud } from '@visx/wordcloud';
 import { Text } from '@visx/text';
 import { scaleLog } from '@visx/scale';
 import { Word } from '@prisma/client';
-import { Group } from '@visx/group';
 
 const fixedRotate = () => 0;
 // const fixedRandom = () => 0.5;
@@ -37,30 +36,40 @@ const WordCloudVisualizer = ({
 
   const fontScale = scaleLog({
     domain: [min, max],
-    range: [24 * sizing, 96 * sizing],
+    range: [24 * sizing, 72 * sizing],
   });
 
   return (
     <Container>
       <Card id="darkcard1">
-        <div style={{ width: `${viewWidth}px`, height: `${viewHeight}px`, margin: 'auto' }}>
+        <Container style={{
+          width: `${viewWidth}px`,
+          height: `${viewHeight}px`,
+          margin: '0 auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
           {FormattedWordCloudData.length > 0 && (
             <Wordcloud
               words={FormattedWordCloudData}
               width={viewWidth}
-              height={viewWidth}
+              height={viewHeight}
               fontSize={(datum) => fontScale(Math.max(1, datum.value))}
+              fontWeight="normal"
               font="Arial"
+              padding={4}
+              spiral="archimedean"
               rotate={fixedRotate}
               random={createSeededRandom(seed)}
             >
               {(cloudWords) => (
-              <Group top={viewHeight / 16} left={viewWidth / 16}>
-                {cloudWords.map((w) => (
+              cloudWords.map((w) => (
                   <Text
                     key={w.text}
                     textAnchor="middle"
                     verticalAnchor="middle"
+                    dominantBaseline="ideographic"
                     transform={`translate(${w.x}, ${w.y}) rotate(${w.rotate ?? 0})`}
                     fontSize={w.size}
                     fontFamily={w.font}
@@ -68,12 +77,11 @@ const WordCloudVisualizer = ({
                   >
                     {w.text}
                   </Text>
-                ))}
-              </Group>
-            )}
+                ))
+              )}
             </Wordcloud>
           )}
-        </div>
+        </Container>
       </Card>
     </Container>
   );

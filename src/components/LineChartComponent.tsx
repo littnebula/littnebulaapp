@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,6 +14,8 @@ import {
   ChartOptions,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { Card, Col, Container, Row } from "react-bootstrap";
+import { Word, WordCloud } from "@prisma/client";
 
 // Register required Chart.js modules
 ChartJS.register(
@@ -32,10 +34,12 @@ ChartJS.register(
 //   wordValue: number;
 // }
 
-export default function LineChartComp() {
+export default function LineChartComp({wordclouds, words}: {wordclouds?: WordCloud[], words?: Word[][]}) {
+  const [wcOrder, setWCOrder] = useState([0,1,2])
+  const [searchWords, setSearchWords] = useState('')
   // 2. Single source of truth for both the table and the graph
   const [rows, setRows] = useState([
-    { wordCloudTitle: "wc1", wordValue: 4200 },
+    { wordCloudTitle: "wc1=================", wordValue: 4200 },
     { wordCloudTitle: "wc2", wordValue: 5100 },
     { wordCloudTitle: "wc3", wordValue: 7400 },
     { wordCloudTitle: "wc4", wordValue: 4800 },
@@ -66,19 +70,17 @@ export default function LineChartComp() {
   };
 
   return (
-    <div className="container my-4">
-      <div className="row g-4 justify-content-center d-flex">
-
-        {/* Line Graph */}
-        <div className="col-md-10">
-          <div id="darkcard1" className="card h-100">
-            <div className="card-header fw-bold">Word Count Trends</div>
-            <div className="card-body" style={{ minHeight: "400px" }}>
+    <Container className="my-4">
+      <Row className="g-4 justify-content-center d-flex">
+        <Col className="md">
+          <Card id="darkcard1" className="h-100">
+            <Card.Header className="fw-bold text-center">Word Count Trends</Card.Header>
+            <Card.Body style={{ minHeight: "400px" }}>
               <Line data={chartData} options={chartOptions} />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 }
