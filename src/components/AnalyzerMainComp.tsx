@@ -74,7 +74,7 @@ const AnalyzerMainComponent = ({
                   <Col>
                     <WordCloudVisualizer 
                     FormattedWordCloudData={getFormattedData(leftwordset, wordclouds[0].displayCount)}
-                    sizing={0.6}
+                    sizing={0.4}
                     seed={12}
                     viewWidth={180}
                     viewHeight={200}
@@ -83,7 +83,7 @@ const AnalyzerMainComponent = ({
                   <Col>
                     <WordCloudVisualizer 
                     FormattedWordCloudData={getFormattedData(rightwordset, wordclouds[1].displayCount)}
-                    sizing={0.6}
+                    sizing={0.4}
                     seed={1}
                     viewWidth={180}
                     viewHeight={200}

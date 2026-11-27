@@ -5,6 +5,7 @@ import { Wordcloud } from '@visx/wordcloud';
 import { Text } from '@visx/text';
 import { scaleLog } from '@visx/scale';
 import { Word } from '@prisma/client';
+import { Group } from '@visx/group';
 
 const fixedRotate = () => 0;
 // const fixedRandom = () => 0.5;
@@ -46,27 +47,30 @@ const WordCloudVisualizer = ({
           {FormattedWordCloudData.length > 0 && (
             <Wordcloud
               words={FormattedWordCloudData}
-              width={viewWidth * sizing}
-              height={viewWidth * sizing}
+              width={viewWidth}
+              height={viewWidth}
               fontSize={(datum) => fontScale(Math.max(1, datum.value))}
               font="Arial"
               rotate={fixedRotate}
               random={createSeededRandom(seed)}
             >
-              {(cloudWords) =>
-                cloudWords.map((w, i) => (
+              {(cloudWords) => (
+              <Group top={viewHeight / 16} left={viewWidth / 16}>
+                {cloudWords.map((w) => (
                   <Text
-                    key={`${w.text}-${i}`}
-                    fill="white"
+                    key={w.text}
                     textAnchor="middle"
-                    transform={`translate(${w.x}, ${w.y}) rotate(${w.rotate})`}
+                    verticalAnchor="middle"
+                    transform={`translate(${w.x}, ${w.y}) rotate(${w.rotate ?? 0})`}
                     fontSize={w.size}
                     fontFamily={w.font}
+                    fill='White'
                   >
                     {w.text}
                   </Text>
-                ))
-              }
+                ))}
+              </Group>
+            )}
             </Wordcloud>
           )}
         </div>
