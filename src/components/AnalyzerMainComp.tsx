@@ -67,6 +67,7 @@ const AnalyzerMainComponent = ({
                 seed={0}
                 viewWidth={400}
                 viewHeight={400}
+                color={`hsl(${collData.leftdisplayColorHue}, ${collData.leftdisplayColorSat}%, ${collData.leftdisplayColorLit}%)`}
                 />
               </TabPane>
               <TabPane eventKey="split">
@@ -78,6 +79,7 @@ const AnalyzerMainComponent = ({
                     seed={12}
                     viewWidth={180}
                     viewHeight={200}
+                    color={`hsl(${collData.leftdisplayColorHue}, ${collData.leftdisplayColorSat}%, ${collData.leftdisplayColorLit}%)`}
                     />
                   </Col>
                   <Col>
@@ -87,6 +89,7 @@ const AnalyzerMainComponent = ({
                     seed={1}
                     viewWidth={180}
                     viewHeight={200}
+                    color={`hsl(${collData.rightdisplayColorHue}, ${collData.rightdisplayColorSat}%, ${collData.rightdisplayColorLit}%)`}
                     />
                   </Col>
                 </Row>

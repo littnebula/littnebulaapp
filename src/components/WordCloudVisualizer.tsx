@@ -3,7 +3,7 @@
 import { Card, Container } from 'react-bootstrap';
 import { Wordcloud } from '@visx/wordcloud';
 import { Text } from '@visx/text';
-import { scaleLog } from '@visx/scale';
+import { scaleLinear, scaleLog } from '@visx/scale';
 import { Word } from '@prisma/client';
 
 const fixedRotate = () => 0;
@@ -23,20 +23,31 @@ const WordCloudVisualizer = ({
   seed,
   viewWidth,
   viewHeight,
+  color,
 }: {
   FormattedWordCloudData: Word[];
   sizing: number;
   seed: number;
   viewWidth: number;
-  viewHeight: number
+  viewHeight: number;
+  color: string;
 }) => {
   const values = FormattedWordCloudData.map((w) => w.value);
   const min = values.length ? Math.max(1, Math.min(...values)) : 1;
   const max = values.length ? Math.max(min, Math.max(...values)) : 1;
 
+  const minSize = 24 * sizing;
+  const maxSize = 72 * sizing;
+
   const fontScale = scaleLog({
     domain: [min, max],
-    range: [24 * sizing, 72 * sizing],
+    range: [minSize, maxSize],
+  });
+
+  const colorScale = scaleLinear<string>({
+    domain: [minSize, maxSize],
+    range: [color, '#ffffff'],
+    clamp: true,
   });
 
   return (
@@ -73,7 +84,7 @@ const WordCloudVisualizer = ({
                     transform={`translate(${w.x}, ${w.y}) rotate(${w.rotate ?? 0})`}
                     fontSize={w.size}
                     fontFamily={w.font}
-                    fill='White'
+                    fill={colorScale(w.size ?? minSize)}
                   >
                     {w.text}
                   </Text>
