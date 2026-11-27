@@ -381,11 +381,9 @@ export async function toggleWCBookmark(userId: number, wordcloudId: number) {
   }
 }
 
-export async function createCollection(coll: { 
-  id: number;
+export async function createCollection(coll: {
   title: string;
   description: string;
-  editors?: string | undefined;
   visibility: string;
   wordcloudIds: number[];
   owner: string;

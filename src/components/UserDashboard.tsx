@@ -20,6 +20,12 @@ const UserDashboard = ({ownedwc, bookmarkedwc, recentwc}: {ownedwc: WordCloud[],
                     Embark on New Voyage
                     </Link>
                 </Container>
+                {(ownedwc.length > 1) && (<Container>
+                    <Link href='/addCollection' className="btn btn-primary btn-lg my-2">
+                    Organize a New Cluster
+                    </Link>
+                </Container>)}
+                
                 <Container>
                     <Nav.Link eventKey="owned">Owned Territories</Nav.Link>
                 </Container>

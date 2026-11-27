@@ -2,7 +2,7 @@ import { loggedInProtectedPage } from '@/lib/page-protection';
 import AddWordCloudForm from '@/components/AddWordCloudForm';
 import { auth } from '@/lib/auth';
 
-const AddStuff = async () => {
+const AddWordCloudpage = async () => {
   // Protect the page, only logged in users can access it.
   const session = await auth();
   loggedInProtectedPage(
@@ -18,4 +18,4 @@ const AddStuff = async () => {
   );
 };
 
-export default AddStuff;
+export default AddWordCloudpage;

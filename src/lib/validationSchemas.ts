@@ -68,7 +68,6 @@ export const AddCommentSchema = Yup.object({
 })
 
 export const CreateCollectionSchema = Yup.object({
-  id: Yup.number().required(),
   title: Yup.string().required(),
   description: Yup.string().required(),
   wordcloudIds: Yup.array()

@@ -38,16 +38,12 @@ export default async function AnalyzeCollection({ params }: { params: { id: stri
         collectionId: collectionId,
       },
     },
-  }});
+  },
+  include: {
+    wordData: true,
+  }
+  });
   console.log(wordClouds)
-//   const words: Word[] = await prisma.word.findMany({
-//     where: {
-//       wordcloudId: wordcloud?.id
-//     },
-//     orderBy: {
-//       value: "desc",
-//     }
-//   });
   const comments: Comment[] = await prisma.comment.findMany({
     where: {
       collectionId: collection?.id
