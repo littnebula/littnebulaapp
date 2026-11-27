@@ -330,14 +330,26 @@ export async function deleteWord(id: number) {
   });
 }
 
-export async function addComment({comment, wordcloudId, owner}: { comment: string, wordcloudId: number, owner: string }) {
+export async function addComment({
+  comment, 
+  wordcloudId, 
+  collectionId,
+  owner
+  }: { 
+    comment: string, 
+    wordcloudId?: number, 
+    collectionId?: number,
+    owner: string 
+  }) {
   await prisma.comment.create({
     data: {
       comment,
       wordcloudId,
+      collectionId,
       owner,
     },
   });
+
 }
 
 export async function toggleWCBookmark(userId: number, wordcloudId: number) {

@@ -52,10 +52,14 @@ const WordCloudExaminer = ({wordclouddata, words, comments}: {wordclouddata: Wor
             <Row>
               <TabContent>
                 <TabPane eventKey="desc">
-                  <p className="text-wrap text-break">{wordclouddata.description}</p>
+                  <Container className="p-2">
+                    <p className="text-wrap text-break">{wordclouddata.description}</p>
+                  </Container>
                 </TabPane>
                 <TabPane eventKey="bib">
-                  <p className="text-wrap text-break">{wordclouddata.bibliography}</p>
+                  <Container className="p-2">
+                    <p className="text-wrap text-break">{wordclouddata.bibliography}</p>
+                  </Container>
                 </TabPane>
                 <TabPane eventKey="wordlist">
                   <WordListing words={words} />

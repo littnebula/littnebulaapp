@@ -63,7 +63,8 @@ export const OperatingOnWordsbyValue= Yup.object({
 
 export const AddCommentSchema = Yup.object({
   comment: Yup.string().required(),
-  wordcloudId: Yup.number().required(),
+  wordcloudId: Yup.number(),
+  collectionId: Yup.number(),
   owner: Yup.string().required(),
 })
 
