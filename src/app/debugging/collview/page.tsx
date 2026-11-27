@@ -1,7 +1,8 @@
-import { Container} from "react-bootstrap";
+import { Container, Row} from "react-bootstrap";
 import { prisma } from "@/lib/prisma";
 import AnalyzerMainComponent from "@/components/AnalyzerMainComp";
 import { Word } from "@prisma/client";
+import LineChartComp from "@/components/LineChartComponent";
 
 export default async function DebuggingSpace() {
   const collectiondata = await prisma.collection.findUnique({
@@ -28,12 +29,17 @@ export default async function DebuggingSpace() {
   const words: Word[][] = dataset.map((item) => item.wordcloud.wordData)
   return (
     <Container>
-      <AnalyzerMainComponent 
-      collData={collection}
-      wordclouds={wordclouds}
-      words={words}
-      comments={comments}
-      />
+      <Row>
+        <AnalyzerMainComponent 
+        collData={collection}
+        wordclouds={wordclouds}
+        words={words}
+        comments={comments}
+        />
+      </Row>
+      <Row>
+        <LineChartComp />
+      </Row>
     </Container>
   );
 };

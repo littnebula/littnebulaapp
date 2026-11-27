@@ -73,7 +73,8 @@ export const CreateCollectionSchema = Yup.object({
   description: Yup.string().required(),
   wordcloudIds: Yup.array()
   .of(Yup.number().integer("Must be a whole number").required())
-  .min(1, "Select at least one word cloud") // Ensures the array isn't empty
+  .min(1, "Select at least one Territories") // Ensures the array isn't empty
+  .max(10, "Select no more than 10 Territories")
   .required("Word cloud IDs are required"),
   visibility: Yup.string().oneOf(['PUBLIC', 'RESTRICTED', 'PRIVATE']).required(),
   owner: Yup.string().required(),
