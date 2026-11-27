@@ -8,6 +8,7 @@ import { addComment, revalidatepage } from '@/lib/dbActions';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { AddCommentSchema } from '@/lib/validationSchemas';
 import { usePathname } from "next/navigation";
+import Link from 'next/link';
 
 const AddCommentForm = ({ wcid, collid }: {wcid?: number, collid?: number }) => {
   const { data: session, status } = useSession();
@@ -25,7 +26,18 @@ const AddCommentForm = ({ wcid, collid }: {wcid?: number, collid?: number }) => 
     return <LoadingSpinner />;
   }
   if (status === 'unauthenticated') {
-    return (<></>);
+    return (
+      <Card id='darkcard1'>
+        <Card.Header>
+          To Add a Comment:
+        </Card.Header>
+        <Card.Body>
+          <Link href="/auth/signin">Sign In</Link>
+          /
+          <Link href="/auth/signup">Sign Up</Link>
+        </Card.Body>
+      </Card>
+    );
   }
   const onSubmit = async (comment: { comment: string; wordcloudId?: number, collectionId?: number, owner: string }) => {
     await addComment(comment);

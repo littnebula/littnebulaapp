@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -28,38 +27,61 @@ ChartJS.register(
   Legend
 );
 
-// // 1. Define TypeScript interface for your table rows
+// 1. Define TypeScript interface for your table rows
 // interface WordTrack {
 //   wordCloudTitle: string;
 //   wordValue: number;
 // }
 
-export default function LineChartComp({wordclouds, words}: {wordclouds?: WordCloud[], words?: Word[][]}) {
-  const [wcOrder, setWCOrder] = useState([0,1,2])
-  const [searchWords, setSearchWords] = useState('')
-  // 2. Single source of truth for both the table and the graph
-  const [rows, setRows] = useState([
-    { wordCloudTitle: "wc1=================", wordValue: 4200 },
-    { wordCloudTitle: "wc2", wordValue: 5100 },
-    { wordCloudTitle: "wc3", wordValue: 7400 },
-    { wordCloudTitle: "wc4", wordValue: 4800 },
-    { wordCloudTitle: "wc5", wordValue: 6300 },
-  ]);
+export default function LineChartComp({
+  searchWords, 
+  wordclouds, 
+  words
+  }: {
+  searchWords: string[]
+  wordclouds?: WordCloud[], 
+  words?: Word[][]
+  }) {
+  if (!wordclouds || !words) {
+    return (<></>);
+  }
+  type WordCloudData = Record<string, string | number>;
+
+  const data: WordCloudData[] = [];
+
+  wordclouds?.forEach((wc, idx) => {
+    // 3. Type 'newEntry' so TypeScript accepts dynamic keys from searchWords
+    const newEntry: WordCloudData = { title: wc.title };
+
+    searchWords.forEach((key) => {
+      newEntry[key] = words[idx].reduce((sum, item) => {
+        return item.text === key ? sum + item.value : sum;
+      }, 0);
+    });
+    data.push(newEntry);
+  })
 
   // 3. Map the table rows into Chart.js format
   const chartData: ChartData<"line"> = {
-    labels: rows.map((row) => row.wordCloudTitle),
-    datasets: [
-      {
-        label: "Data",
-        data: rows.map((row) => row.wordValue),
-        borderColor: `hsla(${120}, ${100}%, ${50}%)`, // Bootstrap primary blue
-        backgroundColor: `hsla(${120}, ${100}%, ${50}%)`,
+    labels: data.map((row) => row.title),
+    datasets: [],
+  };
+  console.log(data);
+  searchWords.forEach((key, idx) => {
+    chartData.datasets.push({
+        label: key,
+        data: data.map((row) => +row[key]),
+        borderColor: `hsla(${idx * 360/searchWords.length}, ${100}%, ${50}%)`,
+        backgroundColor: `hsla(${idx * 360/searchWords.length}, ${100}%, ${50}%)`,
         tension: 0.3,
         fill: true,
-      },
-    ],
-  };
+      })
+  })
+  console.log(chartData.datasets);
+
+  
+  
+
 
   const chartOptions: ChartOptions<"line"> = {
     responsive: true,

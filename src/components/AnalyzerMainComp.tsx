@@ -6,6 +6,7 @@ import WordCloudVisualizer from "./WordCloudVisualizer";
 import { getFormattedData } from "@/lib/WordCloudActions";
 import AddCommentForm from "./AddCommentForm";
 import CommentItem from "./CommentItem";
+import LineChartComp from "./LineChartComponent";
 
 const AnalyzerMainComponent = ({ 
     collData, 
@@ -34,7 +35,8 @@ const AnalyzerMainComponent = ({
   leftwordset.push(...words[0]);
   const rightwordset: Word[] = [];
   rightwordset.push(...words[1]);
-
+  
+  const searchWords: string[] = ['THE', 'SHE', 'WE', 'THEY']; /// pull from database collection.trendingset
 
   return (
     <Container>
@@ -93,7 +95,13 @@ const AnalyzerMainComponent = ({
                     />
                   </Col>
                 </Row>
-                
+              </TabPane>
+              <TabPane eventKey='trends'>
+                <LineChartComp 
+                  searchWords={searchWords}
+                  wordclouds={wordclouds}
+                  words={words}
+                />
               </TabPane>
             </TabContent>
           </Row>
