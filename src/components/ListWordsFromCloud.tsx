@@ -16,7 +16,6 @@ const WordListing = ({words}: {words: Word[]}) => {
           <tr>
           <th>Unique Word</th>
           <th className="text-start">Count</th>
-          <th className="text-start">Annotation</th>
           </tr>
         </thead>
         <tbody>
@@ -24,7 +23,6 @@ const WordListing = ({words}: {words: Word[]}) => {
             <tr key={w.text}>
             <td>{w.text}</td>
             <td className="text-start">{w.value}</td>
-            <td className="text-start">{w.annotation}</td>
             </tr>
           ))}
         </tbody>

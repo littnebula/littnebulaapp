@@ -9,6 +9,8 @@ import { ModifyWordCloudSchema } from '@/lib/validationSchemas';
 import { editWordCloud } from '@/lib/dbActions';
 import { getSupportedLocales, languageSet } from '@/lib/WordCloudActions';
 import { JSX } from 'react/jsx-runtime';
+import IconSelect from './IconSelectForm';
+import { useState } from 'react';
 
 const onSubmit = async (data: { 
   id: number;
@@ -20,6 +22,10 @@ const onSubmit = async (data: {
   tags: string;
   editors?: string | undefined;
   visibility: string;
+  displayColorHue: number;
+  displayColorSat: number;
+  displayColorLit: number;
+  displayIcon: string;
   owner: string;
   creatorId: number;
   }) => {
@@ -31,13 +37,21 @@ const onSubmit = async (data: {
 };
 
 const EditWordCloudForm = ({ wc }: { wc: WordCloud }) => {
+  const [hue, setHue] = useState(wc.displayColorHue);
+  const [sat, setSat] = useState(wc.displayColorSat);
+  const [lit, setLit] = useState(wc.displayColorLit);
+  const [selectedIcon, setSelectedIcon] = useState(wc.displayIcon);
   const {
     register,
     handleSubmit,
+    setValue,
     reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(ModifyWordCloudSchema),
+    defaultValues: {
+      displayIcon: wc.displayIcon
+    }
   });
   // console.log(wc);
   const strEditors: string = wc.editors.join(' ');
@@ -54,7 +68,7 @@ const EditWordCloudForm = ({ wc }: { wc: WordCloud }) => {
         <Col>
           <Card id='darkcard1'>
             <Card.Header className="text-center">
-              <h2>Edit Word Cloud</h2>
+              <h2>Edit Territory Aspects</h2>
             </Card.Header>
             <Card.Body>
               <Form onSubmit={handleSubmit(onSubmit)}>
@@ -148,6 +162,98 @@ const EditWordCloudForm = ({ wc }: { wc: WordCloud }) => {
                   />
                   <div className="invalid-feedback">{errors.editors?.message}</div>
                 </Form.Group>
+                <hr/>
+                <Row>
+                  <Col className='col-3'>
+                    <h5>Display Icon</h5>
+                  </Col>
+                  <Col>
+                    <IconSelect
+                      name="displayIcon"
+                      value={selectedIcon}
+                      onChange={(icon) => {
+                        setSelectedIcon(icon)
+                        setValue('displayIcon', icon, { shouldValidate: true, shouldDirty: true });
+                      }}
+                      columns={9}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className='col-3'>
+                    <h5>Display Color</h5>
+                  </Col>
+                  <Col>
+                    <Container className='p-1'>
+                      <div 
+                        className="rounded w-auto " 
+                        style={{ 
+                          height: '12px',
+                          background: `hsla(${hue}, ${sat}%, ${lit}%)`
+                        }}
+                      />
+                    </Container>
+                  </Col>
+                </Row>
+                <Row className='p-2'>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label className='d-block text-center'>
+                        Hue: {hue}
+                      </Form.Label>
+                      <input
+                        type="range"
+                        className="form-range"
+                        id="numberRange"
+                        defaultValue={wc.displayColorHue}
+                        {...register('displayColorHue')}
+                        min={0}
+                        max={360}
+                        step={1}
+                        value={hue}
+                        onChange={(e) => setHue(Number(e.target.value))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label className='d-block text-center'>
+                        Saturation: {sat}
+                      </Form.Label>
+                      <input
+                        type="range"
+                        className="form-range"
+                        id="numberRange"
+                        defaultValue={wc.displayColorSat}
+                        {...register('displayColorSat')}
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={sat}
+                        onChange={(e) => setSat(Number(e.target.value))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label className='d-block text-center'>
+                        Lightness: {lit}
+                      </Form.Label>
+                      <input
+                        type="range"
+                        className="form-range"
+                        id="numberRange"
+                        defaultValue={wc.displayColorLit}
+                        {...register('displayColorLit')}
+                        min={50}
+                        max={100}
+                        step={1}
+                        value={lit}
+                        onChange={(e) => setLit(Number(e.target.value))}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
                 <input type="hidden" {...register('owner')} value={wc.owner} />
                 <input type="hidden" {...register('creatorId')} value={wc.creatorId} />
                 <Form.Group className="form-group">

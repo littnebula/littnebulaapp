@@ -28,13 +28,19 @@ const ListPage = async () => {
       wordcloud: true
     }
   })
+  const ownedcoll = await prisma.collection.findMany({
+    where: {
+      userId: ownerId
+    }
+  })
   return (
     <main>
       <Container id="list" fluid className="py-3">
         <UserDashboard 
         ownedwc={ownedwc}
         bookmarkedwc={markedwc.map((bkm) => bkm.wordcloud)}
-        recentwc={ownedwc}/>
+        recentwc={ownedwc}
+        ownedcoll={ownedcoll}/>
       </Container>
     </main>
   );

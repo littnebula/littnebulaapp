@@ -12,13 +12,13 @@ export const languageSet: Record<string, string> = {
   'uk': "Ukrainian",
   'hi': "Hindi",
   'fil': "Filipino",
-  // 'sm': "Samoan",
+  'sm': "Samoan",
   'id': "Indonesian",
   'ar': "Arabic",
   'vi': "Vietnamese",
   'ko': "Korean",
   'haw': "Hawaiian",
-  // 'hwc': "Hawaiian Pidgin",
+  'hwc': "Hawaiian Pidgin",
   'es': "Generic Spanish",
   'es-MX': "Mexico Spanish",
   'es-AR': "Argentina Spanish",
@@ -27,6 +27,11 @@ export const languageSet: Record<string, string> = {
   'zh-CN': "Simplified Chinese",
   'zh-TW': "Taiwan Chinese",
 }
+
+export function getHSLColor(hue: number, sat: number, lit: number): string {
+  return `hsl(${hue}, ${sat}%, ${lit}%)`
+}
+
 
 export interface WCGenData {
   wordcloud: Word[],
@@ -81,13 +86,23 @@ export function generateWordCloudData(sourceText: string, language: string): WCG
   return newWCD
 }
 
-export function getFormattedData(wordcloud: Word[], visiblewords: number): Word[] {
+function truncateString(str: string, limit: number) {
+  if (str.length < limit) {
+    return str;
+  }
+  return str.slice(0, (limit - 3)) + '...'
+}
+
+export function getFormattedData(wordcloud?: Word[], visiblewords?: number): Word[] {
+  if (!wordcloud || !visiblewords) {
+    return []
+  }
   const formattedData: Word[] = [];
   let visibleTotal: number = 0;
   for (let i: number = 0; i < Math.min(visiblewords, wordcloud.length); i++) {
     formattedData.push(
       {
-        'text': wordcloud[i].text,
+        'text': truncateString(wordcloud[i].text, 40),
         'value': Math.abs(wordcloud[i].value),
         'annotation': wordcloud[i].annotation,
         'id': 0,
@@ -96,9 +111,14 @@ export function getFormattedData(wordcloud: Word[], visiblewords: number): Word[
     )
     visibleTotal += Math.abs(wordcloud[i].value);
   }
+  if (formattedData.length == 0) {
+    return []
+  }
   const scaleFactor: number = 1000 / (formattedData[0].value/ visibleTotal)
   for (let i: number = 0; i < Math.min(visiblewords, formattedData.length); i++) {
     formattedData[i].value = formattedData[i].value * scaleFactor / visibleTotal;
   }
   return formattedData;
 }
+
+

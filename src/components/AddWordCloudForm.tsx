@@ -10,6 +10,8 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import { GenerateWordCloudSchema } from '@/lib/validationSchemas';
 import { getSupportedLocales, languageSet } from '@/lib/WordCloudActions';
 import { JSX } from 'react/jsx-runtime';
+import { useState } from 'react';
+import IconSelect from './IconSelectForm';
 
 const onSubmit = async (data: { 
   sourceText: string; 
@@ -19,6 +21,10 @@ const onSubmit = async (data: {
   description: string;
   tags: string;
   visibility: string;
+  displayColorHue: number;
+  displayColorSat: number;
+  displayColorLit: number;
+  displayIcon: string;
   owner: string;
   creatorId: number;
   }) => {
@@ -30,6 +36,11 @@ const onSubmit = async (data: {
 };
 
 const AddWordCloudForm: React.FC = () => {
+  const [hue, setHue] = useState(50);
+  const [sat, setSat] = useState(80);
+  const [lit, setLit] = useState(80);
+  const [selectedIcon, setSelectedIcon] = useState('cloud');
+
   const { data: session, status } = useSession();
   // console.log('AddWordCloudForm', status, session);
   const currentUser = session?.user?.email || '';
@@ -37,10 +48,14 @@ const AddWordCloudForm: React.FC = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(GenerateWordCloudSchema),
+    defaultValues: {
+      displayIcon: 'cloud'
+    }
   });
   if (status === 'loading') {
     return <LoadingSpinner />;
@@ -56,12 +71,13 @@ const AddWordCloudForm: React.FC = () => {
     )
   })
 
+
   return (
     <Container className="py-3">
       <Row className="justify-content-center">
         <Col md>
           <Col className="text-center">
-            <h2>Embark on Voyage, Start new Territory</h2>
+            <h2>Embark on Voyage, Start a new Territory</h2>
           </Col>
           <Card id="darkcard1">
             <Card.Body>
@@ -81,7 +97,7 @@ const AddWordCloudForm: React.FC = () => {
                   <Col>
                     <Form.Group>
                       <Form.Label>Language</Form.Label>
-                      <select {...register('language')} className={`form-control ${errors.language ? 'is-invalid' : ''}`}>
+                      <select {...register('language')} className={`form-control ${errors.language ? 'is-invalid' : ''} bg-dark text-light`}>
                         {langOptions}
                       </select>
                       <div className="invalid-feedback">{errors.language?.message}</div>
@@ -138,8 +154,99 @@ const AddWordCloudForm: React.FC = () => {
                     </Form.Group>
                   </Col>
                 </Row>
+                <hr/>
+                <Row>
+                  <Col className='col-3'>
+                    <h5>Display Icon</h5>
+                  </Col>
+                  <Col>
+                    <IconSelect
+                      name="displayIcon"
+                      value={selectedIcon}
+                      onChange={(icon) => {
+                        setSelectedIcon(icon)
+                        setValue('displayIcon', icon, { shouldValidate: true, shouldDirty: true });
+                      }}
+                      
+                      columns={12}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className='col-3'>
+                    <h5>Display Color</h5>
+                  </Col>
+                  <Col>
+                    <Container className='p-1'>
+                      <div 
+                        className="rounded w-auto " 
+                        style={{ 
+                          height: '12px',
+                          background: `hsl(${hue}, ${sat}%, ${lit}%)`
+                        }}
+                      />
+                    </Container>
+                  </Col>
+                </Row>
+                <Row className='p-2'>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label className='d-block text-center'>
+                        Hue: {hue}
+                      </Form.Label>
+                      <input
+                        type="range"
+                        className="form-range"
+                        id="numberRange"
+                        {...register('displayColorHue')}
+                        min={0}
+                        max={360}
+                        step={1}
+                        value={hue}
+                        onChange={(e) => setHue(Number(e.target.value))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label className='d-block text-center'>
+                        Saturation: {sat}
+                      </Form.Label>
+                      <input
+                        type="range"
+                        className="form-range"
+                        id="numberRange"
+                        {...register('displayColorSat')}
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={sat}
+                        onChange={(e) => setSat(Number(e.target.value))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label className='d-block text-center'>
+                        Lightness: {lit}
+                      </Form.Label>
+                      <input
+                        type="range"
+                        className="form-range"
+                        id="numberRange"
+                        {...register('displayColorLit')}
+                        min={50}
+                        max={100}
+                        step={1}
+                        value={lit}
+                        onChange={(e) => setLit(Number(e.target.value))}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
                 <input type="hidden" {...register('owner')} value={currentUser} />
                 <input type="hidden" {...register('creatorId')} value={parseInt(currentUserId)} />
+                <input type="hidden" {...register('displayIcon')} value={selectedIcon} />
                 <Form.Group className="form-group">
                   <Row className="pt-3">
                     <Col>

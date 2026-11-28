@@ -23,6 +23,10 @@ export const GenerateWordCloudSchema = Yup.object({
   description: Yup.string().required(),
   tags: Yup.string().required(),
   visibility: Yup.string().oneOf(['PUBLIC', 'RESTRICTED', 'PRIVATE']).required(),
+  displayColorHue: Yup.number().required(),
+  displayColorSat: Yup.number().required(),
+  displayColorLit: Yup.number().required(),
+  displayIcon: Yup.string().required(),
   owner: Yup.string().required(),
   creatorId: Yup.number().required(),
 });
@@ -37,6 +41,10 @@ export const ModifyWordCloudSchema = Yup.object({
   editors: Yup.string(),
   displayCount: Yup.number().required(),
   visibility: Yup.string().oneOf(['PUBLIC', 'RESTRICTED', 'PRIVATE']).required(),
+  displayColorHue: Yup.number().required(),
+  displayColorSat: Yup.number().required(),
+  displayColorLit: Yup.number().required(),
+  displayIcon: Yup.string().required(),
   owner: Yup.string().required(),
   creatorId: Yup.number().required(),
 });
@@ -55,6 +63,41 @@ export const OperatingOnWordsbyValue= Yup.object({
 
 export const AddCommentSchema = Yup.object({
   comment: Yup.string().required(),
-  wordcloudId: Yup.number().required(),
+  wordcloudId: Yup.number(),
+  collectionId: Yup.number(),
   owner: Yup.string().required(),
+})
+
+export const CreateCollectionSchema = Yup.object({
+  title: Yup.string().required(),
+  description: Yup.string().required(),
+  wordcloudIds: Yup.array()
+  .of(Yup.number().integer("Must be a whole number").required())
+  .min(1, "Select at least one Territories") // Ensures the array isn't empty
+  .max(10, "Select no more than 10 Territories")
+  .required("Word cloud IDs are required"),
+  visibility: Yup.string().oneOf(['PUBLIC', 'RESTRICTED', 'PRIVATE']).required(),
+  trendingWords: Yup.string().trim().required(),
+  displayIcon: Yup.string().required(),
+
+  owner: Yup.string().required(),
+  userId: Yup.number().required(),
+})
+
+export const EditCollectionSchema = Yup.object({
+  id: Yup.number().required(),
+  title: Yup.string().required(),
+  description: Yup.string().required(),
+  visibility: Yup.string().oneOf(['PUBLIC', 'RESTRICTED', 'PRIVATE']).required(),
+  trendingWords: Yup.string().trim().required(),
+
+  leftdisplayColorHue: Yup.number().required(),
+  leftdisplayColorSat: Yup.number().required(),
+  leftdisplayColorLit: Yup.number().required(),
+  
+  rightdisplayColorHue: Yup.number().required(),
+  rightdisplayColorSat: Yup.number().required(),
+  rightdisplayColorLit: Yup.number().required(),
+
+  displayIcon: Yup.string().required(),
 })

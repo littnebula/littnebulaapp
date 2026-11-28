@@ -25,6 +25,10 @@ enum VisibilityType {
 
 model User {
   id            Int           @id @default(autoincrement())
+  displayIcon          String @default("user")
+  displayColorHue      Int @default(0)
+  displayColorSat      Int @default(100)
+  displayColorLit      Int @default(50)
   email         String        @unique
   password      String
   role          Role          @default(USER)
@@ -32,6 +36,7 @@ model User {
   editAccessWC  WordCloud[]   @relation("EditAccessWC")
   bookmarkedWC  BookmarkedWC[] 
 	recentlyWC    ViewedWC[]
+  collections   Collection[]
 }
 
 model Word {
@@ -68,6 +73,7 @@ model WordCloud {
   wordData      Word[]
   sourceTotal   Int     @default(1)
   displayCount  Int     @default(10)
+  randomseed    Int     @default(0)
   createdAt     DateTime @default(now()) 
   bibliography  String
   title         String
@@ -77,16 +83,22 @@ model WordCloud {
   views         Int      @default(0)
   bookmarks     Int      @default(0)
 
+  displayColorHue      Int @default(0)
+  displayColorSat      Int @default(100)
+  displayColorLit      Int @default(50)
+  displayIcon         String @default("cloud")
+
   editors       String[]  @default([])
-  editingUsers  User[]          @relation("EditAccessWC")
+  editingUsers  User[]    @relation("EditAccessWC")
 
   comments      Comment[]
 
   viewedWC      ViewedWC[]
   bookmarkedWC  BookmarkedWC[]
+
+  datasetLinks  DatasetWordClouds[]
 }
 
-// Explicit Join Table for "Recently Viewed"
 model ViewedWC {
   userId        Int
   wordcloudId   Int
@@ -98,7 +110,6 @@ model ViewedWC {
   @@id([userId, wordcloudId])
 }
 
-// Explicit Join Table for "Bookmarks"
 model BookmarkedWC {
   userId    Int
   wordcloudId    Int
@@ -110,12 +121,65 @@ model BookmarkedWC {
   @@id([userId, wordcloudId])
 }
 
+model Collection {
+  id        Int            @id @default(autoincrement())
+	owner     String
+  userId    Int
+  user      User           @relation(fields: [userId], references: [id])
+  createdAt DateTime       @default(now())
+
+  dataset   DatasetWordClouds[]
+  
+  title         String
+  description   String 
+  views         Int      @default(0)
+  visibility    VisibilityType  @default(PUBLIC)
+
+  leftdisplayColorHue      Int @default(0)
+  leftdisplayColorSat      Int @default(100)
+  leftdisplayColorLit      Int @default(50)
+  rightdisplayColorHue      Int @default(180)
+  rightdisplayColorSat      Int @default(100)
+  rightdisplayColorLit      Int @default(50)
+  displayIcon         String @default("cloudy")
+
+  trendingWords     String[]
+  dataSortOrder     Int[]
+  leftSplit         Int[]
+
+  editors       String[]  @default([])
+  comments      Comment[]
+}
+
+model DatasetWordClouds {
+  collectionId Int
+  wordcloudId  Int
+  position     Int      @default(0)
+  addedAt      DateTime @default(now())
+
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  wordcloud    WordCloud  @relation(fields: [wordcloudId], references: [id], onDelete: Cascade)
+
+  @@id([collectionId, wordcloudId])
+}
+
 model Comment {
   id          Int       @id @default(autoincrement())
 	owner       String
 	comment     String
 	timestamp   DateTime  @default(now())
-  wordcloud   WordCloud @relation(fields: [wordcloudId], references: [id], onDelete: Cascade)
-  wordcloudId Int
+  wordcloud   WordCloud? @relation(fields: [wordcloudId], references: [id], onDelete: Cascade)
+  wordcloudId Int?
+  collection    Collection? @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  collectionId  Int? 
 }
 
+model Report {
+  id          Int       @id @default(autoincrement())
+  wordcloudId Int?
+  userId      Int?
+  reporterId  Int
+  context     String
+  reason      String
+  resolution  String
+}

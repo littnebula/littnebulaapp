@@ -13,7 +13,12 @@ const WordCloudExaminer = ({wordclouddata, words, comments}: {wordclouddata: Wor
       <Row>          
         <WordCloudVisualizer 
         FormattedWordCloudData={getFormattedData(words, wordclouddata.displayCount)}
-        sizing={1.0}/>
+        sizing={1.0}
+        seed={wordclouddata.randomseed}
+        viewWidth={400}
+        viewHeight={400}
+        color={`hsl(${wordclouddata.displayColorHue}, ${wordclouddata.displayColorSat}%, ${wordclouddata.displayColorLit}%)`}
+        />
       </Row>
       <Row>
         <Card id="darkcard1" className="my-1">
@@ -49,10 +54,14 @@ const WordCloudExaminer = ({wordclouddata, words, comments}: {wordclouddata: Wor
             <Row>
               <TabContent>
                 <TabPane eventKey="desc">
-                  <p className="text-wrap text-break">{wordclouddata.description}</p>
+                  <Container className="p-2">
+                    <p className="text-wrap text-break">{wordclouddata.description}</p>
+                  </Container>
                 </TabPane>
                 <TabPane eventKey="bib">
-                  <p className="text-wrap text-break">{wordclouddata.bibliography}</p>
+                  <Container className="p-2">
+                    <p className="text-wrap text-break">{wordclouddata.bibliography}</p>
+                  </Container>
                 </TabPane>
                 <TabPane eventKey="wordlist">
                   <WordListing words={words} />

@@ -103,10 +103,14 @@ export async function addNewWordCloud(wc: {
   description: string;
   tags: string;
   visibility: string;
+  displayColorHue: number;
+  displayColorSat: number;
+  displayColorLit: number;
+  displayIcon: string;
   owner: string;
   creatorId: number;
   }) {
-  // console.log(`new cloud data: ${JSON.stringify(wc, null, 2)}`);
+  console.log(`new cloud data: ${JSON.stringify(wc, null, 2)}`);
   const wordCloudGenResult: WCGenData = generateWordCloudData(wc.sourceText, wc.language)
   // console.log(wordCloudGenResult);
   const wordsToBeAdded: Prisma.WordCreateWithoutWordcloudInput[] = []
@@ -134,10 +138,14 @@ export async function addNewWordCloud(wc: {
     bibliography: wc.bibliography,
     tags: wc.tags.split(" ").filter((str) => str.trim().length > 0),
     visibility: vis,
+    displayColorHue: wc.displayColorHue,
+    displayColorSat: wc.displayColorSat,
+    displayColorLit: wc.displayColorLit,
+    displayIcon: wc.displayIcon,
     owner: wc.owner,
     creatorId: wc.creatorId,
   }
-  console.log(wcdata);
+  // console.log(wcdata);
   await prisma.wordCloud.create({
     data: wcdata
   });
@@ -153,10 +161,14 @@ export async function editWordCloud(wc: {
   tags: string;
   editors?: string | undefined;
   visibility: string;
+  displayColorHue: number;
+  displayColorSat: number;
+  displayColorLit: number;
+  displayIcon: string;
   owner: string;
   creatorId: number;
   }) {
-  console.log(`given cloud data: ${JSON.stringify(wc, null, 2)}`);
+  // console.log(`given cloud data: ${JSON.stringify(wc, null, 2)}`);
   let vis: VisibilityType = 'PRIVATE';
   if (wc.visibility === 'RESTRICTED') {
     vis = 'RESTRICTED';
@@ -173,6 +185,11 @@ export async function editWordCloud(wc: {
       visibility: vis,
       displayCount: wc.displayCount,
       language: wc.language,
+
+      displayColorHue: wc.displayColorHue,
+      displayColorSat: wc.displayColorSat,
+      displayColorLit: wc.displayColorLit,
+      displayIcon: wc.displayIcon,
 
       tags: wc.tags.split(" ").filter((str) => str.trim().length > 0),
       editors: wc.editors?.split(" ").filter((str) => str.trim().length > 0),
@@ -313,14 +330,26 @@ export async function deleteWord(id: number) {
   });
 }
 
-export async function addComment({comment, wordcloudId, owner}: { comment: string, wordcloudId: number, owner: string }) {
+export async function addComment({
+  comment, 
+  wordcloudId, 
+  collectionId,
+  owner
+  }: { 
+    comment: string, 
+    wordcloudId?: number, 
+    collectionId?: number,
+    owner: string 
+  }) {
   await prisma.comment.create({
     data: {
       comment,
       wordcloudId,
+      collectionId,
       owner,
     },
   });
+
 }
 
 export async function toggleWCBookmark(userId: number, wordcloudId: number) {
@@ -362,6 +391,96 @@ export async function toggleWCBookmark(userId: number, wordcloudId: number) {
       },
     });
   }
+}
+
+export async function createCollection(coll: {
+  title: string;
+  description: string;
+  visibility: string;
+  wordcloudIds: number[];
+  trendingWords: string;
+  owner: string;
+  userId: number;
+  }) {
+  // console.log(`given cloud data: ${JSON.stringify(coll, null, 2)}`);
+  let vis: VisibilityType = 'PRIVATE';
+  if (coll.visibility === 'RESTRICTED') {
+    vis = 'RESTRICTED';
+  } else if (coll.visibility === 'PUBLIC') {
+    vis = 'PUBLIC';
+  }
+  const trendwords: string[] = coll.trendingWords.trim().toUpperCase().split(' ').filter((str) => str.trim().length > 0)
+
+  await prisma.collection.create({
+    data: {
+      title: coll.title,
+      description: coll.description,
+      visibility: vis,
+      dataset: {
+        create: coll.wordcloudIds.map((id) => ({
+          wordcloud: {
+            connect: { id: id }
+          }
+        }))
+      },
+      trendingWords: trendwords,
+      owner: coll.owner,
+      userId: coll.userId,
+    }
+  });
+}
+
+export async function editCollection(coll: {
+  id: number;
+  title: string;
+  description: string;
+  visibility: string;
+
+  trendingWords: string;
+  leftdisplayColorHue: number;
+  leftdisplayColorSat: number;
+  leftdisplayColorLit: number;
+
+  rightdisplayColorHue: number;
+  rightdisplayColorSat: number;
+  rightdisplayColorLit: number;
+  displayIcon: string;
+  }) {
+  // console.log(`given cloud data: ${JSON.stringify(coll, null, 2)}`);
+   let vis: VisibilityType = 'PRIVATE';
+  if (coll.visibility === 'RESTRICTED') {
+    vis = 'RESTRICTED';
+  } else if (coll.visibility === 'PUBLIC') {
+    vis = 'PUBLIC';
+  }
+  const trendwords: string[] = coll.trendingWords.trim().toUpperCase().split(' ').filter((str) => str.trim().length > 0)
+
+  await prisma.collection.update({
+    where: { id: coll.id},
+    data: {
+      title: coll.title,
+      description: coll.description,
+      visibility: vis,
+      trendingWords: trendwords,
+
+      leftdisplayColorHue: coll.leftdisplayColorHue,
+      leftdisplayColorSat: coll.leftdisplayColorSat,
+      leftdisplayColorLit: coll.leftdisplayColorLit,
+      
+      rightdisplayColorHue: coll.rightdisplayColorHue,
+      rightdisplayColorSat: coll.rightdisplayColorSat,
+      rightdisplayColorLit: coll.rightdisplayColorLit,
+
+      displayIcon: coll.displayIcon,
+    }
+  })
+}
+
+export async function deleteCollection(id: number) {
+  await prisma.collection.delete({
+    where: { id },
+  });
+  redirect('/myprofile');
 }
 
 export async function revalidatepage(pagepath: string) {

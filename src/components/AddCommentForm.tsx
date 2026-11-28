@@ -8,8 +8,9 @@ import { addComment, revalidatepage } from '@/lib/dbActions';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { AddCommentSchema } from '@/lib/validationSchemas';
 import { usePathname } from "next/navigation";
+import Link from 'next/link';
 
-const AddCommentForm = ({ wcid }: {wcid: number}) => {
+const AddCommentForm = ({ wcid, collid }: {wcid?: number, collid?: number }) => {
   const { data: session, status } = useSession();
   const currentUser = session?.user?.email || '';
   const pathname = usePathname();
@@ -25,9 +26,20 @@ const AddCommentForm = ({ wcid }: {wcid: number}) => {
     return <LoadingSpinner />;
   }
   if (status === 'unauthenticated') {
-    return (<></>);
+    return (
+      <Card id='darkcard1'>
+        <Card.Header>
+          To Add a Comment:
+        </Card.Header>
+        <Card.Body>
+          <Link href="/auth/signin">Sign In</Link>
+          /
+          <Link href="/auth/signup">Sign Up</Link>
+        </Card.Body>
+      </Card>
+    );
   }
-  const onSubmit = async (comment: { comment: string; wordcloudId: number, owner: string }) => {
+  const onSubmit = async (comment: { comment: string; wordcloudId?: number, collectionId?: number, owner: string }) => {
     await addComment(comment);
     await revalidatepage(pathname);
     //   swal('Success', 'Your item has been added', 'success', {
@@ -52,6 +64,7 @@ const AddCommentForm = ({ wcid }: {wcid: number}) => {
           </Form.Group>
           <input type="hidden" {...register('owner')} value={currentUser} />
           <input type="hidden" {...register('wordcloudId')} value={wcid} />
+          <input type="hidden" {...register('collectionId')} value={collid} />
           <Form.Group className="form-group">
             <Row className="pt-3">
               <Col>
