@@ -78,7 +78,26 @@ export const CreateCollectionSchema = Yup.object({
   .required("Word cloud IDs are required"),
   visibility: Yup.string().oneOf(['PUBLIC', 'RESTRICTED', 'PRIVATE']).required(),
   trendingWords: Yup.string().trim().required(),
+  displayIcon: Yup.string().required(),
 
   owner: Yup.string().required(),
   userId: Yup.number().required(),
+})
+
+export const EditCollectionSchema = Yup.object({
+  id: Yup.number().required(),
+  title: Yup.string().required(),
+  description: Yup.string().required(),
+  visibility: Yup.string().oneOf(['PUBLIC', 'RESTRICTED', 'PRIVATE']).required(),
+  trendingWords: Yup.string().trim().required(),
+
+  leftdisplayColorHue: Yup.number().required(),
+  leftdisplayColorSat: Yup.number().required(),
+  leftdisplayColorLit: Yup.number().required(),
+  
+  rightdisplayColorHue: Yup.number().required(),
+  rightdisplayColorSat: Yup.number().required(),
+  rightdisplayColorLit: Yup.number().required(),
+
+  displayIcon: Yup.string().required(),
 })

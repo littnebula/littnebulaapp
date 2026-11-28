@@ -109,7 +109,7 @@ const AddCollectionForm = ({ ownedwc }: { ownedwc: WordCloud[] }) => {
                     id="collectionTitle"
                     type="text"
                     {...register('title')}
-                    className={`form-control ${errors.title ? 'is-invalid' : ''}`}
+                    className={`form-control ${errors.title ? 'is-invalid' : ''} bg-dark text-light`}
                   />
                   <div className="invalid-feedback">{errors.title?.message}</div>
                 </Form.Group>
@@ -119,7 +119,7 @@ const AddCollectionForm = ({ ownedwc }: { ownedwc: WordCloud[] }) => {
                   <textarea
                     id="collectionDescription"
                     {...register('description')}
-                    className={`form-control ${errors.description ? 'is-invalid' : ''}`}
+                    className={`form-control ${errors.description ? 'is-invalid' : ''} bg-dark text-light`}
                   />
                   <div className="invalid-feedback">{errors.description?.message}</div>
                 </Form.Group>

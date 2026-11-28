@@ -2,7 +2,6 @@ import { Container, Row} from "react-bootstrap";
 import { prisma } from "@/lib/prisma";
 import AnalyzerMainComponent from "@/components/AnalyzerMainComp";
 import { Word } from "@prisma/client";
-import LineChartComp from "@/components/LineChartComponent";
 
 
 export default async function DebuggingSpace() {

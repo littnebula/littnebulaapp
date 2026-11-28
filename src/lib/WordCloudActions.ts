@@ -86,6 +86,13 @@ export function generateWordCloudData(sourceText: string, language: string): WCG
   return newWCD
 }
 
+function truncateString(str: string, limit: number) {
+  if (str.length < limit) {
+    return str;
+  }
+  return str.slice(0, (limit - 3)) + '...'
+}
+
 export function getFormattedData(wordcloud?: Word[], visiblewords?: number): Word[] {
   if (!wordcloud || !visiblewords) {
     return []
@@ -95,7 +102,7 @@ export function getFormattedData(wordcloud?: Word[], visiblewords?: number): Wor
   for (let i: number = 0; i < Math.min(visiblewords, wordcloud.length); i++) {
     formattedData.push(
       {
-        'text': wordcloud[i].text,
+        'text': truncateString(wordcloud[i].text, 40),
         'value': Math.abs(wordcloud[i].value),
         'annotation': wordcloud[i].annotation,
         'id': 0,

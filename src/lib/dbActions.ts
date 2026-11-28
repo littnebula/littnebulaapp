@@ -430,6 +430,58 @@ export async function createCollection(coll: {
   });
 }
 
+export async function editCollection(coll: {
+  id: number;
+  title: string;
+  description: string;
+  visibility: string;
+
+  trendingWords: string;
+  leftdisplayColorHue: number;
+  leftdisplayColorSat: number;
+  leftdisplayColorLit: number;
+
+  rightdisplayColorHue: number;
+  rightdisplayColorSat: number;
+  rightdisplayColorLit: number;
+  displayIcon: string;
+  }) {
+  // console.log(`given cloud data: ${JSON.stringify(coll, null, 2)}`);
+   let vis: VisibilityType = 'PRIVATE';
+  if (coll.visibility === 'RESTRICTED') {
+    vis = 'RESTRICTED';
+  } else if (coll.visibility === 'PUBLIC') {
+    vis = 'PUBLIC';
+  }
+  const trendwords: string[] = coll.trendingWords.trim().toUpperCase().split(' ').filter((str) => str.trim().length > 0)
+
+  await prisma.collection.update({
+    where: { id: coll.id},
+    data: {
+      title: coll.title,
+      description: coll.description,
+      visibility: vis,
+      trendingWords: trendwords,
+
+      leftdisplayColorHue: coll.leftdisplayColorHue,
+      leftdisplayColorSat: coll.leftdisplayColorSat,
+      leftdisplayColorLit: coll.leftdisplayColorLit,
+      
+      rightdisplayColorHue: coll.rightdisplayColorHue,
+      rightdisplayColorSat: coll.rightdisplayColorSat,
+      rightdisplayColorLit: coll.rightdisplayColorLit,
+
+      displayIcon: coll.displayIcon,
+    }
+  })
+}
+
+export async function deleteCollection(id: number) {
+  await prisma.collection.delete({
+    where: { id },
+  });
+  redirect('/myprofile');
+}
 
 export async function revalidatepage(pagepath: string) {
   revalidatePath(pagepath);

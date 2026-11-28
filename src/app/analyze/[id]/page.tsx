@@ -39,8 +39,8 @@ export default async function AnalyzeCollection({ params }: { params: { id: stri
   const wordclouds = dataset.map((item) => item.wordcloud);
   const words: Word[][] = dataset.map((item) => item.wordcloud.wordData)
   console.log(collection)
-  const isEditor: boolean = collection.editors.includes(currentUser);
-  if (collection.visibility == VisibilityType.PRIVATE && currentUser !== collection.owner && !isEditor) {
+  const isOwner: boolean = collection.owner === currentUser;
+  if (collection.visibility == VisibilityType.PRIVATE && !isOwner) {
     return NotAuthorized();
   }
 
@@ -58,8 +58,7 @@ export default async function AnalyzeCollection({ params }: { params: { id: stri
   // });
   console.log(wordclouds)
   console.log(comments)
-  if (!(currentUser == collection.owner || isEditor)) {
-  }
+  
   const alltags: string[] = [];
   wordclouds.forEach(wc => {
     alltags.push(...wc.tags);
@@ -75,7 +74,7 @@ export default async function AnalyzeCollection({ params }: { params: { id: stri
             <h5>[{[...new Set(alltags)].join('] [')}]</h5>
           </Col>
           <Col>
-            {(currentUser == collection.owner || isEditor) && (
+            {(isOwner) && (
               <Link 
                 key={collection.title} 
                 href={`/editCollection/${collectionId}`}

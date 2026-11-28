@@ -68,7 +68,7 @@ const EditWordCloudForm = ({ wc }: { wc: WordCloud }) => {
         <Col>
           <Card id='darkcard1'>
             <Card.Header className="text-center">
-              <h2>Edit Word Cloud</h2>
+              <h2>Edit Territory Aspects</h2>
             </Card.Header>
             <Card.Body>
               <Form onSubmit={handleSubmit(onSubmit)}>
