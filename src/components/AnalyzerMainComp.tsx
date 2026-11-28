@@ -71,7 +71,7 @@ const AnalyzerMainComponent = ({
               <TabPane eventKey="split">
                 <Row>
                   {wordclouds.map((wc, idx) => (
-                    <Col key={wc.id}>
+                    <Col key={wc.id} className="py-3">
                       <Link href={`/examine/${wc.id}`} className="text-center text-decoration-none text-reset">
                         <h4 className="font-bold whitespace-normal break-words">
                           {wc.title.toUpperCase()}
@@ -87,26 +87,6 @@ const AnalyzerMainComponent = ({
                       />
                     </Col>
                   ))}
-                  {/* <Col>
-                    <WordCloudVisualizer 
-                    FormattedWordCloudData={getFormattedData(leftwordset, wordclouds[0].displayCount)}
-                    sizing={0.5}
-                    seed={12}
-                    viewWidth={180}
-                    viewHeight={200}
-                    color={`hsl(${collData.leftdisplayColorHue}, ${collData.leftdisplayColorSat}%, ${collData.leftdisplayColorLit}%)`}
-                    />
-                  </Col>
-                  <Col>
-                    <WordCloudVisualizer 
-                    FormattedWordCloudData={getFormattedData(rightwordset, wordclouds[1].displayCount)}
-                    sizing={0.5}
-                    seed={1}
-                    viewWidth={180}
-                    viewHeight={200}
-                    color={`hsl(${collData.rightdisplayColorHue}, ${collData.rightdisplayColorSat}%, ${collData.rightdisplayColorLit}%)`}
-                    />
-                  </Col> */}
                 </Row>
               </TabPane>
               <TabPane eventKey='trends'>

@@ -74,20 +74,76 @@ export default function LineChartComp({
         borderColor: `hsla(${idx * 360/searchWords.length}, ${100}%, ${50}%)`,
         backgroundColor: `hsla(${idx * 360/searchWords.length}, ${100}%, ${50}%)`,
         tension: 0.3,
+        pointRadius: 6,
+        pointHoverRadius: 8,
         fill: true,
       })
   })
   console.log(chartData.datasets);
 
-  
-  
-
-
   const chartOptions: ChartOptions<"line"> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { position: "top" },
+      legend: { 
+        position: "top",
+        labels: {
+          color: "#ffffff",
+          font: {
+            size: 16,
+          },
+        },
+      },
+      tooltip: {
+        titleFont: {
+          size: 16,
+        },
+        bodyFont: {
+          size: 14,
+        },
+      },
+    },
+    scales: {
+      // 4. X-Axis Ticks & Title
+      x: {
+        ticks: {
+          color: "#ffffff",
+          font: {
+            size: 14,
+          },
+        },
+        grid: {
+          color: "#ffffff75",
+        },
+        title: {
+          display: true,
+          text: "Territories",
+          color: "#ffffff",
+          font: {
+            size: 14,
+          },
+        },
+      },
+      // 5. Y-Axis Ticks & Title
+      y: {
+        ticks: {
+          color: "#ffffff",
+          font: {
+            size: 12,
+          },
+        },
+        grid: {
+          color: "#ffffff7c",
+        },
+        title: {
+          display: true,
+          text: "Word Counts",
+          color: "#ffffff",
+          font: {
+            size: 14,
+          },
+        },
+      },
     },
   };
 
