@@ -145,8 +145,7 @@ model Collection {
 
   trendingWords     String[]
   dataSortOrder     Int[]
-  LeftSplit         Int[]
-  RightSplit        Int[]
+  leftSplit         Int[]
 
   editors       String[]  @default([])
   comments      Comment[]

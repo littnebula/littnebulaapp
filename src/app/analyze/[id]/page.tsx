@@ -2,17 +2,11 @@ import { notFound } from 'next/navigation';
 import { VisibilityType, Word, } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
-// import WordCloudExaminer from '@/components/ViewWordCloudComp';
-import { Container, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import NotAuthorized from '@/app/not-authorized/page';
 import AnalyzerMainComponent from '@/components/AnalyzerMainComp';
 import Link from 'next/link';
 import { PencilSquare } from 'react-bootstrap-icons';
-// import { incrementWordCloudViews } from '@/lib/dbActions';
-// import Link from "next/link";
-// import { PencilSquare } from 'react-bootstrap-icons';
-// import { BookmarkToggleButton } from '@/components/BookmarkToggleButton';
-
 
 export default async function AnalyzeCollection({ params }: { params: { id: string | string[] } }) {
   const { id } = await params;
@@ -22,7 +16,7 @@ export default async function AnalyzeCollection({ params }: { params: { id: stri
   // const currentUserId: number = +(session?.user?.id || '0');
   const collectionId: number = +id;
   const collectionResult = await prisma.collection.findUnique({
-    where: { id: 1},
+    where: { id: collectionId},
     include: {
       dataset: {
         include: {
@@ -36,6 +30,7 @@ export default async function AnalyzeCollection({ params }: { params: { id: stri
       comments: true
     }
   });
+  console.log(collectionResult)
   if (!collectionResult) {
     return notFound();
   }
@@ -48,8 +43,6 @@ export default async function AnalyzeCollection({ params }: { params: { id: stri
   if (collection.visibility == VisibilityType.PRIVATE && currentUser !== collection.owner && !isEditor) {
     return NotAuthorized();
   }
-
-
 
   // const wordClouds: WordCloud[] = await prisma.wordCloud.findMany({
   // where: {
@@ -67,20 +60,31 @@ export default async function AnalyzeCollection({ params }: { params: { id: stri
   console.log(comments)
   if (!(currentUser == collection.owner || isEditor)) {
   }
+  const alltags: string[] = [];
+  wordclouds.forEach(wc => {
+    alltags.push(...wc.tags);
+  });
 
   return (
     <main>
       <Container>
+        <Container style={{height: '40px'}}/>
         <Row>
-          {(currentUser == collection.owner || isEditor) && (
-            <Link 
-              key={collection.title} 
-              href={`/editCollection/${collectionId}`}
-              className='btn btn-solid-grn py-2'
-            >
-            <PencilSquare/> Edit
-            </Link>
-          )}
+          <Col>
+            <h2>{collection.title}</h2>
+            <h5>[{[...new Set(alltags)].join('] [')}]</h5>
+          </Col>
+          <Col>
+            {(currentUser == collection.owner || isEditor) && (
+              <Link 
+                key={collection.title} 
+                href={`/editCollection/${collectionId}`}
+                className='btn btn-solid-grn py-2'
+              >
+              <PencilSquare/> Edit
+              </Link>
+            )}
+          </Col>
         </Row>
         <AnalyzerMainComponent 
         collData={collection}

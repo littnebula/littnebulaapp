@@ -398,6 +398,7 @@ export async function createCollection(coll: {
   description: string;
   visibility: string;
   wordcloudIds: number[];
+  trendingWords: string;
   owner: string;
   userId: number;
   }) {
@@ -408,7 +409,8 @@ export async function createCollection(coll: {
   } else if (coll.visibility === 'PUBLIC') {
     vis = 'PUBLIC';
   }
-  
+  const trendwords: string[] = coll.trendingWords.trim().toUpperCase().split(' ').filter((str) => str.trim().length > 0)
+
   await prisma.collection.create({
     data: {
       title: coll.title,
@@ -421,6 +423,7 @@ export async function createCollection(coll: {
           }
         }))
       },
+      trendingWords: trendwords,
       owner: coll.owner,
       userId: coll.userId,
     }

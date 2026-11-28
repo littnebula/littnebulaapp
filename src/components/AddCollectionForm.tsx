@@ -18,6 +18,7 @@ interface CollectionFormValues {
   description: string;
   visibility: string;
   wordcloudIds: number[];
+  trendingWords: string,
   owner: string;
   userId: number;
 }
@@ -42,6 +43,7 @@ const AddCollectionForm = ({ ownedwc }: { ownedwc: WordCloud[] }) => {
       description: '',
       visibility: 'PUBLIC',
       wordcloudIds: [],
+      trendingWords: '',
       owner: '',
       userId: 0,
     },
@@ -85,6 +87,7 @@ const AddCollectionForm = ({ ownedwc }: { ownedwc: WordCloud[] }) => {
       description: '',
       visibility: 'PUBLIC',
       wordcloudIds: [],
+      trendingWords: '',
       owner: currentUser,
       userId: currentUserId,
     });
@@ -134,7 +137,17 @@ const AddCollectionForm = ({ ownedwc }: { ownedwc: WordCloud[] }) => {
                   </select>
                   <div className="invalid-feedback">{errors.visibility?.message}</div>
                 </Form.Group>
-
+                <Form.Group>
+                  <Form.Label>Words To Analyze for Trends</Form.Label>
+                  <input
+                    type='text'
+                    {...register('trendingWords')}
+                    className={`form-control ${errors.trendingWords ? 'is-invalid' : ''} bg-dark text-light`}
+                    maxLength={300}
+                    placeholder='Words separated by spaces...'
+                  />
+                  <div className="invalid-feedback">{errors.trendingWords?.message}</div>
+                </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label>Word Clouds</Form.Label>
                   <CheckboxDropdown

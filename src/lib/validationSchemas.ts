@@ -77,6 +77,8 @@ export const CreateCollectionSchema = Yup.object({
   .max(10, "Select no more than 10 Territories")
   .required("Word cloud IDs are required"),
   visibility: Yup.string().oneOf(['PUBLIC', 'RESTRICTED', 'PRIVATE']).required(),
+  trendingWords: Yup.string().trim().required(),
+
   owner: Yup.string().required(),
   userId: Yup.number().required(),
 })

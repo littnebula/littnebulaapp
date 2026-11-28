@@ -19,32 +19,34 @@ const AnalyzerMainComponent = ({
     words: Word[][]
     comments: Comment[]
   }) => {
-  const alltags: string[] = [];
+
   let avgDisplayCount: number = 0;
   wordclouds.forEach(wc => {
-    alltags.push(...wc.tags);
     avgDisplayCount += wc.displayCount;
   });
   avgDisplayCount /= wordclouds.length;
-  const mergedwordSet: Word[] = [];
-  words.forEach((wordset) => {
-    mergedwordSet.push(...wordset)
-  })
+  const allwordSet: Word[] = structuredClone(words[0]);
+  for (let i = 1; i < words.length; i++) {
+    for (let j = 0; j < words[i].length; j++) {
+      const foundWord = allwordSet.find((word) => word.text === words[i][j].text)
+      if (!foundWord) {
+        allwordSet.push({ ...words[i][j] });
+      } else {
+        foundWord.value += words[i][j].value;
+      }
+    }
+  }
+  allwordSet.sort((a, b) => b.value - a.value);
 
   const leftwordset: Word[] = [];
   leftwordset.push(...words[0]);
   const rightwordset: Word[] = [];
   rightwordset.push(...words[1]);
   
-  const searchWords: string[] = ['THE', 'SHE', 'WE', 'THEY']; /// pull from database collection.trendingset
+  // const searchWords: string[] = ['THE', 'SHE', 'WE', 'THEY']; /// pull from database collection.trendingset
 
   return (
     <Container>
-      <Container style={{height: '40px'}}/>
-      <Row>
-        <h2>{collData.title}</h2>
-        <h5>[{alltags.join('] [')}]</h5>
-      </Row>
       <Card id="darkcard1" className="p-2">
         <TabContainer defaultActiveKey="merge">
           <Nav variant="pills" className="gray-pills">
@@ -64,7 +66,7 @@ const AnalyzerMainComponent = ({
             <TabContent>
               <TabPane eventKey="merge">
                 <WordCloudVisualizer 
-                FormattedWordCloudData={getFormattedData(mergedwordSet, avgDisplayCount)}
+                FormattedWordCloudData={getFormattedData(allwordSet, avgDisplayCount)}
                 sizing={1.0}
                 seed={0}
                 viewWidth={400}
@@ -77,7 +79,7 @@ const AnalyzerMainComponent = ({
                   <Col>
                     <WordCloudVisualizer 
                     FormattedWordCloudData={getFormattedData(leftwordset, wordclouds[0].displayCount)}
-                    sizing={0.4}
+                    sizing={0.5}
                     seed={12}
                     viewWidth={180}
                     viewHeight={200}
@@ -87,7 +89,7 @@ const AnalyzerMainComponent = ({
                   <Col>
                     <WordCloudVisualizer 
                     FormattedWordCloudData={getFormattedData(rightwordset, wordclouds[1].displayCount)}
-                    sizing={0.4}
+                    sizing={0.5}
                     seed={1}
                     viewWidth={180}
                     viewHeight={200}
@@ -98,7 +100,7 @@ const AnalyzerMainComponent = ({
               </TabPane>
               <TabPane eventKey='trends'>
                 <LineChartComp 
-                  searchWords={searchWords}
+                  searchWords={collData.trendingWords}
                   wordclouds={wordclouds}
                   words={words}
                 />

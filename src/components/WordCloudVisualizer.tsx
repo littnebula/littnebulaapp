@@ -84,12 +84,12 @@ const WordCloudVisualizer = ({
             <Wordcloud
               key={cloudKey}
               words={wordsCopy}
-              width={viewWidth}
-              height={viewHeight}
+              width={viewWidth * 0.9}
+              height={viewHeight * 0.9}
               fontSize={(datum) => fontScale(Math.max(1, datum.value))}
               fontWeight="normal"
               font="Arial"
-              padding={4}
+              padding={6}
               spiral="archimedean"
               rotate={fixedRotate}
               random={randomGenerator}
