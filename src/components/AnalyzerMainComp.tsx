@@ -7,6 +7,7 @@ import { getFormattedData } from "@/lib/WordCloudActions";
 import AddCommentForm from "./AddCommentForm";
 import CommentItem from "./CommentItem";
 import LineChartComp from "./LineChartComponent";
+import Link from "next/link";
 
 const AnalyzerMainComponent = ({ 
     collData, 
@@ -37,13 +38,6 @@ const AnalyzerMainComponent = ({
     }
   }
   allwordSet.sort((a, b) => b.value - a.value);
-
-  const leftwordset: Word[] = [];
-  leftwordset.push(...words[0]);
-  const rightwordset: Word[] = [];
-  rightwordset.push(...words[1]);
-  
-  // const searchWords: string[] = ['THE', 'SHE', 'WE', 'THEY']; /// pull from database collection.trendingset
 
   return (
     <Container>
@@ -76,7 +70,24 @@ const AnalyzerMainComponent = ({
               </TabPane>
               <TabPane eventKey="split">
                 <Row>
-                  <Col>
+                  {wordclouds.map((wc, idx) => (
+                    <Col key={wc.id}>
+                      <Link href={`/examine/${wc.id}`} className="text-center text-decoration-none text-reset">
+                        <h4 className="font-bold whitespace-normal break-words">
+                          {wc.title.toUpperCase()}
+                        </h4>
+                      </Link>
+                      <WordCloudVisualizer 
+                      FormattedWordCloudData={getFormattedData(words[idx], wc.displayCount)}
+                      sizing={0.5}
+                      seed={wc.randomseed}
+                      viewWidth={180}
+                      viewHeight={200}
+                      color={`hsl(${wc.displayColorHue}, ${wc.displayColorSat}%, ${wc.displayColorLit}%)`}
+                      />
+                    </Col>
+                  ))}
+                  {/* <Col>
                     <WordCloudVisualizer 
                     FormattedWordCloudData={getFormattedData(leftwordset, wordclouds[0].displayCount)}
                     sizing={0.5}
@@ -95,7 +106,7 @@ const AnalyzerMainComponent = ({
                     viewHeight={200}
                     color={`hsl(${collData.rightdisplayColorHue}, ${collData.rightdisplayColorSat}%, ${collData.rightdisplayColorLit}%)`}
                     />
-                  </Col>
+                  </Col> */}
                 </Row>
               </TabPane>
               <TabPane eventKey='trends'>
@@ -119,9 +130,6 @@ const AnalyzerMainComponent = ({
               </Col>
               <Col>
                 <Nav.Link eventKey="comments">Comments</Nav.Link>
-              </Col>
-              <Col>
-                <Nav.Link eventKey="wclinks">WordClouds</Nav.Link>
               </Col>
             </Row>
           </Nav>

@@ -12,6 +12,7 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import { createCollection } from '@/lib/dbActions';
 import { CreateCollectionSchema } from '@/lib/validationSchemas';
 import CheckboxDropdown, { DropdownOption } from './CheckboxDropdown';
+import IconSelect from './IconSelectForm';
 
 interface CollectionFormValues {
   title: string;
@@ -19,12 +20,14 @@ interface CollectionFormValues {
   visibility: string;
   wordcloudIds: number[];
   trendingWords: string,
+  displayIcon: string,
   owner: string;
   userId: number;
 }
 
 const AddCollectionForm = ({ ownedwc }: { ownedwc: WordCloud[] }) => {
   const [wcIds, setWCIds] = useState<number[]>([]);
+  const [selectedIcon, setSelectedIcon] = useState('cloud');
   const { data: session, status } = useSession();
 
   const currentUser = session?.user?.email || '';
@@ -44,6 +47,7 @@ const AddCollectionForm = ({ ownedwc }: { ownedwc: WordCloud[] }) => {
       visibility: 'PUBLIC',
       wordcloudIds: [],
       trendingWords: '',
+      displayIcon: 'cloudy',
       owner: '',
       userId: 0,
     },
@@ -88,6 +92,7 @@ const AddCollectionForm = ({ ownedwc }: { ownedwc: WordCloud[] }) => {
       visibility: 'PUBLIC',
       wordcloudIds: [],
       trendingWords: '',
+      displayIcon: 'cloudy',
       owner: currentUser,
       userId: currentUserId,
     });
@@ -148,23 +153,40 @@ const AddCollectionForm = ({ ownedwc }: { ownedwc: WordCloud[] }) => {
                   />
                   <div className="invalid-feedback">{errors.trendingWords?.message}</div>
                 </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Word Clouds</Form.Label>
-                  <CheckboxDropdown
-                    options={datasetOptions}
-                    selectedIds={wcIds}
-                    onChange={(updatedIds) => {
-                      setWCIds(updatedIds);
-                      setValue('wordcloudIds', updatedIds, { shouldValidate: true });
-                    }}
-                    placeholder="Select Data"
-                  />
-                  {errors.wordcloudIds && (
-                    <div className="text-danger small mt-1">
-                      {errors.wordcloudIds.message}
-                    </div>
-                  )}
-                </Form.Group>
+                <Row>
+                  <Col className='col-3'>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Word Clouds</Form.Label>
+                      <CheckboxDropdown
+                        options={datasetOptions}
+                        selectedIds={wcIds}
+                        onChange={(updatedIds) => {
+                          setWCIds(updatedIds);
+                          setValue('wordcloudIds', updatedIds, { shouldValidate: true });
+                        }}
+                        placeholder="Select Data"
+                      />
+                      {errors.wordcloudIds && (
+                        <div className="text-danger small mt-1">
+                          {errors.wordcloudIds.message}
+                        </div>
+                      )}
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <h5>Display Icon</h5>
+                    <IconSelect
+                      name="displayIcon"
+                      value={selectedIcon}
+                      onChange={(icon) => {
+                        setSelectedIcon(icon)
+                        setValue('displayIcon', icon, { shouldValidate: true, shouldDirty: true });
+                      }}
+                      
+                      columns={12}
+                    />
+                  </Col>
+                </Row>
 
                 {Object.keys(errors).length > 0 && (
                   <div className="alert alert-danger mt-3">
